@@ -1,60 +1,36 @@
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
 	import CardPanel from './CardPanel.svelte';
+	import type { Keyed } from '$lib/types';
 
 	let _id = 0;
-
-	function genId() { return _id++; }
+	function withId<T extends object>(o: T): Keyed<T> {
+		return { ...o, id: _id++ };
+	}
 
 	let cards: ComponentProps<CardPanel>['cards'] = [
-		{
-			id: genId(),
+		withId({
 			name: 'Book',
 			responsibilities: [
-				{
-					id: genId(),
-					text: 'knows its contents'
-				},
-				{
-					id: genId(),
-					text: 'knows its metadata'
-				},
-				{
-					id: genId(),
-					text: 'knows its length'
-				},
+				withId({ text: 'knows its contents' }),
+				withId({ text: 'knows its metadata' }),
+				withId({ text: 'knows its length' }),
 			],
 			collaborators: [
-				{
-					id: genId(),
-					text: 'Page'
-				},
+				withId({ text: 'Page' }),
 			],
-		},
-		{
-			id: genId(),
+		}),
+		withId({
 			name: 'Library',
 			responsibilities: [
-				{
-					id: genId(),
-					text: 'knows its contents'
-				},
-				{
-					id: genId(),
-					text: 'knows its metadata'
-				},
-				{
-					id: genId(),
-				 	text: 'knows its lenders'
-				},
+				withId({ text: 'knows its contents' }),
+				withId({ text: 'knows its metadata' }),
+				withId({ text: 'knows its lenders' }),
 			],
 			collaborators: [
-				{
-					id: genId(),
-					text: 'Book'
-				},
+				withId({ text: 'Book' }),
 			],
-		},
+		}),
 	];
 </script>
 
