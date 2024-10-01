@@ -1,12 +1,10 @@
 {
   "image": "mcr.microsoft.com/devcontainers/universal",
-  "features": { },
+  "features": {},
 
-  "customizations" : {
-    "vscode" : {
-      "extensions" : [
-          "esbenp.prettier-vscode"
-      ]
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode"]
     }
   }
 }
