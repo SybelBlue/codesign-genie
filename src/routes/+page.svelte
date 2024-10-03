@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
-  import CardPanel from './CardPanel.svelte';
+  import CardPanel from '$lib/components/CardPanel.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
