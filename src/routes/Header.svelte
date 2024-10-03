@@ -1,5 +1,5 @@
 <script>
-  import { page } from '$app/stores';
+  // import { page } from '$app/stores';
   import logo from '$lib/images/svelte-logo.svg';
   import github from '$lib/images/github.svg';
 </script>
@@ -97,7 +97,7 @@
     height: 100%;
   }
 
-  li[aria-current='page']::before {
+  /* li[aria-current='page']::before {
     --size: 6px;
     content: '';
     width: 0;
@@ -121,7 +121,7 @@
     letter-spacing: 0.1em;
     text-decoration: none;
     transition: color 0.2s linear;
-  }
+  } */
 
   a:hover {
     color: var(--color-theme-1);

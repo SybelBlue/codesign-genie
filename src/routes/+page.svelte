@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
-  import CardPanel from './CardPanel.svelte';
   import type { Keyed } from '$lib/types';
+  import CardPanel from './CardPanel.svelte';
 
-  let _id = 0;
-  function withId<T extends object>(o: T): Keyed<T> {
-    return { ...o, id: _id++ };
-  }
+  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
+    let nextId = 0;
+    return (o) => ({ ...o, id: nextId++ });
+  })();
 
   let cards: ComponentProps<CardPanel>['cards'] = [
     withId({
@@ -14,25 +14,24 @@
       responsibilities: [
         withId({ text: 'knows its contents' }),
         withId({ text: 'knows its metadata' }),
-        withId({ text: 'knows its length' })
+        withId({ text: 'knows its length' }),
       ],
-      collaborators: [withId({ text: 'Page' })]
+      collaborators: [withId({ name: 'Page' })]
     }),
     withId({
-      name: 'Library',
+      name: 'Page',
       responsibilities: [
-        withId({ text: 'knows its contents' }),
-        withId({ text: 'knows its metadata' }),
-        withId({ text: 'knows its lenders' })
+        withId({ text: 'knows its text' }),
+        withId({ text: 'has a number' }),
       ],
-      collaborators: [withId({ text: 'Book' })]
+      collaborators: []
     })
   ];
 </script>
 
 <svelte:head>
   <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+  <meta name="description" content="crc card design game" />
 </svelte:head>
 
 <section>
