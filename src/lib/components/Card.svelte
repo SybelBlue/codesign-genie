@@ -1,44 +1,36 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
   import type { Keyed } from '$lib/types';
   import { highlightedClass } from '$lib/stores';
+  import ClassLabel from '$lib/components/ClassLabel.svelte';
 
   export let name: string;
   export let responsibilities: Keyed<{ text: string }>[];
   export let collaborators: Keyed<{ name: string }>[];
 
   $: highlight = $highlightedClass == name;
-
-  const dispatch = createEventDispatcher();
 </script>
 
-<div class:highlight class="flashcard" >
-  <h3 class="header class-name">{name}</h3>
+
+<div class:highlight class="flashcard">
+  <h3><ClassLabel disabled {name} /></h3>
   <div class="col-container">
     <div>
-      <h4 class="header">responsibilities</h4>
+      <h4>responsibilities</h4>
       <ul>
-        {#each responsibilities as r (r.id)}
-          <input
-            bind:value={r.text}
-            class="responsibility"
-            />
+        {#each responsibilities as { text: value, id } (id)}
+          <li class="responsibility">
+            <input bind:value />
+          </li>
         {/each}
       </ul>
     </div>
     <div>
-      <h4 class="header">collaborators</h4>
+      <h4>collaborators</h4>
       <ul>
-        {#each collaborators as c (c.id)}
+        {#each collaborators as { name, id } (id)}
           <li class="collaborator">
-            <span
-              on:mouseenter={() => $highlightedClass = c.name }
-              on:mouseleave={() => $highlightedClass = undefined}
-              on:focus={() => dispatch('selectCard', { 'name': c.name })}
-              class="class-name"
-              role="link"
-              tabindex=0
-              >{c.name}</span></li>
+            <ClassLabel on:selectCard {name} />
+          </li>
         {/each}
       </ul>
     </div>
@@ -48,6 +40,11 @@
 <style lang="scss">
   div {
     flex: 1;
+  }
+
+  h3,
+  h4 {
+    font-style: italic;
   }
 
   .flashcard {
@@ -85,10 +82,6 @@
     @media (min-width: 601px) {
       font-size: 20px;
     }
-  }
-
-  .header {
-    font-style: italic;
   }
 
   .col-container {
