@@ -34,9 +34,7 @@
   <meta name="description" content="crc card design game" />
 </svelte:head>
 
-<section>
-  <CardPanel {cards} />
-</section>
+<CardPanel {cards} />
 
 <style>
   section {
@@ -44,6 +42,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     flex: 0.6;
   }
 

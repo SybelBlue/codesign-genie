@@ -13,14 +13,13 @@
 
 <div class:highlight class="flashcard">
   <h3><ClassLabel disabled {name} /></h3>
+  <hr>
   <div class="col-container">
     <div>
       <h4>responsibilities</h4>
       <ul>
         {#each responsibilities as { text: value, id } (id)}
-          <li class="responsibility">
-            <input bind:value />
-          </li>
+          <li> <input bind:value /> </li>
         {/each}
       </ul>
     </div>
@@ -28,9 +27,7 @@
       <h4>collaborators</h4>
       <ul>
         {#each collaborators as { name, id } (id)}
-          <li class="collaborator">
-            <ClassLabel on:selectCard {name} />
-          </li>
+          <li> <ClassLabel on:selectCard {name} /> </li>
         {/each}
       </ul>
     </div>
@@ -42,59 +39,14 @@
     flex: 1;
   }
 
+  hr {
+    margin: 3px;
+  }
+
   h3,
   h4 {
     font-style: italic;
-  }
-
-  .flashcard {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    border-bottom: 1px solid #eee;
-    font-size: 18px;
-    width: 100%;
-    // Set a minimum height and use aspect-ratio for scaling
-    min-height: 80px;
-    aspect-ratio: 2.33 / 1; // Width to height ratio (adjust as needed)
-
-    // Use padding for responsive text sizing
-    padding: 5%;
-    box-sizing: border-box;
-
     margin: 4px;
-
-    flex-direction: column;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    // Responsive font size
-    @media (max-width: 400px) {
-      font-size: 16px;
-    }
-
-    @media (min-width: 401px) and (max-width: 600px) {
-      font-size: 18px;
-    }
-
-    @media (min-width: 601px) {
-      font-size: 20px;
-    }
-  }
-
-  .col-container {
-    flex-direction: row;
-    display: flex;
-  }
-
-  .highlight {
-    box-shadow: 0 0 25px rgba(81, 203, 238, 1);
-  }
-
-  .class-name {
-    font-family: var(--font-mono);
   }
 
   input {
@@ -121,5 +73,50 @@
 
   li {
     list-style: none;
+  }
+
+  .flashcard {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    font-size: 18px;
+    // Set a minimum height and use aspect-ratio for scaling
+    min-height: 2in;
+    max-width: 50vw;
+    aspect-ratio: 2 / 1; // Width to height ratio (adjust as needed)
+
+    // Use padding for responsive text sizing
+    padding: 4px;
+    box-sizing: border-box;
+
+    margin: 4px;
+    border: 2px solid #eee;
+    border-radius: 5px;
+
+    background-color: var(--color-bg-2);
+
+    flex-direction: column;
+
+    // Responsive font size
+    @media (max-width: 400px) {
+      font-size: 16px;
+    }
+
+    @media (min-width: 401px) and (max-width: 600px) {
+      font-size: 18px;
+    }
+
+    @media (min-width: 601px) {
+      font-size: 20px;
+    }
+  }
+
+  .col-container {
+    flex-direction: row;
+    display: flex;
+  }
+
+  .highlight {
+    box-shadow: 0 0 25px rgba(81, 203, 238, 1);
   }
 </style>

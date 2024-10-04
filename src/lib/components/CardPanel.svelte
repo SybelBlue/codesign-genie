@@ -18,9 +18,11 @@
 <style lang="scss">
   .scrollable-container {
     border: 1px solid #ccc;
-    width: 100%;
-    max-width: 78%; // Maximum width of the container
-    overflow-y: scroll;
+    width: 95vw;
+    max-width: 100vw;
+
+    // max-width: 78%; // Maximum width of the container
+    overflow: auto;
     margin: 0 auto; // Center the container
   }
 </style>
