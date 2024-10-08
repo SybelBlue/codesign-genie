@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import type { Keyed } from '$lib/types';
   import { highlightedClass } from '$lib/stores';
   import ClassLabel from '$lib/components/ClassLabel.svelte';
@@ -7,11 +8,20 @@
   export let responsibilities: Keyed<{ text: string }>[];
   export let collaborators: Keyed<{ name: string }>[];
 
+  let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
+  const selectCard = () => cardSelectDispatcher('selectCard', { name });
+
   $: highlight = $highlightedClass == name;
 </script>
 
 
-<div class:highlight class="flashcard">
+<div
+  on:focus={selectCard}
+  class:highlight
+  class="flashcard"
+  role="gridcell"
+  tabindex=0
+  >
   <h3><ClassLabel disabled {name} /></h3>
   <hr>
   <div class="col-container">
@@ -34,7 +44,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style lang="postcss">
   div {
     flex: 1;
   }
@@ -52,6 +62,8 @@
   input {
     background-color: transparent;
     border: 3px transparent;
+
+    width: 95%;
 
     font-family: var(--font-handwritten);
     font-size: 18pt;
@@ -80,12 +92,11 @@
     align-items: left;
     justify-content: left;
     font-size: 18px;
-    // Set a minimum height and use aspect-ratio for scaling
-    min-height: 2in;
-    max-width: 50vw;
-    aspect-ratio: 2 / 1; // Width to height ratio (adjust as needed)
+    /* min-height: 1in; */
+    max-height: 3in;
+    max-width: 40% - 2rem;
+    aspect-ratio: 2.5 / 1;
 
-    // Use padding for responsive text sizing
     padding: 4px;
     box-sizing: border-box;
 
@@ -97,7 +108,6 @@
 
     flex-direction: column;
 
-    // Responsive font size
     @media (max-width: 400px) {
       font-size: 16px;
     }

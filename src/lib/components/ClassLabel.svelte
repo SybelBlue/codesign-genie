@@ -10,13 +10,14 @@
   /** warning: immutable! make a new label when a change happens*/
   export let disabled: boolean = false;
 
-  const dispatch = createEventDispatcher<{ selectCard: { name: string } }>();
+  let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
+  const selectCard = () => cardSelectDispatcher('selectCard', { name });
 </script>
 
 <span
   on:mouseenter={() => $highlightedClass = !disabled && name }
   on:mouseleave={() => $highlightedClass = false }
-  on:focus={() => dispatch('selectCard', { name })}
+  on:focus={selectCard}
   role="link"
   tabindex=0
   >{name}</span>
