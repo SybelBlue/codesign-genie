@@ -34,9 +34,8 @@ async function fetchChat(messages: Array<Object>, systemMessage: String = ''): P
     })
   });
 
-  const completion = response.json();
-  // @ts-expect-error
-  return completion.choices[0].message.content; // this type stub is pretty big, so I don't want to write it just yet
+  const completion = await response.json();
+  return completion.choices[0].message.content;
 }
 
 const SYSTEM_PROMPTS = {
@@ -48,7 +47,7 @@ export const POST = async ({ request }) => {
     return new Response('Please provide a request body!', { status: 400 });
   }
 
-  const req: ChatRequest = JSON.parse(String(request.body));
+  const req: ChatRequest = await request.json();
 
   let sysprompt: string;
   if (req.sysprompt in SYSTEM_PROMPTS) {
