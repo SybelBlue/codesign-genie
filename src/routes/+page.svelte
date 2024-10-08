@@ -2,31 +2,23 @@
   import type { ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
   import CardPanel from '$lib/components/CardPanel.svelte';
+  import { libraryJson } from '$lib/decks';
+
+
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
-  let cards: ComponentProps<CardPanel>['cards'] = [
-    withId({
-      name: 'Book',
-      responsibilities: [
-        withId({ text: 'knows its contents' }),
-        withId({ text: 'knows its metadata' }),
-        withId({ text: 'knows its length' }),
-      ],
-      collaborators: [withId({ name: 'Page' })]
-    }),
-    withId({
-      name: 'Page',
-      responsibilities: [
-        withId({ text: 'knows its text' }),
-        withId({ text: 'has a number' }),
-      ],
-      collaborators: []
+
+  let cards: ComponentProps<CardPanel>['cards'] =
+    libraryJson.map(card => withId({
+      name: card.name,
+      responsibilities: card.responsibilities.map(withId),
+      collaborators: card.collaborators.map(withId),
     })
-  ];
+  );
 </script>
 
 <svelte:head>
