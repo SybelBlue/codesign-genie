@@ -18,7 +18,7 @@
 <div
   on:focus={selectCard}
   class:highlight
-  class="flashcard"
+  class="card base-300 rounded-box"
   role="gridcell"
   tabindex=0
   >
@@ -85,40 +85,6 @@
 
   li {
     list-style: none;
-  }
-
-  .flashcard {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    font-size: 18px;
-    /* min-height: 1in; */
-    max-height: 3in;
-    max-width: 40% - 2rem;
-    aspect-ratio: 2.5 / 1;
-
-    padding: 4px;
-    box-sizing: border-box;
-
-    margin: 4px;
-    border: 2px solid #eee;
-    border-radius: 5px;
-
-    background-color: var(--color-bg-2);
-
-    flex-direction: column;
-
-    @media (max-width: 400px) {
-      font-size: 16px;
-    }
-
-    @media (min-width: 401px) and (max-width: 600px) {
-      font-size: 18px;
-    }
-
-    @media (min-width: 601px) {
-      font-size: 20px;
-    }
   }
 
   .col-container {

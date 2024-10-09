@@ -3,12 +3,12 @@
   import type { Keyed } from '$lib/types';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson } from '$lib/decks';
+  import ThemeChange from '$lib/components/ThemeChange.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
-
 
   let cards: ComponentProps<CardBoard>['cards'] =
     libraryJson.map(card => withId({
@@ -23,5 +23,7 @@
   <title>Home</title>
   <meta name="description" content="crc card design game" />
 </svelte:head>
+
+<ThemeChange />
 
 <CardBoard {cards} />

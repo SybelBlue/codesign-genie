@@ -21,12 +21,12 @@
   });
 </script>
 
-<div class="viewport" bind:this={viewport}>
+<div class="viewport bg-base-100" bind:this={viewport}>
   <div class="grid">
-    {#each cards as c (c.id)}
+    {#each cards as { id, ...card } (id)}
       <Card
         on:selectCard={(data) => console.debug('selectCard', data)}
-        {...c}
+        {...card}
         />
     {/each}
   </div>
@@ -48,7 +48,7 @@
     gap: 1rem;
     padding: 1rem;
   }
-
+/*
   .grid-item {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -58,5 +58,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+  } */
 </style>
