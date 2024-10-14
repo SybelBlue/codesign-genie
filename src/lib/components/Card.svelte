@@ -12,7 +12,7 @@
 
 
 <div class:highlight class="flashcard">
-  <h3><ClassLabel disabled {name} /></h3>
+  <h3><ClassLabel disabled on:selectCard {name} /></h3>
   <hr>
   <div class="col-container">
     <div>

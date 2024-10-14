@@ -2,12 +2,15 @@
   import type { ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
   import CardPanel from '$lib/components/CardPanel.svelte';
+  import Card from "$lib/components/Card.svelte";
+  import Editor from '$lib/components/Editor.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
+  let selectedCard: ComponentProps<Card> | false = false;
   let cards: ComponentProps<CardPanel>['cards'] = [
     withId({
       name: 'Book',
@@ -34,7 +37,20 @@
   <meta name="description" content="crc card design game" />
 </svelte:head>
 
-<CardPanel {cards} />
+<CardPanel
+  {cards}
+  on:cardSelected={(data) => {
+    console.log("Card selected:", data.detail)
+    selectedCard = data.detail.card;
+  }}
+  />
+
+{#if selectedCard}
+  <Editor
+    {selectedCard}
+    />
+{/if}
+
 
 <style>
   section {

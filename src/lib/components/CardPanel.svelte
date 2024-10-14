@@ -1,15 +1,24 @@
 <script lang="ts">
-  import type { ComponentProps } from 'svelte';
+  import { createEventDispatcher, type ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
   import Card from './Card.svelte';
 
   export let cards: Keyed<ComponentProps<Card>>[];
+  
+  const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
 </script>
 
 <section class="scrollable-container">
   {#each cards as c (c.id)}
     <Card
-      on:selectCard={(data) => console.debug('selectCard', data)}
+      on:selectCard={(data) => {
+        console.debug('selectCard', data)
+        let matching_card = cards.find((card) => card.name == data.detail.name)
+        if (matching_card)
+          dispatch("cardSelected", {card: {...matching_card}})
+        else
+          console.error("Did not find card of name", data.detail.name);
+      }}
       {...c}
       />
   {/each}
