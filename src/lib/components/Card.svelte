@@ -18,7 +18,7 @@
 <div
   on:focus={selectCard}
   class:highlight
-  class="card base-300 rounded-box"
+  class="tw-grow"
   role="gridcell"
   tabindex=0
   >

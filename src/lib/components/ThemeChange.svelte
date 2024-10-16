@@ -38,7 +38,7 @@
       "sunset",
   ]
   export let dropdownClasses = ""
-  export let btnClasses = "btn-ghost"
+  export let btnClasses = "btn-neutral"
   export let contentClasses = "mt-16"
 </script>
 
