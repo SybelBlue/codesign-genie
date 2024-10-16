@@ -45,11 +45,9 @@
   }}
   />
 
-{#if selectedCard}
-  <Editor
-    {selectedCard}
-    />
-{/if}
+<Editor
+  {selectedCard}
+  />
 
 
 <style>
