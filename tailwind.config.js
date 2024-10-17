@@ -22,4 +22,9 @@ export default {
     logs: true, // Shows info about daisyUI version and used config in the console when building your CSS
     themeRoot: ":root", // The element that receives theme color CSS variables
   },
+  // https://www.reddit.com/r/sveltejs/comments/18gk1e9/anyone_else_having_issues_with_daisyui_in/
+  // fix for weird issue where custom css gets optimized away
+  // safelist: [
+  //   { pattern: /gap./ }
+  // ]
 }
