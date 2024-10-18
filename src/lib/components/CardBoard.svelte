@@ -27,7 +27,7 @@
   >
   <div class="grid gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
     {#each cards as { id, ...cardProps } (id)}
-      <div>
+      <div> <!-- having this div allows cards to auto-size themselves -->
         <Card
           on:selectCard={(data) => console.debug('selectCard', data)}
           {...cardProps}
