@@ -25,7 +25,7 @@
   class="viewport bg-base-100"
   bind:this={viewport}
   >
-  <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+  <div class="grid gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
     {#each cards as { id, ...cardProps } (id)}
       <div>
         <Card
