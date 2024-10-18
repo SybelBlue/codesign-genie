@@ -2,7 +2,7 @@
   import type { ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import { libraryJson, rpgJson } from '$lib/decks';
+  import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import { availableClasses } from '$lib/stores';
   import DeckChanger from '$lib/components/DeckChange.svelte';
@@ -20,6 +20,11 @@
       collaborators: card.collaborators.map(withId),
     })),
     "library": libraryJson.map(card => withId({
+      name: card.name,
+      responsibilities: card.responsibilities.map(withId),
+      collaborators: card.collaborators.map(withId),
+    })),
+    "hospital": hospitalJson.map(card => withId({
       name: card.name,
       responsibilities: card.responsibilities.map(withId),
       collaborators: card.collaborators.map(withId),
