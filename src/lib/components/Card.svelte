@@ -26,15 +26,15 @@
     <h3 class="card-title"><ClassLabel disabled {name} /></h3>
     <hr>
     <div class="flex flex-row">
-      <div style="grow">
+      <div class="ps-0 grow">
         <h4>responsibilities</h4>
         <ul>
           {#each responsibilities as { text: value, id } (id)}
-            <li> <input bind:value class="text-ellipsis" /> </li>
+            <li class="w-full"> <input bind:value class="text-ellipsis" /> </li>
           {/each}
         </ul>
       </div>
-      <div style="flex-1">
+      <div class="pe-2 min-w-fit">
         <h4>collaborators</h4>
         <ul>
           {#each collaborators as { name, id } (id)}
@@ -48,8 +48,8 @@
 
 <style lang="postcss">
   hr {
+    @apply border-primary;
     margin-bottom: 5px;
-    border-color: oklch(var(--p));
   }
 
   h3 {
@@ -80,9 +80,8 @@
     padding-right: 4px;
 
     &:hover {
+      @apply text-accent-content bg-accent;
       outline: 3px lightcyan;
-      background: oklch(var(--a));
-      width: auto;
       text-overflow: visible;
     }
   }
