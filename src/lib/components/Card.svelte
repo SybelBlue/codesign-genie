@@ -18,45 +18,52 @@
 <div
   on:focus={selectCard}
   class:highlight
-  class="tw-grow"
+  class="tw-grow card dark:card-bordered shadow-xl"
   role="gridcell"
   tabindex=0
   >
-  <h3><ClassLabel disabled {name} /></h3>
-  <hr>
-  <div class="col-container">
-    <div>
-      <h4>responsibilities</h4>
-      <ul>
-        {#each responsibilities as { text: value, id } (id)}
-          <li> <input bind:value /> </li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h4>collaborators</h4>
-      <ul>
-        {#each collaborators as { name, id } (id)}
-          <li> <ClassLabel on:selectCard {name} /> </li>
-        {/each}
-      </ul>
+  <div class="card-body">
+    <h3 class="card-title"><ClassLabel disabled {name} /></h3>
+    <hr>
+    <div class="flex flex-row">
+      <div style="grow">
+        <h4>responsibilities</h4>
+        <ul>
+          {#each responsibilities as { text: value, id } (id)}
+            <li> <input bind:value class="text-ellipsis" /> </li>
+          {/each}
+        </ul>
+      </div>
+      <div style="flex-1">
+        <h4>collaborators</h4>
+        <ul>
+          {#each collaborators as { name, id } (id)}
+            <li> <ClassLabel on:selectCard {name} /> </li>
+          {/each}
+        </ul>
+      </div>
     </div>
   </div>
 </div>
 
 <style lang="postcss">
-  div {
-    flex: 1;
-  }
-
   hr {
-    margin: 3px;
+    margin-bottom: 5px;
+    border-color: oklch(var(--p));
   }
 
-  h3,
-  h4 {
+  h3 {
     font-style: italic;
     margin: 4px;
+    margin-bottom: 0px !important;
+  }
+
+  h4 {
+    @apply text-base-content;
+    font-style: italic;
+    margin: 4px;
+    text-decoration: underline;
+    text-decoration-color: oklch(var(--p));
   }
 
   input {
@@ -71,28 +78,22 @@
     border-radius: 5px;
     padding-left: 4px;
     padding-right: 4px;
-  }
 
-  input:hover {
-    outline: 3px lightcyan;
-    background: rgba(0.2, 0.2, 0.2, 0.2);
+    &:hover {
+      outline: 3px lightcyan;
+      background: oklch(var(--a));
+      width: auto;
+      text-overflow: visible;
+    }
   }
 
   ul,
   li {
     padding: 0px;
-  }
-
-  li {
     list-style: none;
   }
 
-  .col-container {
-    flex-direction: row;
-    display: flex;
-  }
-
   .highlight {
-    box-shadow: 0 0 25px rgba(81, 203, 238, 1);
+    box-shadow: 0 0 25px oklch(var(--a));
   }
 </style>
