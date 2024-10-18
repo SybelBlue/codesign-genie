@@ -30,11 +30,10 @@
 <style lang="postcss">
   span {
     font-family: var(--font-mono);
-    font-size: inherit;
 
     &.enabled:hover {
-      text-shadow: 0 0 25px oklch(var(--a));
-      text-decoration: underline;
+      @apply underline;
+      text-shadow: 0 0 15px oklch(var(--a));
     }
 
     &.no-card {
@@ -42,7 +41,6 @@
 
       &:hover {
         color: var(--fallback-nc,oklch(var(--nc)/0.3));
-        text-shadow: 0 0 25px var(--fallback-nc,oklch(var(--nc)/0.8));
       }
     }
   }

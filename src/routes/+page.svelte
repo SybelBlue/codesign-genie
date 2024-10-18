@@ -4,7 +4,7 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
-  import { availableClasses } from '$lib/stores';
+  import { availableClasses, debug } from '$lib/stores';
   import DeckChanger from '$lib/components/DeckChange.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
@@ -33,11 +33,23 @@
 
   $: cards = decks[currentDeck];
   $: $availableClasses = cards.map(c => c.name);
+
+  $debug = false;
 </script>
 
 <svelte:head>
   <title>CARA / {currentDeck}</title>
   <meta name="description" content="crc card design game" />
+
+  <!-- patch to delay pageload until theme is ready in deployment -->
+  {#if !$debug}
+    <script async crossorigin="anonymous">
+      var selectedTheme = localStorage.getItem("theme");
+      if(selectedTheme) {
+          document.documentElement.setAttribute("data-theme", selectedTheme);
+      }
+    </script>
+  {/if}
 </svelte:head>
 
 <ThemeChanger />
