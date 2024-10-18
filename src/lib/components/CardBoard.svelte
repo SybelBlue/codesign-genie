@@ -23,20 +23,25 @@
   const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
 </script>
 
-<div class="viewport bg-base-100" bind:this={viewport}>
-  <div class="md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-justify-items-center tw-gap-3 md:tw-gap-y-4 md:tw-py-1.5 tw-grid">
-    {#each cards as { id, ...card } (id)}
-      <Card
-        on:selectCard={(data) => {
-          console.debug('selectCard', data)
-          let matching_card = cards.find((card) => card.name == data.detail.name)
-          if (matching_card)
-            dispatch("cardSelected", {card: {...matching_card}})
-          else
-            console.error("Did not find card of name", data.detail.name);
-        }}
-        {...card}
-        />
+<div
+  class="viewport bg-base-100"
+  bind:this={viewport}
+  >
+  <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+    {#each cards as { id, ...cardProps } (id)}
+      <div>
+        <Card
+          on:selectCard={(data) => {
+            console.debug('selectCard', data)
+            let matching_card = cards.find((card) => card.name == data.detail.name)
+            if (matching_card)
+              dispatch("cardSelected", {card: {...matching_card}})
+            else
+              console.error("Did not find card of name", data.detail.name);
+          }}
+          {...cardProps}
+          />
+      </div>
     {/each}
   </div>
 </div>
@@ -45,26 +50,8 @@
   .viewport {
     width: 100%;
     overflow: auto;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
   }
-/*
-  .grid {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-  }
-  .grid-item {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 1rem;
-    text-align: center;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  } */
 </style>
