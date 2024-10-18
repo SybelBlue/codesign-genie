@@ -38,5 +38,8 @@
   />
 
 <Editor
-  {selectedCard}
+  card={selectedCard}
+  on:commit={(data) => {
+    console.log("Commit card", data.detail.card)
+  }}
   />

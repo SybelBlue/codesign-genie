@@ -1,18 +1,20 @@
 <script lang="ts">
-  import type { ComponentProps } from "svelte";
+  import { createEventDispatcher, type ComponentProps } from "svelte";
   import Card from "./Card.svelte";
 
-  export let selectedCard: ComponentProps<Card> | undefined;
+  export let card: ComponentProps<Card> | undefined;
+
+  let dispatch = createEventDispatcher<{ commit: { card: ComponentProps<Card> } }>();
 </script>
 
-{#if selectedCard}
+{#if card}
 <div class="absolute fixed left-0 w-1/2 h-screen">
   <div class="bg-base-100 h-screen grid grid-cols-1">
     <!-- "X" button in top right -->
     <button
       class="btn btn-circle btn-outline"
       on:click={(_) => {
-        selectedCard = undefined;
+        card = undefined;
       }}
       >
       <svg
@@ -33,7 +35,7 @@
     <!-- The Card area -->
     <div class="mx-auto w-4/5">
       <Card
-        {...selectedCard}
+        {...card}
         />
     </div>
     <!-- -->
@@ -43,7 +45,12 @@
       <input class="input input-bordered mr-2 w-3/4"
         type="text" name="commitMessage" id="commitMessageInput">
       <input class="btn btn-outline w=1/4"
-        type="submit" value="commit" id="commitSubmitBtn">
+        type="submit" value="commit" id="commitSubmitBtn"
+        on:click={() => {
+          if (card) dispatch('commit', { card });
+          else console.error("Tried to commit undefined card!");
+        }}
+        >
     </div>
     <!-- -->
   </div>
