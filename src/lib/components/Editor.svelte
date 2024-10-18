@@ -4,7 +4,12 @@
 
   export let card: ComponentProps<Card> | undefined;
 
-  let dispatch = createEventDispatcher<{ commit: { card: ComponentProps<Card> } }>();
+  let message: string = "";
+  let dispatch = createEventDispatcher<{ 
+      commit: { 
+        card: ComponentProps<Card>,
+        message: string
+    } }>();
 </script>
 
 {#if card}
@@ -12,7 +17,7 @@
   <div class="bg-base-100 h-screen grid grid-cols-1">
     <!-- "X" button in top right -->
     <button
-      class="btn btn-circle btn-outline"
+      class="btn btn-circle btn-outline ml-auto"
       on:click={(_) => {
         card = undefined;
       }}
@@ -43,11 +48,13 @@
     <!-- The "commit" area -->
     <div class="flex justify-center w-4/5 mx-auto mb-4">
       <input class="input input-bordered mr-2 w-3/4"
-        type="text" name="commitMessage" id="commitMessageInput">
+        type="text" name="commitMessage" id="commitMessageInput"
+        bind:value={message}
+        >
       <input class="btn btn-outline w=1/4"
         type="submit" value="commit" id="commitSubmitBtn"
         on:click={() => {
-          if (card) dispatch('commit', { card });
+          if (card) dispatch('commit', { card, message });
           else console.error("Tried to commit undefined card!");
         }}
         >

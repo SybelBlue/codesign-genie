@@ -40,6 +40,11 @@
 <Editor
   card={selectedCard}
   on:commit={(data) => {
-    console.log("Commit card", data.detail.card)
+    console.log(
+      "Commit card",
+      data.detail.message,
+      data.detail.card
+    );
+    selectedCard = undefined;
   }}
   />
