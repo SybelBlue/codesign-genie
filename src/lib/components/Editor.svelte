@@ -14,10 +14,10 @@
 
 {#if card}
 <div class="absolute fixed left-0 w-1/2 h-screen">
-  <div class="bg-base-100 h-screen grid grid-cols-1">
+  <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
     <!-- "X" button in top right -->
     <button
-      class="btn btn-circle btn-outline ml-auto"
+      class="btn btn-circle btn-outline ml-auto mr-2 mt-2"
       on:click={(_) => {
         card = undefined;
       }}
@@ -46,7 +46,7 @@
     <!-- -->
 
     <!-- The "commit" area -->
-    <div class="flex justify-center w-4/5 mx-auto mb-4">
+    <div class="flex justify-center w-4/5 mx-auto">
       <input class="input input-bordered mr-2 w-3/4"
         type="text" name="commitMessage" id="commitMessageInput"
         bind:value={message}
