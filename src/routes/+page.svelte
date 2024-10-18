@@ -5,13 +5,14 @@
   import { libraryJson } from '$lib/decks';
   import ThemeChange from '$lib/components/ThemeChange.svelte';
   import Editor from '$lib/components/Editor.svelte';
+  import Card from '$lib/components/Card.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
-  let selectedCard: ComponentProps<Card> | false = false;
+  let selectedCard: ComponentProps<Card> | undefined = undefined;
   let cards: ComponentProps<CardBoard>['cards'] =
     libraryJson.map(card => withId({
       name: card.name,
