@@ -4,17 +4,18 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson } from '$lib/decks';
   import ThemeChange from '$lib/components/ThemeChange.svelte';
+  import Timeline from '$lib/components/Timeline.svelte';
 
-  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
+  const withId: <T extends object>(o: T) => Keyed<T> = (function () {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
-  let cards: ComponentProps<CardBoard>['cards'] =
-    libraryJson.map(card => withId({
+  let cards: ComponentProps<CardBoard>['cards'] = libraryJson.map((card) =>
+    withId({
       name: card.name,
       responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
+      collaborators: card.collaborators.map(withId)
     })
   );
 </script>
@@ -27,3 +28,8 @@
 <ThemeChange />
 
 <CardBoard {cards} />
+
+<main>
+  <h1>Document Version Timeline</h1>
+  <VersionTimeline />
+</main>
