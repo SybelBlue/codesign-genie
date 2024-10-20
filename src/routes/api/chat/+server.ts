@@ -1,4 +1,6 @@
-import { CHAT_API_KEY } from '$env/static/private';
+
+// Defined in a `$REPO/.env` file as described in https://kit.svelte.dev/docs/modules#$env-static-private
+import { CHAT_API_KEY } from '$env/static/private'; 
 import type { ChatRequest } from '$lib/types.js';
 
 async function fetchChat(messages: Array<Object>, systemMessage: String = ''): Promise<String> {
