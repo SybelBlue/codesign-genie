@@ -1,0 +1,119 @@
+
+[
+    {
+      "name": "Item",
+      "responsibilities": [
+        {
+          "text": "Store Item's product information (name, description, price)"
+        },
+        {
+          "text": "Manage inventory levels"
+        },
+        {
+          "text": "Update price"
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "ShoppingCart"
+        },
+        {
+          "name": "Order"
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "responsibilities": [
+        {
+          "text": "Store customer information"
+        },
+        {
+          "text": "Manage customer account"
+        },
+        {
+          "text": "View order history"
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "ShoppingCart"
+        },
+        {
+          "name": "Order"
+        }
+      ]
+    },
+    {
+      "name": "ShoppingCart",
+      "responsibilities": [
+        {
+          "text": "Add items to cart"
+        },
+        {
+          "text": "Remove items from cart"
+        },
+        {
+          "text": "Calculate cart total"
+        },
+        {
+          "text": "Clear cart"
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Product"
+        },
+        {
+          "name": "Customer"
+        },
+        {
+          "name": "Order"
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "responsibilities": [
+        {
+          "text": "Store order details"
+        },
+        {
+          "text": "Calculate order total"
+        },
+        {
+          "text": "Update order status"
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Customer"
+        },
+        {
+          "name": "Product"
+        },
+        {
+          "name": "PaymentProcessor"
+        }
+      ]
+    },
+    {
+      "name": "PaymentProcessor",
+      "responsibilities": [
+        {
+          "text": "Process payments"
+        },
+        {
+          "text": "Validate transactions"
+        },
+        {
+          "text": "Handle refunds"
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Order"
+        }
+      ]
+    }
+  ]
