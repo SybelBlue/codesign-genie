@@ -18,14 +18,15 @@
   let hoveredCommit = null;
 </script>
 
-<div class="timeline relative pl-6 flex flex-col items-start h-full overflow-y-auto">
+<div class="timeline relative pl-10 flex flex-col items-start h-full overflow-y-auto">
+  <div class="timeline-line"></div>
   {#each commits as commit, index}
     <div
       class="timeline-item relative flex items-center mb-5 w-full z-10"
       on:mouseenter={() => (hoveredCommit = commit)}
       on:mouseleave={() => (hoveredCommit = null)}
     >
-      <div class="timeline-point w-3 h-3 rounded-full bg-primary absolute -left-[21px]"></div>
+      <div class="timeline-point w-4 h-4 rounded-full bg-primary absolute -left-[12px]"></div>
       <div class="timeline-content bg-base-300 rounded p-2 flex-grow">
         <span class="commit-id font-bold text-xs block text-base-content">{commit.id}</span>
         {#if hoveredCommit === commit}
@@ -37,19 +38,27 @@
 </div>
 
 <style>
-  .timeline::before {
-    content: '';
+  .timeline {
+    position: relative;
+    min-height: 300px; /* Ensure minimum height */
+  }
+
+  .timeline-line {
     position: absolute;
-    top: 10px;
-    bottom: 375px; /* top/bottom hardcoded to fit 4 commits */
-    left: 5px;
+    top: 0;
+    bottom: 0;
+    left: 13px;
     width: 2px;
-    @apply bg-primary;
+    background-color: hsl(var(--p));
+    color: currentColor;
     z-index: 1;
   }
 
-  /* Ensure the timeline container has enough height for all commits */
-  .timeline {
-    min-height: 300px; /* Adjust this value based on your needs */
+  .timeline-point {
+    transform: translateX(-50%); /* Center the dot on the line */
+  }
+
+  .timeline-item {
+    position: relative;
   }
 </style>
