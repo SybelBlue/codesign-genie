@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { highlightedClass } from '$lib/stores';
+  import { highlightedClass, availableClasses } from '$lib/stores';
 
   /** warning: immutable! make a new label when a change happens*/
   export let name: string;
@@ -12,24 +12,36 @@
 
   let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
   const selectCard = () => cardSelectDispatcher('selectCard', { name });
+
+  $: hasACard = $availableClasses.includes(name);
 </script>
 
 <span
   on:mouseenter={() => $highlightedClass = !disabled && name }
   on:mouseleave={() => $highlightedClass = false }
   on:focus={selectCard}
-  class:enabled={!disabled}
+  class:enabled={!disabled && hasACard}
+  class:no-card={!hasACard}
   class="text-accent"
   role="link"
   tabindex=0
   >{name}</span>
 
-<style>
+<style lang="postcss">
   span {
     font-family: var(--font-mono);
-    font-size: inherit;
-  }
-  span.enabled:hover {
-    text-shadow: 0 0 25px oklch(var(--a));
+
+    &.enabled:hover {
+      @apply underline;
+      text-shadow: 0 0 15px oklch(var(--a));
+    }
+
+    &.no-card {
+      color: var(--fallback-nc,oklch(var(--nc)/0.8));
+
+      &:hover {
+        color: var(--fallback-nc,oklch(var(--nc)/0.3));
+      }
+    }
   }
 </style>

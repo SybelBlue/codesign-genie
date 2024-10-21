@@ -35,9 +35,9 @@
   class="viewport bg-base-100"
   bind:this={viewport}
   >
-  <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+  <div class="grid gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
     {#each cards as { id, ...cardProps } (id)}
-      <div>
+      <div> <!-- having this div allows cards to auto-size themselves -->
         <Card
           on:selectCard={propagateSelection}
           {...cardProps}

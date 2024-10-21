@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Player",
+    "responsibilities": [
+      { "text": "Manage player attributes (health, mana, etc.)" },
+      { "text": "Handle player movement" },
+      { "text": "Manage inventory" },
+      { "text": "Level up and gain experience" }
+    ],
+    "collaborators": [
+      { "name": "Inventory" },
+      { "name": "SkillTree" },
+      { "name": "QuestLog" }
+    ]
+  },
+  {
+    "name": "Enemy",
+    "responsibilities": [
+      { "text": "Manage enemy attributes" },
+      { "text": "Implement AI behavior" },
+      { "text": "Handle combat actions" }
+    ],
+    "collaborators": [
+      { "name": "CombatSystem" },
+      { "name": "LootTable" }
+    ]
+  },
+  {
+    "name": "Inventory",
+    "responsibilities": [
+      { "text": "Store and manage items" },
+      { "text": "Handle item addition and removal" },
+      { "text": "Calculate inventory weight" }
+    ],
+    "collaborators": [
+      { "name": "Item" },
+      { "name": "Player" }
+    ]
+  },
+  {
+    "name": "Item",
+    "responsibilities": [
+      { "text": "Store item properties" },
+      { "text": "Implement item use effects" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "Inventory" }
+    ]
+  },
+  {
+    "name": "QuestLog",
+    "responsibilities": [
+      { "text": "Track active and completed quests" },
+      { "text": "Update quest progress" },
+      { "text": "Provide quest rewards" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "NPC" }
+    ]
+  },
+  {
+    "name": "SkillTree",
+    "responsibilities": [
+      { "text": "Manage character skills and abilities" },
+      { "text": "Handle skill point allocation" },
+      { "text": "Unlock new abilities" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "CombatSystem" }
+    ]
+  },
+  {
+    "name": "CombatSystem",
+    "responsibilities": [
+      { "text": "Manage combat encounters" },
+      { "text": "Calculate damage and effects" },
+      { "text": "Handle turn-based or real-time combat logic" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "Enemy" },
+      { "name": "SkillTree" }
+    ]
+  },
+  {
+    "name": "NPC",
+    "responsibilities": [
+      { "text": "Store NPC information and dialog" },
+      { "text": "Handle NPC interactions" },
+      { "text": "Manage NPC schedules and behavior" }
+    ],
+    "collaborators": [
+      { "name": "QuestLog" },
+      { "name": "DialogueSystem" }
+    ]
+  },
+  {
+    "name": "LootTable",
+    "responsibilities": [
+      { "text": "Generate random loot drops" },
+      { "text": "Manage loot probabilities" },
+      { "text": "Scale loot based on player level or difficulty" }
+    ],
+    "collaborators": [
+      { "name": "Item" },
+      { "name": "Enemy" }
+    ]
+  },
+  {
+    "name": "SaveSystem",
+    "responsibilities": [
+      { "text": "Save game state to file or cloud" },
+      { "text": "Load game state from save data" },
+      { "text": "Manage multiple save slots" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "GameWorld" }
+    ]
+  },
+  {
+    "name": "DialogueSystem",
+    "responsibilities": [
+      { "text": "Manage conversation trees" },
+      { "text": "Handle dialog choices and consequences" },
+      { "text": "Integrate with quest system" }
+    ],
+    "collaborators": [
+      { "name": "NPC" },
+      { "name": "QuestLog" }
+    ]
+  },
+  {
+    "name": "GameWorld",
+    "responsibilities": [
+      { "text": "Manage world map and regions" },
+      { "text": "Handle environment interactions" },
+      { "text": "Manage day/night cycle and weather" }
+    ],
+    "collaborators": [
+      { "name": "Player" },
+      { "name": "WeatherSystem" }
+    ]
+  }
+]
