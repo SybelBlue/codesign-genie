@@ -22,26 +22,17 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    gap: 2rem; /* Increased gap between containers */
+    gap: 2rem;
     padding: 1rem;
     box-sizing: border-box;
   }
 
   .cards-container {
-    height: 80%;
     flex: 1;
     overflow-y: auto;
     background-color: #f0f0f0;
     border-radius: 8px;
     padding: 1rem;
-    margin-bottom: 1rem; /* Added margin at the bottom of cards-container */
-  }
-
-  .timeline-container {
-    height: 20%; /* Adjust height as needed */
-    overflow-y: auto;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 1rem;
+    margin-bottom: 1rem;
   }
 </style>
