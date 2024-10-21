@@ -22,7 +22,8 @@
 
 <div class="fixed top-0 left-0 h-screen z-50">
   <button
-    class="absolute top-4 left-4 w-12 h-12 bg-primary text-primary-content rounded-full cursor-pointer flex items-center justify-center"
+    class="absolute top-4 left-4 w-12 h-12 bg-primary text-primary-content rounded-full cursor-pointer flex items-center justify-center opacity-30"
+    title="Commit History"
     on:click={toggleDrawer}
   >
     <div class="commit-indicator" style="height: {commitHistory}px;"></div>
@@ -54,5 +55,6 @@
     width: 2px;
     background: currentColor;
     transition: height 0.3s ease;
+    opacity: 20%;
   }
 </style>
