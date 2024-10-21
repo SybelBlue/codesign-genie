@@ -1,28 +1,38 @@
 <script>
   import '../app.css';
+  import Timeline from '$lib/components/Timeline.svelte';
+  import CommitDrawer from '$lib/components/CommitDrawer.svelte';
+  import { VersionControl } from '$lib/versionControl';
+
+  const vcs = new VersionControl('src/lib/crc-decks/library.json');
+  let commitHistory = 0;
+  let isDrawerOpen = false;
 </script>
 
+<CommitDrawer {isDrawerOpen} {commitHistory} {vcs} />
+
 <div class="app">
-  <main>
+  <div class="cards-container">
     <slot />
-  </main>
+  </div>
 </div>
 
 <style>
   .app {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
+    gap: 2rem;
+    padding: 1rem;
+    box-sizing: border-box;
   }
 
-  main {
+  .cards-container {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
+    background-color: #f0f0f0;
+    border-radius: 8px;
     padding: 1rem;
-    width: 100%;
-    max-width: 64rem;
-    margin: 0 auto;
-    box-sizing: border-box;
+    margin-bottom: 1rem;
   }
 </style>
