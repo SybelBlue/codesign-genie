@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, type ComponentProps } from 'svelte';
+  import { createEventDispatcher, onMount, type ComponentProps } from 'svelte';
   import type { Keyed } from '$lib/types';
   import Card from './Card.svelte';
 
@@ -19,6 +19,16 @@
       window.removeEventListener('resize', resizeViewport);
     };
   });
+
+  const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
+  const propagateSelection = (data: CustomEvent<{ name: string }>) => {
+    const card = cards.find((card) => card.name == data.detail.name)
+    if (card) {
+      dispatch("cardSelected", { card })
+    } else {
+      console.error("Did not find card of name", data.detail.name);
+    }
+  };
 </script>
 
 <div
@@ -29,7 +39,7 @@
     {#each cards as { id, ...cardProps } (id)}
       <div>
         <Card
-          on:selectCard={(data) => console.debug('selectCard', data)}
+          on:selectCard={propagateSelection}
           {...cardProps}
           />
       </div>
