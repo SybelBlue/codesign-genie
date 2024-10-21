@@ -1,9 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher, type ComponentProps } from "svelte";
   import Card from "./Card.svelte";
+  import { clickOutside } from "$lib/actions";
   import { slide } from "svelte/transition";
 
   export let card: ComponentProps<Card> | undefined;
+
+  $: lastChange = (function(_) {return Date.now();})(card);
 
   let message: string = "";
   let dispatch = createEventDispatcher<{
@@ -15,7 +18,11 @@
 </script>
 
 {#if card}
-<div transition:slide class="absolute left-0 w-1/2 h-screen">
+<div
+  use:clickOutside={() => { if (Date.now() - lastChange > 200) card = undefined; }}
+  transition:slide
+  class="absolute left-0 w-1/2 h-screen"
+  >
   <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
     <!-- "X" button in top right -->
     <button
