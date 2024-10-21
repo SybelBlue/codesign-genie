@@ -50,14 +50,14 @@
     </div>
     <!-- -->
 
-    <!-- The "commit" area -->
+    <!-- The "propose" area -->
     <div class="flex justify-center w-4/5 mx-auto">
       <input class="input input-bordered mr-2 w-3/4"
         type="text" name="commitMessage" id="commitMessageInput"
         bind:value={message}
         >
       <input class="btn btn-outline w=1/4"
-        type="submit" value="commit" id="commitSubmitBtn"
+        type="submit" value="propose" id="submitBtn"
         on:click={() => {
           if (card) {
             dispatch('commit', { card, message });
