@@ -23,14 +23,14 @@
   tabindex=0
   >
   <div class="card-body">
-    <h3 class="card-title"><ClassLabel disabled {name} /></h3>
-    <hr>
+    <h3 class="card-title m-1 mb-0 italic"><ClassLabel disabled {name} /></h3>
+    <hr class="border-primary">
     <div class="flex flex-row">
       <div class="ps-0 grow">
         <h4>responsibilities</h4>
         <ul>
           {#each responsibilities as { text: value, id } (id)}
-            <li class="w-full"> <input bind:value class="text-ellipsis" /> </li>
+            <li class="w-full"> <input bind:value /> </li>
           {/each}
         </ul>
       </div>
@@ -47,42 +47,24 @@
 </div>
 
 <style lang="postcss">
-  hr {
-    @apply border-primary;
-    margin-bottom: 5px;
-  }
-
-  h3 {
-    font-style: italic;
-    margin: 4px;
-    margin-bottom: 0px !important;
-  }
-
   h4 {
-    @apply text-base-content;
-    font-style: italic;
-    margin: 4px;
-    text-decoration: underline;
+    @apply text-base-content italic m-1 underline;
     text-decoration-color: oklch(var(--p));
   }
 
   input {
-    background-color: transparent;
-    border: 3px transparent;
+    @apply text-ellipsis rounded-lg bg-transparent;
 
     width: 95%;
 
     font-family: var(--font-handwritten);
     font-size: 18pt;
 
-    border-radius: 5px;
     padding-left: 4px;
     padding-right: 4px;
 
     &:hover {
       @apply text-accent-content bg-accent;
-      outline: 3px lightcyan;
-      text-overflow: visible;
     }
   }
 

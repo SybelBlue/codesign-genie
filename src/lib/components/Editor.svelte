@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, type ComponentProps } from "svelte";
   import Card from "./Card.svelte";
+  import { slide } from "svelte/transition";
 
   export let card: ComponentProps<Card> | undefined;
 
@@ -14,14 +15,12 @@
 </script>
 
 {#if card}
-<div class="fixed left-0 w-1/2 h-screen">
+<div transition:slide class="absolute left-0 w-1/2 h-screen">
   <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
     <!-- "X" button in top right -->
     <button
       class="btn btn-circle btn-outline ml-auto mr-2 mt-2"
-      on:click={(_) => {
-        card = undefined;
-      }}
+      on:click={() => card = undefined}
       >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,9 +39,7 @@
 
     <!-- The Card area -->
     <div class="mx-auto w-4/5">
-      <Card
-        {...card}
-        />
+      <Card {...card} />
     </div>
     <!-- -->
 
