@@ -9,33 +9,39 @@
   import Editor from '$lib/components/Editor.svelte';
   import Card from '$lib/components/Card.svelte';
 
-  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
+  const withId: <T extends object>(o: T) => Keyed<T> = (function () {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
   let selectedCard: ComponentProps<Card> | undefined;
-  let currentDeck = "rpg";
+  let currentDeck = 'rpg';
   let decks: Record<string, ComponentProps<CardBoard>['cards']> = {
-    "rpg": rpgJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
-    "library": libraryJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
-    "hospital": hospitalJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
+    rpg: rpgJson.map((card) =>
+      withId({
+        name: card.name,
+        responsibilities: card.responsibilities.map(withId),
+        collaborators: card.collaborators.map(withId)
+      })
+    ),
+    library: libraryJson.map((card) =>
+      withId({
+        name: card.name,
+        responsibilities: card.responsibilities.map(withId),
+        collaborators: card.collaborators.map(withId)
+      })
+    ),
+    hospital: hospitalJson.map((card) =>
+      withId({
+        name: card.name,
+        responsibilities: card.responsibilities.map(withId),
+        collaborators: card.collaborators.map(withId)
+      })
+    )
   };
 
   $: cards = decks[currentDeck];
-  $: $availableClasses = cards.map(c => c.name);
+  $: $availableClasses = cards.map((c) => c.name);
 
   $debug = false;
 </script>
@@ -47,9 +53,9 @@
   <!-- patch to delay pageload until theme is ready in deployment -->
   {#if !$debug}
     <script async crossorigin="anonymous">
-      var selectedTheme = localStorage.getItem("theme");
-      if(selectedTheme) {
-          document.documentElement.setAttribute("data-theme", selectedTheme);
+      var selectedTheme = localStorage.getItem('theme');
+      if (selectedTheme) {
+        document.documentElement.setAttribute('data-theme', selectedTheme);
       }
     </script>
   {/if}
@@ -60,21 +66,17 @@
 <CardBoard
   {cards}
   on:cardSelected={(data) => {
-    console.log("Card selected:", data.detail)
+    console.log('Card selected:', data.detail);
     selectedCard = data.detail.card;
   }}
-  />
+/>
 
 <Editor
   card={selectedCard}
   on:commit={(data) => {
-    console.log(
-      "Commit card",
-      data.detail.message,
-      data.detail.card
-    );
+    console.log('Commit card', data.detail.message, data.detail.card);
     selectedCard = undefined;
   }}
-  />
+/>
 
 <DeckChanger {decks} bind:currentDeck />
