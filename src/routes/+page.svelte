@@ -44,6 +44,13 @@
   $: $availableClasses = cards.map((c) => c.name);
 
   $debug = false;
+
+  let commitCost = 0;
+
+  function handleCardEdit(event) {
+    // Update the commitCost based on the edit
+    commitCost += 1; // You can implement a more sophisticated cost calculation here
+  }
 </script>
 
 <svelte:head>
