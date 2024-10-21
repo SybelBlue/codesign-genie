@@ -4,7 +4,6 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson } from '$lib/decks';
   import ThemeChange from '$lib/components/ThemeChange.svelte';
-  import Timeline from '$lib/components/Timeline.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function () {
     let nextId = 0;
@@ -18,6 +17,13 @@
       collaborators: card.collaborators.map(withId)
     })
   );
+
+  let commitCost = 0;
+
+  function handleCardEdit(event) {
+    // Update the commitCost based on the edit
+    commitCost += 1; // You can implement a more sophisticated cost calculation here
+  }
 </script>
 
 <svelte:head>
@@ -27,9 +33,12 @@
 
 <ThemeChange />
 
-<CardBoard {cards} />
+<h1>Welcome to the Codesign Genie</h1>
 
-<main>
-  <h1>Document Version Timeline</h1>
-  <VersionTimeline />
-</main>
+<CardBoard {cards} on:cardEdit={handleCardEdit} />
+
+<style>
+  h1 {
+    margin-bottom: 1rem;
+  }
+</style>
