@@ -17,7 +17,6 @@
 
 <div
   on:focus={selectCard}
-  on:selectCard
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl"
   role="gridcell"

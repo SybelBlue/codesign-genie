@@ -12,7 +12,7 @@
     return (o) => ({ ...o, id: nextId++ });
   })();
 
-  let selectedCard: ComponentProps<Card> | undefined = undefined;
+  let selectedCard: ComponentProps<Card> | undefined;
   let cards: ComponentProps<CardBoard>['cards'] =
     libraryJson.map(card => withId({
       name: card.name,
@@ -29,7 +29,7 @@
 
 <ThemeChange />
 
-<CardBoard 
+<CardBoard
   {cards}
   on:cardSelected={(data) => {
     console.log("Card selected:", data.detail)

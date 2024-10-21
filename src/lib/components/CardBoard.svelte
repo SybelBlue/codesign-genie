@@ -21,6 +21,14 @@
   });
 
   const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
+  const propagateSelection = (data: CustomEvent<{ name: string }>) => {
+    const card = cards.find((card) => card.name == data.detail.name)
+    if (card) {
+      dispatch("cardSelected", { card })
+    } else {
+      console.error("Did not find card of name", data.detail.name);
+    }
+  };
 </script>
 
 <div
@@ -31,14 +39,7 @@
     {#each cards as { id, ...cardProps } (id)}
       <div>
         <Card
-          on:selectCard={(data) => {
-            console.debug('selectCard', data)
-            let matching_card = cards.find((card) => card.name == data.detail.name)
-            if (matching_card)
-              dispatch("cardSelected", {card: {...matching_card}})
-            else
-              console.error("Did not find card of name", data.detail.name);
-          }}
+          on:selectCard={propagateSelection}
           {...cardProps}
           />
       </div>
