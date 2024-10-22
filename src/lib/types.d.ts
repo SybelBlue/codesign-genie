@@ -16,15 +16,28 @@ export type GenerationRequest = {
   schema: ValidSchema;
 };
 
-export type JSONSchema = {
-  type: string;
+export type JSONObjectSchema = {
+  type: 'object';
   description: string;
-  [key: string]: Schema;
-  // items?: Schema;
-  // properties?: {[key: string]: Schema;};
+  additionalProperties: false;
+  required: Array<string>;
+  properties: { [key: string]: JSONSchema };
 };
 
-const CARD_SCHEMA = {
+type JSONPrimitiveSchema = {
+  type: string;
+  description: string;
+};
+
+type JSONArraySchema = {
+  type: 'array';
+  description: string;
+  items: JSONSchema;
+};
+
+export type JSONSchema = JSONObjectSchema | JSONArraySchema | JSONPrimitiveSchema;
+
+const CARD_SCHEMA: JSONObjectSchema = {
   type: 'object',
   description:
     'A single Class-Responsibility-Collaborator (CRC) card to be used in Agile software development',
@@ -53,7 +66,7 @@ const CARD_SCHEMA = {
   required: ['name', 'responsibilities', 'collaborators']
 };
 
-const DECK_SCHEMA = {
+const DECK_SCHEMA: JSONObjectSchema = {
   type: 'object',
   description:
     'A deck of Class-Responsibility-Collaborator (CRC) cards to be used in Agile software development',
