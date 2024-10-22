@@ -17,8 +17,8 @@
 </script>
 
 <span
-  on:mouseenter={() => $highlightedClass = !disabled && name }
-  on:mouseleave={() => $highlightedClass = false }
+  on:mouseenter={() => $highlightedClass = disabled ? undefined : name }
+  on:mouseleave={() => $highlightedClass = undefined }
   on:focus={selectCard}
   class:enabled={!disabled && hasACard}
   class:no-card={!hasACard}

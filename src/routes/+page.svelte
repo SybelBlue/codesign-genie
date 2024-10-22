@@ -37,7 +37,7 @@
   $: cards = decks[currentDeck];
   $: $availableClasses = cards.map(c => c.name);
 
-  $debug = false;
+  // $debug = true;
 </script>
 
 <svelte:head>
