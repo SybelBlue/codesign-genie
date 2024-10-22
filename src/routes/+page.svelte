@@ -78,7 +78,7 @@
 <ThemeChanger />
 
 <CardBoard
-  bind:cards
+  {cards}
   on:cardSelected={(data) => {
     console.log("Card selected:", data.detail)
     selectedCard = data.detail.card;
