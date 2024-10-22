@@ -38,13 +38,16 @@
 
 <div id="backdrop">
   <ul class="grid-container">
-    {#each cards as { id, ...cardProps } (id)}
-      {@const surface = cardProps.name === $highlightedClass}
+    {#each cards as { id, name, responsibilities, collaborators } (id)}
+      {@const surface = name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
           <Card
             on:selectCard={propagateSelection}
-            {...cardProps}
+            locked
+            bind:name
+            bind:responsibilities
+            bind:collaborators
             />
         {/if}
       </li>
@@ -55,9 +58,11 @@
       role="gridcell"
       tabindex=0
       >
-      <div class="card-body">
-        <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
-      </div>
+      {#if !animateIn}
+        <div class="card-body">
+          <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
+        </div>
+      {/if}
     </div>
   </ul>
 </div>

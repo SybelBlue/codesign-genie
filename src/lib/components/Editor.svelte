@@ -46,7 +46,11 @@
 
     <!-- The Card area -->
     <div class="mx-auto w-4/5">
-      <Card {...card} />
+      <Card
+        bind:name={card.name}
+        bind:responsibilities={card.responsibilities}
+        bind:collaborators={card.collaborators}
+        />
     </div>
     <!-- -->
 

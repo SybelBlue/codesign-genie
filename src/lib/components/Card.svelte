@@ -3,13 +3,20 @@
   import type { Keyed } from '$lib/types';
   import { highlightedClass } from '$lib/stores';
   import ClassLabel from '$lib/components/ClassLabel.svelte';
+  import { withId } from '$lib/common';
 
   export let name: string;
   export let responsibilities: Keyed<{ text: string }>[];
   export let collaborators: Keyed<{ name: string }>[];
 
+  export let locked: boolean = false;
+
   let dispatcher = createEventDispatcher();
   const selectCard = () => dispatcher('selectCard', { name });
+
+  const addResponsibility = () => {
+    responsibilities = [...responsibilities, withId({ text: 'new responsibility'})]
+  };
 
   $: highlight = $highlightedClass === name;
 </script>
@@ -30,7 +37,7 @@
         <h4>responsibilities</h4>
         <ul>
           {#each responsibilities as { text: value, id } (id)}
-            <li class="w-full"> <input bind:value /> </li>
+            <li class="w-full"> <input disabled={locked} bind:value /> </li>
           {/each}
         </ul>
       </div>
@@ -43,12 +50,22 @@
         </ul>
       </div>
     </div>
+    {#if !locked}
+      <button
+        on:focus={addResponsibility}
+        class="w-full h-2 btn btn-ghost btn-outline tw-grow mx-auto"
+        role="gridcell"
+        tabindex=0
+        >
+        +
+      </button>
+    {/if}
   </div>
 </div>
 
 <style lang="postcss">
   h4 {
-    @apply text-base-content italic m-1 underline;
+    @apply relative text-base-content italic m-1 underline;
     text-decoration-color: oklch(var(--p));
   }
 
@@ -65,6 +82,9 @@
 
     &:hover {
       @apply text-accent-content bg-accent;
+      &:disabled {
+        @apply text-neutral-content bg-neutral;
+      }
     }
   }
 
