@@ -1,15 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount, type ComponentProps } from 'svelte';
+  import { createEventDispatcher, type ComponentProps } from 'svelte';
+  import { flip } from 'svelte/animate';
   import type { Keyed } from '$lib/types';
   import Card from './Card.svelte';
   import { fullscreen } from '$lib/actions';
-  import { highlightedClass } from '$lib/stores';
+  import { debug, highlightedClass } from '$lib/stores';
 
   export let cards: Keyed<ComponentProps<Card>>[];
+  export let animateIn: boolean = !$debug;
+
+  $: if (animateIn) setTimeout(() => animateIn = false, 200);
 
   const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
   const propagateSelection = (data: CustomEvent<{ name: string }>) => {
-    const card = cards.find((card) => card.name == data.detail.name)
+    const card = cards.find((card) => card.name == data.detail.name);
     if (card) {
       dispatch("cardSelected", { card })
     } else {
@@ -19,17 +23,19 @@
 </script>
 
 <div use:fullscreen class="viewport bg-base-100">
-  <div class="grid p-1 gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
+  <ul class="grid p-1 gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
-      <div class:surface> <!-- this div allows for cards with differing heights! -->
-        <Card
-          on:selectCard={propagateSelection}
-          {...cardProps}
-          />
-      </div>
+      <li class:surface animate:flip={{ duration: 400 }}>
+        {#if !animateIn}
+          <Card
+            on:selectCard={propagateSelection}
+            {...cardProps}
+            />
+        {/if}
+      </li>
     {/each}
-  </div>
+  </ul>
 </div>
 
 <style>
