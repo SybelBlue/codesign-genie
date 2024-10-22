@@ -90,6 +90,7 @@
 
 <Editor
   card={selectedCard}
+  {readyForCommit}
   on:commit={async data => {
     console.log(
       "Commit card",
