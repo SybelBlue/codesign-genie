@@ -40,11 +40,11 @@
   if (deckInfo != null) {
     let json_string = atob(deckInfo);
     let deck = JSON.parse(json_string).response.cards;
-    decks['custom'] = deck.map(card =>
+    decks['custom'] = deck.map((card: { name: string, responsibilities: string[], collaborators: string[] }) =>
       withId({
         name: card.name,
-        responsibilities: card.responsibilities.map((resposibility) => withId({
-          text: resposibility
+        responsibilities: card.responsibilities.map((responsibility) => withId({
+          text: responsibility
         })),
         collaborators: card.collaborators.map((collaborator) => withId({
           name: collaborator
