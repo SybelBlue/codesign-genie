@@ -49,7 +49,8 @@ const CARD_SCHEMA = {
       }
     }
   },
-  additionalProperties: false
+  additionalProperties: false,
+  required: ['name', 'responsibilities', 'collaborators']
 };
 
 const DECK_SCHEMA = {
@@ -62,7 +63,8 @@ const DECK_SCHEMA = {
       items: CARD_SCHEMA
     }
   },
-  additionalProperties: false
+  additionalProperties: false,
+  required: ['cards']
 };
 
 export type ValidSchema = 'Card' | 'Deck';

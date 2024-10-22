@@ -66,9 +66,10 @@ ${TYPEDEF}
     body: JSON.stringify(req_body)
   }).then((value) =>
     value.json().then((completion) => {
-      console.log(completion);
+      console.log('Got OAI response', completion);
       const json_response: string = completion.choices[0].message.content;
       const response_object: Type = JSON.parse(json_response);
+      console.log('Raw response:', response_object);
       return response_object;
     })
   );
@@ -89,7 +90,7 @@ export const POST = async ({ request }) => {
       });
     },
     (failure_reason) => {
-      return new Response('', { status: 403 });
+      return new Response('Invalid JSON!', { status: 400 });
     }
   );
 };
