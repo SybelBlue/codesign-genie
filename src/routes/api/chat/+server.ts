@@ -1,11 +1,10 @@
-
 // Defined in a `$REPO/.env` file as described in https://kit.svelte.dev/docs/modules#$env-static-private
-import { CHAT_API_KEY } from '$env/static/private'; 
-import type { ChatRequest } from '$lib/types.js';
+import { CHAT_API_KEY } from '$env/static/private';
+import type { Message, ChatRequest } from '$lib/types';
 
-async function fetchChat(messages: Array<Object>, systemMessage: String = ''): Promise<String> {
+async function fetchChat(messages: Array<Message>, systemMessage: string = ''): Promise<String> {
   const ENDPOINT_URL: URL = new URL('https://api.openai.com/v1/chat/completions');
-  const MODEL: String = 'gpt-4o';
+  const MODEL: string = 'gpt-4o';
 
   if (systemMessage !== '') {
     messages.unshift({
@@ -53,13 +52,13 @@ export const POST = async ({ request }) => {
 
   let sysprompt: string;
   if (req.sysprompt in SYSTEM_PROMPTS) {
-    sysprompt = SYSTEM_PROMPTS[req.sysprompt];
+    // sysprompt = SYSTEM_PROMPTS[req.sysprompt];
   } else {
     sysprompt = req.sysprompt;
   }
 
   const data = {
-    response: await fetchChat(req.messages, sysprompt)
+    // response: await fetchChat(req.messages, sysprompt)
   };
 
   return new Response(JSON.stringify(data), { status: 200 });
