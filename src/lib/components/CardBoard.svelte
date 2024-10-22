@@ -11,6 +11,7 @@
 
 <script lang="ts">
   import { flip } from 'svelte/animate';
+  import { withId } from '$lib/common';
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
 
@@ -30,6 +31,19 @@
       console.error("Did not find card of name", name);
     }
   };
+
+  const newCard = (name: string) => withId({
+    name,
+    responsibilities: [],
+    collaborators: [],
+  });
+
+  let newClassCounter = 0;
+  const addNewCard = () => {
+    const card = newCard('NewClass' + newClassCounter++);
+    cards = [...cards, card];
+    selectCard?.(card);
+  };
 </script>
 
 <div id="backdrop">
@@ -42,6 +56,16 @@
         {/if}
       </li>
     {/each}
+    <div
+      onfocus={addNewCard}
+      class="h-full btn btn-ghost tw-grow card dark:card-bordered shadow-xl"
+      role="gridcell"
+      tabindex=0
+      >
+      <div class="card-body">
+        <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
+      </div>
+    </div>
   </ul>
 </div>
 
