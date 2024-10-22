@@ -1,70 +1,80 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
-  import CardPanel from './CardPanel.svelte';
   import type { Keyed } from '$lib/types';
+  import CardBoard from '$lib/components/CardBoard.svelte';
+  import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
+  import ThemeChanger from '$lib/components/ThemeChange.svelte';
+  import { availableClasses, debug } from '$lib/stores';
+  import DeckChanger from '$lib/components/DeckChange.svelte';
+  import Editor from '$lib/components/Editor.svelte';
+  import Card from '$lib/components/Card.svelte';
 
-  let _id = 0;
-  function withId<T extends object>(o: T): Keyed<T> {
-    return { ...o, id: _id++ };
-  }
+  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
+    let nextId = 0;
+    return (o) => ({ ...o, id: nextId++ });
+  })();
 
-  let cards: ComponentProps<CardPanel>['cards'] = [
-    withId({
-      name: 'Book',
-      responsibilities: [
-        withId({ text: 'knows its contents' }),
-        withId({ text: 'knows its metadata' }),
-        withId({ text: 'knows its length' })
-      ],
-      collaborators: [withId({ text: 'Page' })]
-    }),
-    withId({
-      name: 'Library',
-      responsibilities: [
-        withId({ text: 'knows its contents' }),
-        withId({ text: 'knows its metadata' }),
-        withId({ text: 'knows its lenders' })
-      ],
-      collaborators: [withId({ text: 'Book' })]
-    })
-  ];
+  let selectedCard: ComponentProps<Card> | undefined;
+  let currentDeck = "rpg";
+  let decks: Record<string, ComponentProps<CardBoard>['cards']> = {
+    "rpg": rpgJson.map(card => withId({
+      name: card.name,
+      responsibilities: card.responsibilities.map(withId),
+      collaborators: card.collaborators.map(withId),
+    })),
+    "library": libraryJson.map(card => withId({
+      name: card.name,
+      responsibilities: card.responsibilities.map(withId),
+      collaborators: card.collaborators.map(withId),
+    })),
+    "hospital": hospitalJson.map(card => withId({
+      name: card.name,
+      responsibilities: card.responsibilities.map(withId),
+      collaborators: card.collaborators.map(withId),
+    })),
+  };
+
+  $: cards = decks[currentDeck];
+  $: $availableClasses = cards.map(c => c.name);
+
+  $debug = false;
 </script>
 
 <svelte:head>
-  <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
+  <title>CARA / {currentDeck}</title>
+  <meta name="description" content="crc card design game" />
+
+  <!-- patch to delay pageload until theme is ready in deployment -->
+  {#if !$debug}
+    <script async crossorigin="anonymous">
+      var selectedTheme = localStorage.getItem("theme");
+      if(selectedTheme) {
+          document.documentElement.setAttribute("data-theme", selectedTheme);
+      }
+    </script>
+  {/if}
 </svelte:head>
 
-<section>
-  <CardPanel {cards} />
-</section>
+<ThemeChanger />
 
-<style>
-  section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 0.6;
-  }
+<CardBoard
+  {cards}
+  on:cardSelected={(data) => {
+    console.log("Card selected:", data.detail)
+    selectedCard = data.detail.card;
+  }}
+  />
 
-  h1 {
-    width: 100%;
-  }
+<Editor
+  card={selectedCard}
+  on:commit={(data) => {
+    console.log(
+      "Commit card",
+      data.detail.message,
+      data.detail.card
+    );
+    selectedCard = undefined;
+  }}
+  />
 
-  .welcome {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding: 0 0 calc(100% * 495 / 2048) 0;
-  }
-
-  .welcome img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    display: block;
-  }
-</style>
+<DeckChanger {decks} bind:currentDeck />
