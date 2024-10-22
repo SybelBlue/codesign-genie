@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
+  import { page } from '$app/stores';
   import type { Keyed } from '$lib/types';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
@@ -33,6 +34,25 @@
       collaborators: card.collaborators.map(withId),
     })),
   };
+
+  let params = $page.url.searchParams;
+  let deckInfo = params.get('customDeckInfo');
+  if (deckInfo != null) {
+    let json_string = atob(deckInfo);
+    let deck = JSON.parse(json_string).response.cards;
+    decks['custom'] = deck.map((card: { name: string, responsibilities: string[], collaborators: string[] }) =>
+      withId({
+        name: card.name,
+        responsibilities: card.responsibilities.map((responsibility) => withId({
+          text: responsibility
+        })),
+        collaborators: card.collaborators.map((collaborator) => withId({
+          name: collaborator
+        }))
+      })
+    );
+    currentDeck = 'custom';
+  }
 
   $: cards = decks[currentDeck];
   $: $availableClasses = cards.map(c => c.name);
