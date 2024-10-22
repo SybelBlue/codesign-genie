@@ -5,6 +5,7 @@
   import { slide } from "svelte/transition";
 
   export let card: ComponentProps<Card> | undefined;
+  export let readyForCommit: boolean;
 
   $: lastChange = (function(_) {return Date.now();})(card);
 
@@ -56,6 +57,7 @@
         type="text" name="commitMessage" id="commitMessageInput"
         bind:value={message}
         >
+      {#if readyForCommit}
       <input class="btn btn-outline w=1/4"
         type="submit" value="propose" id="submitBtn"
         on:click={() => {
@@ -66,6 +68,9 @@
           }
         }}
         >
+      {:else}
+        <div class="loading loading-ring loading-lg mb-auto"></div>
+      {/if}
     </div>
     <!-- -->
   </div>
