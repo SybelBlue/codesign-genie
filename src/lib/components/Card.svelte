@@ -8,17 +8,20 @@
   export let responsibilities: Keyed<{ text: string }>[];
   export let collaborators: Keyed<{ name: string }>[];
 
-  let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
-  const selectCard = () => cardSelectDispatcher('selectCard', { name });
+  let div: HTMLDivElement;
+
+  let dispatcher = createEventDispatcher();
+  const selectCard = () => dispatcher('selectCard', { name });
 
   $: highlight = $highlightedClass == name;
 </script>
 
 
 <div
+  bind:this={div}
   on:focus={selectCard}
   class:highlight
-  class="tw-grow card dark:card-bordered shadow-xl"
+  class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
   tabindex=0
   >

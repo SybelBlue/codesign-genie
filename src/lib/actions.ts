@@ -13,3 +13,18 @@ export function clickOutside(node: HTMLDivElement, onClick: () => void) {
     }
   };
 }
+
+export function fullscreen(viewport: HTMLDivElement) {
+  const resizeViewport = () => {
+    viewport.style.height = `${window.innerHeight}px`;
+  };
+
+  resizeViewport();
+  window.addEventListener('resize', resizeViewport);
+
+  return {
+    destroy() {
+      window.removeEventListener('resize', resizeViewport);
+    }
+  };
+}
