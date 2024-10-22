@@ -21,7 +21,8 @@
 <div use:fullscreen class="viewport bg-base-100">
   <div class="grid p-1 gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
     {#each cards as { id, ...cardProps } (id)}
-      <div class='card-container' class:surface={cardProps.name === $highlightedClass}>
+      {@const surface = cardProps.name === $highlightedClass}
+      <div class:surface> <!-- this div allows for cards with differing heights! -->
         <Card
           on:selectCard={propagateSelection}
           {...cardProps}
