@@ -9,11 +9,7 @@
   import DeckChanger from '$lib/components/DeckChange.svelte';
   import Editor from '$lib/components/Editor.svelte';
   import Card from '$lib/components/Card.svelte';
-
-  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
-    let nextId = 0;
-    return (o) => ({ ...o, id: nextId++ });
-  })();
+  import { withId } from '$lib/common';
 
   let selectedCard: ComponentProps<Card> | undefined;
   let currentDeck = "rpg";
