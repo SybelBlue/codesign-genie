@@ -13,10 +13,7 @@
   let dispatcher = createEventDispatcher();
   const selectCard = () => dispatcher('selectCard', { name });
 
-  const highlightCard = () => dispatcher('highlightCard', { element: div });
-
   $: highlight = $highlightedClass == name;
-  $: if(highlight) highlightCard();
 </script>
 
 
@@ -24,7 +21,7 @@
   bind:this={div}
   on:focus={selectCard}
   class:highlight
-  class="tw-grow card dark:card-bordered shadow-xl"
+  class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
   tabindex=0
   >

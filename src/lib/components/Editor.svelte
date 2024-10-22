@@ -21,7 +21,7 @@
 <div
   use:clickOutside={() => { if (Date.now() - lastChange > 200) card = undefined; }}
   transition:slide
-  class="absolute left-0 w-1/2 h-screen"
+  class="absolute left-0 w-1/2 h-screen z-50"
   >
   <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
     <!-- "X" button in top right -->
