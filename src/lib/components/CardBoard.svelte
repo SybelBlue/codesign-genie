@@ -3,7 +3,6 @@
   import { flip } from 'svelte/animate';
   import type { Keyed } from '$lib/types';
   import Card from './Card.svelte';
-  import { fullscreen } from '$lib/actions';
   import { debug, highlightedClass } from '$lib/stores';
 
   export let cards: Keyed<ComponentProps<Card>>[];
@@ -22,7 +21,7 @@
   };
 </script>
 
-<div use:fullscreen class="viewport">
+<div id="backdrop">
   <ul class="grid-container">
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
@@ -39,7 +38,7 @@
 </div>
 
 <style lang="postcss">
-  .viewport {
+  #backdrop {
     @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
   }
 

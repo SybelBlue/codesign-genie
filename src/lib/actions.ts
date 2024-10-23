@@ -1,7 +1,7 @@
-export function clickOutside(node: HTMLDivElement, onClick: () => void) {
+export function clickOutside(node: HTMLDivElement, onClick: (_: MouseEvent) => void) {
   const handleClick = (event: MouseEvent) => {
     if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
-      onClick();
+      onClick(event);
     }
   };
 
@@ -10,21 +10,6 @@ export function clickOutside(node: HTMLDivElement, onClick: () => void) {
   return {
     destroy() {
       document.removeEventListener('click', handleClick, true);
-    }
-  };
-}
-
-export function fullscreen(viewport: HTMLDivElement) {
-  const resizeViewport = () => {
-    viewport.style.height = `${window.innerHeight}px`;
-  };
-
-  resizeViewport();
-  window.addEventListener('resize', resizeViewport);
-
-  return {
-    destroy() {
-      window.removeEventListener('resize', resizeViewport);
     }
   };
 }
