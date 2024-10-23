@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { highlightedClass, availableClasses } from '$lib/stores';
+  import { availableClasses } from '$lib/stores';
 
   /** warning: immutable! make a new label when a change happens*/
   export let name: string;
@@ -10,18 +10,18 @@
   /** warning: immutable! make a new label when a change happens*/
   export let disabled: boolean = false;
 
-  let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
-  const selectCard = () => cardSelectDispatcher('selectCard', { name });
+  let dispatcher = createEventDispatcher();
+  const hoverName = (mode: 'starting' | 'ending') => dispatcher('hoverName', { name, mode });
 
-  $: hasACard = $availableClasses.includes(name);
+  $: hasCard = $availableClasses.includes(name);
 </script>
 
 <span
-  on:mouseenter={() => $highlightedClass = disabled ? undefined : name }
-  on:mouseleave={() => $highlightedClass = undefined }
-  on:focus={selectCard}
-  class:enabled={!disabled && hasACard}
-  class:no-card={!hasACard}
+  on:mouseenter={() => hoverName('starting')}
+  on:mouseleave={() => hoverName('ending')}
+  on:focus={() => dispatcher('selectName', { name })}
+  class:disabled
+  class:hasCard
   class="text-accent"
   role="link"
   tabindex=0
@@ -31,12 +31,12 @@
   span {
     font-family: var(--font-mono);
 
-    &.enabled:hover {
+    &.hasCard:not(.disabled):hover {
       @apply underline;
       text-shadow: 0 0 15px oklch(var(--a));
     }
 
-    &.no-card {
+    &:not(.hasCard) {
       color: var(--fallback-nc,oklch(var(--nc)/0.8));
 
       &:hover {

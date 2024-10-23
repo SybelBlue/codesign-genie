@@ -9,14 +9,19 @@
   export let collaborators: Keyed<{ name: string }>[];
 
   let dispatcher = createEventDispatcher();
-  const selectCard = () => dispatcher('selectCard', { name });
+
+  const selectCard = (name: string) => dispatcher('selectCard', { name });
+
+  const hoverCollaboratorName = (data: CustomEvent<{ mode: string, name: string}>) => {
+    $highlightedClass = data.detail.mode == 'starting' ? name : undefined;
+  };
 
   $: highlight = $highlightedClass === name;
 </script>
 
 
 <div
-  on:focus={selectCard}
+  on:focus={() => selectCard(name)}
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
@@ -38,7 +43,13 @@
         <h4>collaborators</h4>
         <ul>
           {#each collaborators as { name, id } (id)}
-            <li> <ClassLabel on:selectCard {name} /> </li>
+            <li>
+              <ClassLabel
+                on:selectName={() => selectCard(name)}
+                on:hoverName={hoverCollaboratorName}
+                {name}
+                />
+            </li>
           {/each}
         </ul>
       </div>
