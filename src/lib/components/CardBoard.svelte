@@ -3,6 +3,7 @@
   import { flip } from 'svelte/animate';
   import type { Keyed } from '$lib/types';
   import Card from './Card.svelte';
+  import { withId } from '$lib/common';
   import { debug, highlightedClass } from '$lib/stores';
 
   export let cards: Keyed<ComponentProps<Card>>[];
@@ -11,13 +12,27 @@
   $: if (animateIn) setTimeout(() => animateIn = false, 200);
 
   const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
+  const selectCard = (card: ComponentProps<Card>) => dispatch("cardSelected", { card });
   const propagateSelection = (data: CustomEvent<{ name: string }>) => {
     const card = cards.find((card) => card.name == data.detail.name);
     if (card) {
-      dispatch("cardSelected", { card })
+      selectCard(card);
     } else {
       console.error("Did not find card of name", data.detail.name);
     }
+  };
+
+  const newCard = (name: string) => withId({
+    name,
+    responsibilities: [],
+    collaborators: [],
+  });
+
+  let newClassCounter = 0;
+  const addNewCard = () => {
+    const card = newCard('NewClass' + newClassCounter++);
+    cards = [...cards, card];
+    selectCard(card);
   };
 </script>
 
@@ -34,6 +49,16 @@
         {/if}
       </li>
     {/each}
+    <div
+      on:focus={addNewCard}
+      class="h-full btn btn-ghost tw-grow card dark:card-bordered shadow-xl"
+      role="gridcell"
+      tabindex=0
+      >
+      <div class="card-body">
+        <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
+      </div>
+    </div>
   </ul>
 </div>
 
