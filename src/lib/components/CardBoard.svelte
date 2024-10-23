@@ -22,8 +22,8 @@
   };
 </script>
 
-<div use:fullscreen class="viewport bg-base-100">
-  <ul class="grid p-1 gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
+<div use:fullscreen class="viewport">
+  <ul class="grid-container">
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
@@ -38,20 +38,25 @@
   </ul>
 </div>
 
-<style>
+<style lang="postcss">
   .viewport {
-    width: 100%;
-    overflow: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
+    @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
   }
-  .surface {
-    position: sticky;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 15;
+
+  .grid-container {
+    @apply grid p-1 gap-2;
+    /* responsive sizing */
+    @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
+  }
+
+  /* Create stacking context for each sticky element */
+  li {
+    @apply relative;
+    z-index: 1;
+
+    &.surface {
+      @apply sticky top-0 bottom-0 isolate pointer-events-none;
+      z-index: 2;
+    }
   }
 </style>
