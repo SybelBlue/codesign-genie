@@ -5,7 +5,7 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
-  import { availableClasses, debug } from '$lib/stores';
+  import { availableClasses, debug, mousePos } from '$lib/stores';
   import DeckChanger from '$lib/components/DeckChange.svelte';
   import Editor from '$lib/components/Editor.svelte';
   import Card from '$lib/components/Card.svelte';
@@ -74,6 +74,10 @@
     </script>
   {/if}
 </svelte:head>
+
+<svelte:window
+  on:mousemove={(e) => $mousePos = { x: e.clientX, y: e.clientY }}
+  />
 
 <ThemeChanger />
 

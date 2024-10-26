@@ -1,14 +1,35 @@
 <script lang="ts">
   import { createEventDispatcher, type ComponentProps } from 'svelte';
   import { flip } from 'svelte/animate';
-  import type { Keyed } from '$lib/types';
+  import type { Key, Keyed } from '$lib/types';
   import Card from './Card.svelte';
-  import { debug, highlightedClass } from '$lib/stores';
+  import { debug, highlightedClass, mousePos } from '$lib/stores';
 
   export let cards: Keyed<ComponentProps<Card>>[];
   export let animateIn: boolean = !$debug;
 
   $: if (animateIn) setTimeout(() => animateIn = false, 200);
+
+  let backdrop: HTMLDivElement;
+
+  const liDict: Record<Key, HTMLLIElement> = {};
+
+  const inlineWithMouse = (el: HTMLLIElement) => {
+    if (!$mousePos) return false;
+    const
+      mouseX = $mousePos.x,
+      rect = el.getBoundingClientRect(),
+      left = rect.left,
+      right = left + rect.width,
+      inline = left < mouseX && mouseX < right;
+    return inline;
+  };
+
+  $: inlineDict = (_ =>
+    Object.fromEntries(
+      Object.entries(liDict).map(([k, el]) => [k, inlineWithMouse(el)])
+    )
+  )($highlightedClass); // recalc on highlightedClass
 
   const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
   const propagateSelection = (data: CustomEvent<{ name: string }>) => {
@@ -21,11 +42,18 @@
   };
 </script>
 
-<div id="backdrop">
+<div bind:this={backdrop} id="backdrop">
   <ul class="grid-container">
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
-      <li class:surface animate:flip={{ duration: 400 }}>
+      {@const inline = inlineDict[`${id}`]}
+      <li
+        bind:this={liDict[`${id}`]}
+        class:surface
+        class:inline
+        class={(liDict[id]?.getBoundingClientRect().left || 0) < 10 ? 'right' : 'left'}
+        animate:flip={{ duration: 400 }}
+        >
         {#if !animateIn}
           <Card
             on:selectCard={propagateSelection}
@@ -56,6 +84,15 @@
     &.surface {
       @apply sticky top-0 bottom-0 isolate pointer-events-none;
       z-index: 2;
+
+      &.inline {
+        &.right {
+          @apply translate-x-full;
+        }
+        &.left {
+          @apply -translate-x-full;
+        }
+      }
     }
   }
 </style>
