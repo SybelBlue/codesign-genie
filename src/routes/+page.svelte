@@ -1,23 +1,22 @@
 <script lang="ts">
-  import type { ComponentProps } from 'svelte';
   import { page } from '$app/stores';
   import type { Keyed } from '$lib/types';
-  import CardBoard from '$lib/components/CardBoard.svelte';
+  import CardBoard, { type Props as CardBoardProps } from '$lib/components/CardBoard.svelte';
   import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import { availableClasses, debug } from '$lib/stores';
   import DeckChanger from '$lib/components/DeckChange.svelte';
   import Editor from '$lib/components/Editor.svelte';
-  import Card from '$lib/components/Card.svelte';
+  import type { Props as CardProps } from '$lib/components/Card.svelte';
 
   const withId: <T extends object>(o: T) => Keyed<T> = (function() {
     let nextId = 0;
     return (o) => ({ ...o, id: nextId++ });
   })();
 
-  let selectedCard: ComponentProps<Card> | undefined;
-  let currentDeck = "rpg";
-  let decks: Record<string, ComponentProps<CardBoard>['cards']> = {
+  let selectedCard: CardProps | undefined = $state();
+  let currentDeck = $state("rpg");
+  let decks: Record<string, CardBoardProps['cards']> = $state({
     "rpg": rpgJson.map(card => withId({
       name: card.name,
       responsibilities: card.responsibilities.map(withId),
@@ -33,7 +32,8 @@
       responsibilities: card.responsibilities.map(withId),
       collaborators: card.collaborators.map(withId),
     })),
-  };
+  });
+  let deckNames = $derived(Object.keys(decks));
 
   let params = $page.url.searchParams;
   let deckInfo = params.get('customDeckInfo');
@@ -54,8 +54,9 @@
     currentDeck = 'custom';
   }
 
-  $: cards = decks[currentDeck];
-  $: $availableClasses = cards.map(c => c.name);
+  $effect(() => {
+    $availableClasses = decks[currentDeck].map(c => c.name);
+  })
 
   // $debug = true;
 </script>
@@ -78,23 +79,23 @@
 <ThemeChanger />
 
 <CardBoard
-  bind:cards
-  on:cardSelected={(data) => {
-    console.log("Card selected:", data.detail)
-    selectedCard = data.detail.card;
+  bind:cards={decks[currentDeck]}
+  selectCard={(card) => {
+    console.log("Card selected:", card.name)
+    selectedCard = card;
   }}
   />
 
 <Editor
   card={selectedCard}
-  on:commit={(data) => {
+  onCommit={(commit) => {
     console.log(
       "Commit card",
-      data.detail.message,
-      data.detail.card
+      commit.message,
+      commit.card
     );
     selectedCard = undefined;
   }}
   />
 
-<DeckChanger {decks} bind:currentDeck />
+<DeckChanger decks={deckNames} bind:currentDeck />

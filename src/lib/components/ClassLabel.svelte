@@ -1,25 +1,24 @@
-<svelte:options immutable/>
-
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { highlightedClass, availableClasses } from '$lib/stores';
 
-  /** warning: immutable! make a new label when a change happens*/
-  export let name: string;
+  interface Props {
+    name: string;
+    disabled?: boolean;
+  }
 
-  /** warning: immutable! make a new label when a change happens*/
-  export let disabled: boolean = false;
+  let { name, disabled = false }: Props = $props();
 
   let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
   const selectCard = () => cardSelectDispatcher('selectCard', { name });
 
-  $: hasACard = $availableClasses.includes(name);
+  let hasACard = $derived($availableClasses.includes(name));
 </script>
 
 <span
-  on:mouseenter={() => $highlightedClass = disabled ? undefined : name }
-  on:mouseleave={() => $highlightedClass = undefined }
-  on:focus={selectCard}
+  onmouseenter={() => $highlightedClass = disabled ? undefined : name}
+  onmouseleave={() => $highlightedClass = undefined}
+  onfocus={selectCard}
   class:enabled={!disabled && hasACard}
   class:no-card={!hasACard}
   class="text-accent"

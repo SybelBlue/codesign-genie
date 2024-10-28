@@ -104,3 +104,7 @@ export const TYPEDEFS = {
 }
 `.trim()
 };
+
+import type { Props as CardProps } from '$lib/components/Card.svelte';
+
+export { CardProps };

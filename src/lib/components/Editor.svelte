@@ -1,20 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher, type ComponentProps } from "svelte";
-  import Card from "./Card.svelte";
+  import Card, { type Props as CardProps } from "./Card.svelte";
   import { clickOutside } from "$lib/actions";
   import { slide } from "svelte/transition";
 
-  export let card: ComponentProps<Card> | undefined;
+  interface Props {
+    card?: CardProps;
+    onCommit?: (commit: { card: CardProps; message: string }) => void;
+  }
 
-  $: lastChange = (function(_) {return Date.now();})(card);
+  let { card = $bindable(), onCommit }: Props = $props();
 
-  let message: string = "";
-  let dispatch = createEventDispatcher<{
-      commit: {
-        card: ComponentProps<Card>,
-        message: string
-      }
-    }>();
+  let lastChange = $derived((function(_) {return Date.now();})(card));
+
+  let message: string = $state("");
+
 </script>
 
 {#if card}
@@ -27,7 +26,8 @@
     <!-- "X" button in top right -->
     <button
       class="btn btn-circle btn-outline ml-auto mr-2 mt-2"
-      on:click={() => card = undefined}
+      onclick={() => card = undefined}
+      aria-label="Select Theme"
       >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -58,9 +58,9 @@
         >
       <input class="btn btn-outline w=1/4"
         type="submit" value="propose" id="submitBtn"
-        on:click={() => {
+        onclick={() => {
           if (card) {
-            dispatch('commit', { card, message });
+            onCommit?.({ card, message });
           } else {
             console.error("Tried to commit undefined card!");
           }

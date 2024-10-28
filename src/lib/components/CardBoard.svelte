@@ -1,22 +1,33 @@
-<script lang="ts">
-  import { createEventDispatcher, type ComponentProps } from 'svelte';
-  import { flip } from 'svelte/animate';
+<script module lang="ts">
+  import type { Props as CardProps } from './Card.svelte';
   import type { Keyed } from '$lib/types';
-  import Card from './Card.svelte';
+
+  export interface Props {
+    cards: Keyed<CardProps>[];
+    animateIn?: boolean;
+    selectCard?: (c: CardProps) => void;
+  }
+</script>
+
+<script lang="ts">
+  import { flip } from 'svelte/animate';
   import { debug, highlightedClass } from '$lib/stores';
+  import Card from './Card.svelte';
 
-  export let cards: Keyed<ComponentProps<Card>>[];
-  export let animateIn: boolean = !$debug;
+  let {
+    cards = $bindable(),
+    animateIn = !$debug,
+    ...handlers
+  }: Props = $props();
 
-  $: if (animateIn) setTimeout(() => animateIn = false, 200);
+  if (animateIn) setTimeout(() => animateIn = false, 200);
 
-  const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
-  const propagateSelection = (data: CustomEvent<{ name: string }>) => {
-    const card = cards.find((card) => card.name == data.detail.name);
+  const propagateSelection = (name: string) => {
+    const card = cards.find((card) => card.name == name);
     if (card) {
-      dispatch("cardSelected", { card })
+      handlers.selectCard?.(card);
     } else {
-      console.error("Did not find card of name", data.detail.name);
+      console.error("Did not find card of name", name);
     }
   };
 </script>
@@ -28,7 +39,7 @@
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
           <Card
-            on:selectCard={propagateSelection}
+            selectCard={propagateSelection}
             {...cardProps}
             />
         {/if}

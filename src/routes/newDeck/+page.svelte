@@ -2,8 +2,8 @@
   import { goto } from '$app/navigation';
   import { stringify } from 'postcss';
 
-  let loading = false;
-  let description = '';
+  let loading = $state(false);
+  let description = $state('');
   const schema = 'Deck';
 </script>
 
@@ -16,7 +16,7 @@
     name="userDescription"
     id="descriptionInput"
     class="input input-bordered m-2"
-  />
+></textarea>
 
   <div class="flex justify-center ml-auto w-1/3">
     {#if loading}
@@ -26,7 +26,7 @@
         type="submit"
         value="Generate!"
         class="btn w-full"
-        on:click={(event) => {
+        onclick={(event) => {
           loading = true;
           fetch('/api/object', {
             method: 'POST',
