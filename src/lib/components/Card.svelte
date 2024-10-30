@@ -1,22 +1,31 @@
-<script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+<script module lang="ts">
   import type { Keyed } from '$lib/types';
+
+  export interface Props {
+    name: string;
+    responsibilities: Keyed<{ text: string }>[];
+    collaborators: Keyed<{ name: string }>[];
+    selectName?: (name: string) => void;
+  }
+</script>
+
+<script lang="ts">
   import { highlightedClass } from '$lib/stores';
   import ClassLabel from '$lib/components/ClassLabel.svelte';
 
-  export let name: string;
-  export let responsibilities: Keyed<{ text: string }>[];
-  export let collaborators: Keyed<{ name: string }>[];
+  let {
+    name = $bindable(),
+    responsibilities = $bindable(),
+    collaborators = $bindable(),
+    selectName,
+  }: Props = $props();
 
-  let dispatcher = createEventDispatcher();
-  const selectCard = () => dispatcher('selectCard', { name });
-
-  $: highlight = $highlightedClass === name;
+  let highlight = $derived($highlightedClass === name);
 </script>
 
 
 <div
-  on:focus={selectCard}
+  onfocus={() => selectName?.(name)}
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
@@ -29,8 +38,8 @@
       <div class="ps-0 grow">
         <h4>responsibilities</h4>
         <ul>
-          {#each responsibilities as { text: value, id } (id)}
-            <li class="w-full"> <input bind:value /> </li>
+          {#each responsibilities as r (r.id)}
+            <li class="w-full"> <input bind:value={r.text} /> </li>
           {/each}
         </ul>
       </div>
@@ -38,7 +47,7 @@
         <h4>collaborators</h4>
         <ul>
           {#each collaborators as { name, id } (id)}
-            <li> <ClassLabel on:selectCard {name} /> </li>
+            <li> <ClassLabel {selectName} {name} /> </li>
           {/each}
         </ul>
       </div>

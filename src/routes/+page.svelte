@@ -1,63 +1,31 @@
 <script lang="ts">
-  import type { ComponentProps } from 'svelte';
   import { page } from '$app/stores';
-  import type { Keyed } from '$lib/types';
-  import CardBoard from '$lib/components/CardBoard.svelte';
-  import { libraryJson, rpgJson, hospitalJson } from '$lib/decks';
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import { availableClasses, debug } from '$lib/stores';
-  import DeckChanger from '$lib/components/DeckChange.svelte';
+  import DeckChanger from '$lib/components/DeckChanger.svelte';
   import Editor from '$lib/components/Editor.svelte';
-  import Card from '$lib/components/Card.svelte';
+  import { decodeDeck, exampleDecks } from '$lib/decks';
+  import CardBoard from '$lib/components/CardBoard.svelte';
+  import type { CardProps } from '$lib/types';
 
-  const withId: <T extends object>(o: T) => Keyed<T> = (function() {
-    let nextId = 0;
-    return (o) => ({ ...o, id: nextId++ });
-  })();
+  let decks = $state(exampleDecks);
+  let deckNames = $derived(Object.keys(decks));
 
-  let selectedCard: ComponentProps<Card> | undefined;
-  let currentDeck = "rpg";
-  let decks: Record<string, ComponentProps<CardBoard>['cards']> = {
-    "rpg": rpgJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
-    "library": libraryJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
-    "hospital": hospitalJson.map(card => withId({
-      name: card.name,
-      responsibilities: card.responsibilities.map(withId),
-      collaborators: card.collaborators.map(withId),
-    })),
-  };
+  let selectedCard: CardProps | undefined = $state();
+  let currentDeck = $state("rpg");
 
   let params = $page.url.searchParams;
   let deckInfo = params.get('customDeckInfo');
   if (deckInfo != null) {
-    let json_string = atob(deckInfo);
-    let deck = JSON.parse(json_string).response.cards;
-    decks['custom'] = deck.map((card: { name: string, responsibilities: string[], collaborators: string[] }) =>
-      withId({
-        name: card.name,
-        responsibilities: card.responsibilities.map((responsibility) => withId({
-          text: responsibility
-        })),
-        collaborators: card.collaborators.map((collaborator) => withId({
-          name: collaborator
-        }))
-      })
-    );
+    decks['custom'] = decodeDeck(deckInfo);
     currentDeck = 'custom';
   }
 
-  $: cards = decks[currentDeck];
-  $: $availableClasses = cards.map(c => c.name);
+  $effect(() => {
+    $availableClasses = decks[currentDeck].map(c => c.name);
+  })
 
-  // $debug = true;
+  $debug = false;
 </script>
 
 <svelte:head>
@@ -78,23 +46,23 @@
 <ThemeChanger />
 
 <CardBoard
-  bind:cards
-  on:cardSelected={(data) => {
-    console.log("Card selected:", data.detail)
-    selectedCard = data.detail.card;
+  bind:cards={decks[currentDeck]}
+  selectCard={(card) => {
+    console.log("Card selected:", card.name)
+    selectedCard = card;
   }}
   />
 
 <Editor
-  card={selectedCard}
-  on:commit={(data) => {
+  bind:card={selectedCard}
+  onCommit={(commit) => {
     console.log(
       "Commit card",
-      data.detail.message,
-      data.detail.card
+      commit.message,
+      commit.card
     );
     selectedCard = undefined;
   }}
   />
 
-<DeckChanger {decks} bind:currentDeck />
+<DeckChanger decks={deckNames} bind:currentDeck />

@@ -1,9 +1,11 @@
 <!-- from https://github.com/saadeghi/daisyui/blob/9641f709c88a29e0c1f74402439c89f504fad423/src/docs/src/components/ThemeChange.svelte -->
 <script lang="ts">
-  import type { ComponentProps } from "svelte"
-  import CardBoard from "./CardBoard.svelte";
-  export let decks: Record<string, ComponentProps<CardBoard>['cards']>;
-  export let currentDeck: keyof (typeof decks);
+  interface Props {
+    decks: string[];
+    currentDeck: string;
+  }
+
+  let { decks, currentDeck = $bindable() }: Props = $props();
 </script>
 
 <div
@@ -28,7 +30,7 @@
         <button
           class="outline-base-content text-start outline-offset-4"
           data-act-class="[&_svg]:visible"
-          on:click={() => { currentDeck = name; }}
+          onclick={() => { currentDeck = name; }}
           >
           <span
             class="bg-base-100 rounded-btn text-base-content block w-full cursor-pointer font-sans">
