@@ -10,15 +10,14 @@
 
   let { card = $bindable(), onCommit }: Props = $props();
 
-  let lastChange = $derived((function(_) {return Date.now();})(card));
+  let lastChange = $derived.by(() => { card; return Date.now(); });
 
   let message: string = $state("");
-
 </script>
 
 {#if card}
 <div
-  use:clickOutside={() => { if (Date.now() - lastChange > 200) card = undefined; }}
+  use:clickOutside={() => { if (card && Date.now() - lastChange > 200) card = undefined; }}
   transition:slide
   class="absolute left-0 w-1/2 h-screen z-50"
   >
@@ -56,7 +55,7 @@
         type="text" name="commitMessage" id="commitMessageInput"
         bind:value={message}
         >
-      <input class="btn btn-outline w=1/4"
+      <input class="btn btn-outline w-1/4"
         type="submit" value="propose" id="submitBtn"
         onclick={() => {
           if (card) {

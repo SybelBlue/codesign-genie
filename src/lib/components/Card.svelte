@@ -5,7 +5,7 @@
     name: string;
     responsibilities: Keyed<{ text: string }>[];
     collaborators: Keyed<{ name: string }>[];
-    selectCard?: (name: string) => void;
+    selectName?: (name: string) => void;
   }
 </script>
 
@@ -17,17 +17,15 @@
     name = $bindable(),
     responsibilities = $bindable(),
     collaborators = $bindable(),
-    selectCard,
+    selectName,
   }: Props = $props();
-
-  const onSelectCard = () => selectCard?.(name);
 
   let highlight = $derived($highlightedClass === name);
 </script>
 
 
 <div
-  onfocus={onSelectCard}
+  onfocus={() => selectName?.(name)}
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
@@ -49,7 +47,7 @@
         <h4>collaborators</h4>
         <ul>
           {#each collaborators as { name, id } (id)}
-            <li> <ClassLabel on:selectCard={onSelectCard} {name} /> </li>
+            <li> <ClassLabel {selectName} {name} /> </li>
           {/each}
         </ul>
       </div>

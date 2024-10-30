@@ -1,12 +1,10 @@
 <!-- from https://github.com/saadeghi/daisyui/blob/9641f709c88a29e0c1f74402439c89f504fad423/src/docs/src/components/ThemeChange.svelte -->
-<script module lang="ts">
-  export interface Props {
+<script lang="ts">
+  interface Props {
     decks: string[];
     currentDeck: string;
   }
-</script>
 
-<script lang="ts">
   let { decks, currentDeck = $bindable() }: Props = $props();
 </script>
 

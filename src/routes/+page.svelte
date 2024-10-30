@@ -87,7 +87,7 @@
   />
 
 <Editor
-  card={selectedCard}
+  bind:card={selectedCard}
   onCommit={(commit) => {
     console.log(
       "Commit card",

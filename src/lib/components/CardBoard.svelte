@@ -17,15 +17,15 @@
   let {
     cards = $bindable(),
     animateIn = !$debug,
-    ...handlers
+    selectCard,
   }: Props = $props();
 
   if (animateIn) setTimeout(() => animateIn = false, 200);
 
-  const propagateSelection = (name: string) => {
+  const propagate = (name: string) => {
     const card = cards.find((card) => card.name == name);
     if (card) {
-      handlers.selectCard?.(card);
+      selectCard?.(card);
     } else {
       console.error("Did not find card of name", name);
     }
@@ -38,10 +38,7 @@
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
-          <Card
-            selectCard={propagateSelection}
-            {...cardProps}
-            />
+          <Card selectName={propagate} {...cardProps} />
         {/if}
       </li>
     {/each}

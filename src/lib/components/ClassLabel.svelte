@@ -1,16 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
   import { highlightedClass, availableClasses } from '$lib/stores';
 
   interface Props {
     name: string;
     disabled?: boolean;
+    selectName?: (name: string) => void;
   }
 
-  let { name, disabled = false }: Props = $props();
-
-  let cardSelectDispatcher = createEventDispatcher<{ selectCard: { name: string } }>();
-  const selectCard = () => cardSelectDispatcher('selectCard', { name });
+  let { name, disabled = false, selectName }: Props = $props();
 
   let hasACard = $derived($availableClasses.includes(name));
 </script>
@@ -18,7 +15,7 @@
 <span
   onmouseenter={() => $highlightedClass = disabled ? undefined : name}
   onmouseleave={() => $highlightedClass = undefined}
-  onfocus={selectCard}
+  onfocus={() => selectName?.(name)}
   class:enabled={!disabled && hasACard}
   class:no-card={!hasACard}
   class="text-accent"
