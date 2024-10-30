@@ -25,7 +25,7 @@
     $availableClasses = decks[currentDeck].map(c => c.name);
   })
 
-  // $debug = true;
+  $debug = false;
 </script>
 
 <svelte:head>
