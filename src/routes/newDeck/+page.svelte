@@ -1,6 +1,5 @@
-<script>
+<script lang="ts">
   import { goto } from '$app/navigation';
-  import { stringify } from 'postcss';
 
   let loading = $state(false);
   let description = $state('');
@@ -26,21 +25,16 @@
         type="submit"
         value="Generate!"
         class="btn w-full"
-        onclick={(event) => {
+        onclick={async () => {
           loading = true;
-          fetch('/api/object', {
+          const response = await fetch('/api/object', {
             method: 'POST',
             body: JSON.stringify({ description, schema })
-          }).then((response) => {
-            response.json().then(
-              (deck) => {
-                console.log(deck);
-                let b64payload = btoa(JSON.stringify(deck));
-                goto(`/?customDeckInfo=${b64payload}`);
-              },
-              (reject_reason) => {}
-            );
           });
+          const deck = await response.json();
+          console.log(deck);
+          const b64payload = btoa(JSON.stringify(deck));
+          goto(`/?customDeckInfo=${b64payload}`);
         }}
       />
     {/if}
