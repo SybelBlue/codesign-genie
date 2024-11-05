@@ -1,34 +1,37 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { availableClasses, debug } from '$lib/stores';
-  import DeckChanger from '$lib/components/DeckChanger.svelte';
+  import { availableClasses, debug, deckNames, currentDeck } from '$lib/stores';
+
   import Editor from '$lib/components/Editor.svelte';
   import { decodeDeck, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
 
   let decks = $state(exampleDecks);
-  let deckNames = $derived(Object.keys(decks));
+
+  // Update store when decks change
+  $effect(() => {
+    $deckNames = Object.keys(decks);
+  });
 
   let selectedCard: CardProps | undefined = $state();
-  let currentDeck = $state("rpg");
 
   let params = $page.url.searchParams;
   let deckInfo = params.get('customDeckInfo');
   if (deckInfo != null) {
     decks['custom'] = decodeDeck(deckInfo);
-    currentDeck = 'custom';
+    $currentDeck = 'custom';
   }
 
   $effect(() => {
-    $availableClasses = decks[currentDeck].map(c => c.name);
+    $availableClasses = decks[$currentDeck].map(c => c.name);
   })
 
   $debug = false;
 </script>
 
 <svelte:head>
-  <title>CARA / {currentDeck}</title>
+  <title>CARA / {$currentDeck}</title>
   <meta name="description" content="crc card design game" />
 
   <!-- patch to delay pageload until theme is ready in deployment -->
@@ -43,7 +46,7 @@
 </svelte:head>
 
 <CardBoard
-  bind:cards={decks[currentDeck]}
+  bind:cards={decks[$currentDeck]}
   selectCard={(card) => {
     console.log("Card selected:", card.name)
     selectedCard = card;
@@ -62,4 +65,4 @@
   }}
   />
 
-<DeckChanger decks={deckNames} bind:currentDeck />
+
