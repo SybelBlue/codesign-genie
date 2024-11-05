@@ -1,57 +1,69 @@
-<script lang="ts">
-  import { createEventDispatcher, type ComponentProps } from 'svelte';
-  import { flip } from 'svelte/animate';
+<script module lang="ts">
+  import type { Props as CardProps } from './Card.svelte';
   import type { Keyed } from '$lib/types';
-  import Card from './Card.svelte';
-  import { fullscreen } from '$lib/actions';
+
+  export interface Props {
+    cards: Keyed<CardProps>[];
+    animateIn?: boolean;
+    selectCard?: (c: CardProps) => void;
+  }
+</script>
+
+<script lang="ts">
+  import { flip } from 'svelte/animate';
   import { debug, highlightedClass } from '$lib/stores';
+  import Card from './Card.svelte';
 
-  export let cards: Keyed<ComponentProps<Card>>[];
-  export let animateIn: boolean = !$debug;
+  let {
+    cards = $bindable(),
+    animateIn = !$debug,
+    selectCard,
+  }: Props = $props();
 
-  $: if (animateIn) setTimeout(() => animateIn = false, 200);
+  if (animateIn) setTimeout(() => animateIn = false, 200);
 
-  const dispatch = createEventDispatcher<{ cardSelected: { card: ComponentProps<Card> } }>();
-  const propagateSelection = (data: CustomEvent<{ name: string }>) => {
-    const card = cards.find((card) => card.name == data.detail.name);
+  const propagate = (name: string) => {
+    const card = cards.find((card) => card.name == name);
     if (card) {
-      dispatch("cardSelected", { card })
+      selectCard?.(card);
     } else {
-      console.error("Did not find card of name", data.detail.name);
+      console.error("Did not find card of name", name);
     }
   };
 </script>
 
-<div use:fullscreen class="viewport bg-base-100">
-  <ul class="grid p-1 gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overscroll-auto">
+<div id="backdrop">
+  <ul class="grid-container">
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
-          <Card
-            on:selectCard={propagateSelection}
-            {...cardProps}
-            />
+          <Card selectName={propagate} {...cardProps} />
         {/if}
       </li>
     {/each}
   </ul>
 </div>
 
-<style>
-  .viewport {
-    width: 100%;
-    overflow: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
+<style lang="postcss">
+  #backdrop {
+    @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
   }
-  .surface {
-    position: sticky;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 15;
+
+  .grid-container {
+    @apply grid p-1 gap-2;
+    /* responsive sizing */
+    @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
+  }
+
+  /* Create stacking context for each sticky element */
+  li {
+    @apply relative;
+    z-index: 1;
+
+    &.surface {
+      @apply sticky top-0 bottom-0 isolate pointer-events-none;
+      z-index: 2;
+    }
   }
 </style>

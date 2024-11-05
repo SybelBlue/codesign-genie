@@ -1,9 +1,8 @@
-<script>
+<script lang="ts">
   import { goto } from '$app/navigation';
-  import { stringify } from 'postcss';
 
-  let loading = false;
-  let description = '';
+  let loading = $state(false);
+  let description = $state('');
   const schema = 'Deck';
 </script>
 
@@ -16,7 +15,7 @@
     name="userDescription"
     id="descriptionInput"
     class="input input-bordered m-2"
-  />
+></textarea>
 
   <div class="flex justify-center ml-auto w-1/3">
     {#if loading}
@@ -26,21 +25,16 @@
         type="submit"
         value="Generate!"
         class="btn w-full"
-        on:click={(event) => {
+        onclick={async () => {
           loading = true;
-          fetch('/api/object', {
+          const response = await fetch('/api/object', {
             method: 'POST',
             body: JSON.stringify({ description, schema })
-          }).then((response) => {
-            response.json().then(
-              (deck) => {
-                console.log(deck);
-                let b64payload = btoa(JSON.stringify(deck));
-                goto(`/?customDeckInfo=${b64payload}`);
-              },
-              (reject_reason) => {}
-            );
           });
+          const deck = await response.json();
+          console.log(deck);
+          const b64payload = btoa(JSON.stringify(deck));
+          goto(`/?customDeckInfo=${b64payload}`);
         }}
       />
     {/if}
