@@ -12,12 +12,12 @@
   let decks = $state(exampleDecks);
   let deckNames = $derived(Object.keys(decks));
 
-  let selectedCard: ComponentProps<Card> | undefined = $state();
+  let selectedCard: CardProps | undefined = $state();
   let currentDeck = $state("rpg");
 
   let params = $page.url.searchParams;
   let deckInfo = params.get('customDeckInfo');
-  let readyForCommit: boolean = false;
+  let readyForCommit: boolean = $state(false);
   if (deckInfo != null) {
     decks['custom'] = decodeDeck(deckInfo);
     currentDeck = 'custom';
