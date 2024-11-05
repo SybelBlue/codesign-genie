@@ -2,106 +2,116 @@
   {
     "name": "Book",
     "responsibilities": [
-      { "text": "Store book information (title, author, ISBN)" },
-      { "text": "Track availability status" },
-      { "text": "Maintain loan history" }
-    ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Loan" },
-      { "name": "Member" }
+      {
+        "description": "Store book information (title, author, ISBN)",
+        "collaborators": [{ "name": "Library" }]
+      },
+      {
+        "description": "Track availability status",
+        "collaborators": [{ "name": "Loan" }]
+      },
+      {
+        "description": "Maintain loan history",
+        "collaborators": [{ "name": "Member" }]
+      }
     ]
   },
   {
     "name": "Member",
     "responsibilities": [
-      { "text": "Store member information" },
-      { "text": "Track current loans" },
-      { "text": "Manage loan history" }
-    ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Loan" },
-      { "name": "Book" }
+      {
+        "description": "Store member information",
+        "collaborators": [{ "name": "Library" }]
+      },
+      {
+        "description": "Track current loans",
+        "collaborators": [{ "name": "Loan" }]
+      },
+      {
+        "description": "Manage loan history",
+        "collaborators": [{ "name": "Book" }]
+      }
     ]
   },
   {
     "name": "Library",
     "responsibilities": [
-      { "text": "Manage book inventory" },
-      { "text": "Handle member registrations" },
-      { "text": "Process loans and returns" }
-    ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Member" },
-      { "name": "Loan" },
-      { "name": "Librarian" }
+      {
+        "description": "Manage book inventory",
+        "collaborators": [{ "name": "Book" }]
+      },
+      {
+        "description": "Handle member registrations",
+        "collaborators": [{ "name": "Member" }]
+      },
+      {
+        "description": "Process loans and returns",
+        "collaborators": [{ "name": "Loan" }, { "name": "Librarian" }]
+      }
     ]
   },
   {
     "name": "Loan",
     "responsibilities": [
-      { "text": "Track loan details (book, member, dates)" },
-      { "text": "Calculate due dates and fines" },
-      { "text": "Handle renewals" }
-    ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Member" },
-      { "name": "Library" }
+      {
+        "description": "Track loan details (book, member, dates)",
+        "collaborators": [{ "name": "Book" }, { "name": "Member" }]
+      },
+      { "description": "Calculate due dates and fines", "collaborators": [] },
+      {
+        "description": "Handle renewals",
+        "collaborators": [{ "name": "Library" }, { "name": "Book" }]
+      }
     ]
   },
   {
     "name": "Librarian",
     "responsibilities": [
-      { "text": "Process loan and return transactions" },
-      { "text": "Manage member accounts" },
-      { "text": "Handle overdue notices and fines" }
-    ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Member" },
-      { "name": "Loan" }
+      {
+        "description": "Process loan and return transactions",
+        "collaborators": [{ "name": "Library" }]
+      },
+      { "description": "Manage member accounts", "collaborators": [{ "name": "Member" }] },
+      {
+        "description": "Handle overdue notices and fines",
+        "collaborators": [{ "name": "Member" }, { "name": "Loan" }]
+      }
     ]
   },
   {
     "name": "Catalog",
     "responsibilities": [
-      { "text": "Maintain searchable book database" },
-      { "text": "Provide search functionality" },
-      { "text": "Update book information" }
-    ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Library" }
+      {
+        "description": "Maintain searchable book database",
+        "collaborators": [{ "name": "Library" }]
+      },
+      { "description": "Provide search functionality", "collaborators": [{ "name": "Library" }] },
+      { "description": "Update book information", "collaborators": [{ "name": "Book" }] }
     ]
   },
   {
     "name": "Reservation",
     "responsibilities": [
-      { "text": "Handle book reservations" },
-      { "text": "Manage reservation queue" },
-      { "text": "Notify members when reserved books are available" }
-    ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Member" },
-      { "name": "Library" }
+      { "description": "Handle book reservations", "collaborators": [{ "name": "Book" }] },
+      { "description": "Manage reservation queue", "collaborators": [{ "name": "Member" }] },
+      {
+        "description": "Notify members when reserved books are available",
+        "collaborators": [{ "name": "Library" }]
+      }
     ]
   },
   {
     "name": "Report",
     "responsibilities": [
-      { "text": "Generate usage statistics" },
-      { "text": "Create overdue reports" },
-      { "text": "Produce member activity summaries" }
-    ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Loan" },
-      { "name": "Book" },
-      { "name": "Member" }
+      {
+        "description": "Generate usage statistics",
+        "collaborators": [{ "name": "Library" }, { "name": "Book" }]
+      },
+      { "description": "Create overdue reports", "collaborators": [{ "name": "Loan" }] },
+      {
+        "description": "Produce member activity summaries",
+        "collaborators": [{ "name": "Member" }]
+      }
     ]
   }
 ]

@@ -1,10 +1,15 @@
 <script module lang="ts">
   import type { Keyed } from '$lib/types';
 
-  export interface Props {
+  interface Data {
     name: string;
-    responsibilities: Keyed<{ text: string }>[];
-    collaborators: Keyed<{ name: string }>[];
+    responsibilities: Keyed<{ 
+      description: string;
+      collaborators: Keyed<{ name: string }>[];
+    }>[];
+  }
+
+  export interface Props extends Data {
     selectName?: (name: string) => void;
   }
 </script>
@@ -16,7 +21,6 @@
   let {
     name = $bindable(),
     responsibilities = $bindable(),
-    collaborators = $bindable(),
     selectName,
   }: Props = $props();
 
@@ -35,22 +39,31 @@
     <h3 class="card-title m-1 mb-0 italic"><ClassLabel disabled {name} /></h3>
     <hr class="border-primary">
     <div class="flex flex-row">
-      <div class="ps-0 grow">
-        <h4>responsibilities</h4>
-        <ul>
+      <table>
+        <colgroup>
+          <col class="ps-0 grow">
+          <col class="pe-2 min-w-fit">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>responsibilities</th>
+            <th>collaborators</th>
+          </tr>
+        </thead>
+        <tbody>
           {#each responsibilities as r (r.id)}
-            <li class="w-full"> <input bind:value={r.text} /> </li>
+          <tr>
+            <td> <input bind:value={r.description} /> </td>
+            <td>
+              {#each r.collaborators as { name, id }, i (id)}
+                {#if i != 0} , &nbsp; {/if}
+                <ClassLabel {selectName} {name} />
+              {/each}
+            </td>
+          </tr>
           {/each}
-        </ul>
-      </div>
-      <div class="pe-2 min-w-fit">
-        <h4>collaborators</h4>
-        <ul>
-          {#each collaborators as { name, id } (id)}
-            <li> <ClassLabel {selectName} {name} /> </li>
-          {/each}
-        </ul>
-      </div>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -59,6 +72,9 @@
   h4 {
     @apply text-base-content italic m-1 underline;
     text-decoration-color: oklch(var(--p));
+  }
+  tr {
+    @apply border-b border-base-300;
   }
 
   input {
