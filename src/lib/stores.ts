@@ -11,3 +11,6 @@ export const debug = (() => {
     (v) => (_debug = dev && v)
   );
 })();
+
+export const deckNames = writable<string[]>([]);
+export const currentDeck = writable<string>("rpg");
