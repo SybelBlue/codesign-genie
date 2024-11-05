@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import { availableClasses, debug } from '$lib/stores';
   import DeckChanger from '$lib/components/DeckChanger.svelte';
   import Editor from '$lib/components/Editor.svelte';
@@ -42,8 +41,6 @@
     </script>
   {/if}
 </svelte:head>
-
-<ThemeChanger />
 
 <CardBoard
   bind:cards={decks[currentDeck]}
