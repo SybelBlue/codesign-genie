@@ -49,18 +49,27 @@ const CARD_SCHEMA: JSONObjectSchema = {
     responsibilities: {
       type: 'array',
       items: {
-        type: 'string',
-        description:
-          'The responsibilities that the resource has, e.g. Maintains a ledger of library cards'
+        type: 'object',
+        properties : {
+          description: {
+            type: 'string',
+            description : 'The responsibilities that the resource has, e.g. Maintains a ledger of library cards'
+          },
+          collaborators : {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  description: 'The collaborating resources for this resource, e.g. LibraryCard'
+                }
+              }
+            }
+          }
+        }
       }
     },
-    collaborators: {
-      type: 'array',
-      items: {
-        type: 'string',
-        description: 'The collaborating resources for this resource, e.g. LibraryCard'
-      }
-    }
   },
   additionalProperties: false,
   required: ['name', 'responsibilities', 'collaborators']
@@ -89,18 +98,22 @@ export const SCHEMAS = {
 export const TYPEDEFS = {
   Card: `
 {
-  name: string,
-  responsibilities: Array<string>,
-  collaborators: Array<string>
+  name: string;
+  responsibilities: Array<{
+    description: string;
+    collaborators: Array<{ name: string }>;
+  }>;
 }
 `.trim(),
   Deck: `
 {
   cards: Array<{
-    name: string,
-    responsibilities: Array<string>,
-    collaborators: Array<string>
-  }>
+    name: string;
+    responsibilities: Array<{
+      description: string;
+      collaborators: Array<{ name: string }>;
+    }>;
+  }>;
 }
 `.trim()
 };
