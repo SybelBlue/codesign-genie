@@ -2,221 +2,218 @@
   {
     "name": "Patient",
     "responsibilities": [
-      { "text": "Store personal information" },
-      { "text": "Manage medical history" },
-      { "text": "Track current medications" },
-      { "text": "Schedule appointments" }
-    ],
-    "collaborators": [
-      { "name": "Doctor" },
-      { "name": "Nurse" },
-      { "name": "Appointment" },
-      { "name": "MedicalRecord" }
+      {
+        "description": "Store personal information",
+        "collaborators": [{ "name": "Nurse" }, { "name": "MedicalRecord" }]
+      },
+      { "description": "Manage medical history", "collaborators": [{ "name": "MedicalRecord" }] },
+      { "description": "Track current medications", "collaborators": [{ "name": "Doctor" }] },
+      { "description": "Schedule appointments", "collaborators": [{ "name": "Appointment" }] }
     ]
   },
   {
     "name": "Doctor",
     "responsibilities": [
-      { "text": "Diagnose patients" },
-      { "text": "Prescribe treatments" },
-      { "text": "Perform procedures" },
-      { "text": "Review patient history" },
-      { "text": "Manage care plans" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "Nurse" },
-      { "name": "MedicalRecord" },
-      { "name": "Prescription" },
-      { "name": "Laboratory" }
+      { "description": "Diagnose patients", "collaborators": [{ "name": "Patient" }] },
+      {
+        "description": "Prescribe treatments",
+        "collaborators": [{ "name": "Patient" }, { "name": "Prescription" }]
+      },
+      {
+        "description": "Perform procedures",
+        "collaborators": [{ "name": "Patient" }, { "name": "Nurse" }]
+      },
+      { "description": "Review patient history", "collaborators": [{ "name": "MedicalRecord" }] },
+      { "description": "Manage care plans", "collaborators": [{ "name": "Prescription" }] }
     ]
   },
   {
     "name": "Nurse",
     "responsibilities": [
-      { "text": "Assist doctors" },
-      { "text": "Administer medications" },
-      { "text": "Monitor patient vitals" },
-      { "text": "Update patient records" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "Doctor" },
-      { "name": "MedicalRecord" },
-      { "name": "Medication" }
+      { "description": "Assist doctors", "collaborators": [{ "name": "Doctor" }] },
+      {
+        "description": "Administer medications",
+        "collaborators": [{ "name": "Medication" }, { "name": "Patient" }]
+      },
+      { "description": "Monitor patient vitals", "collaborators": [{ "name": "Patient" }] },
+      {
+        "description": "Update patient records",
+        "collaborators": [{ "name": "Patient" }, { "name": "MedicalRecord" }]
+      }
     ]
   },
   {
     "name": "Appointment",
     "responsibilities": [
-      { "text": "Store appointment details" },
-      { "text": "Manage scheduling" },
-      { "text": "Send reminders" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "Doctor" },
-      { "name": "Room" }
+      { "description": "Store appointment details", "collaborators": [{ "name": "Room" }] },
+      {
+        "description": "Manage scheduling",
+        "collaborators": [{ "name": "Patient" }, { "name": "Doctor" }, { "name": "Room" }]
+      },
+      {
+        "description": "Send reminders",
+        "collaborators": [{ "name": "Patient" }, { "name": "Doctor" }]
+      }
     ]
   },
   {
     "name": "MedicalRecord",
     "responsibilities": [
-      { "text": "Store patient medical history" },
-      { "text": "Track treatments and outcomes" },
-      { "text": "Manage test results" },
-      { "text": "Generate reports" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "Doctor" },
-      { "name": "Nurse" },
-      { "name": "Laboratory" }
+      { "description": "Store patient medical history", "collaborators": [{ "name": "Patient" }] },
+      {
+        "description": "Track treatments and outcomes",
+        "collaborators": [{ "name": "Laboratory" }]
+      },
+      {
+        "description": "Manage test results",
+        "collaborators": [{ "name": "Doctor" }, { "name": "Nurse" }, { "name": "Laboratory" }]
+      },
+      { "description": "Generate reports", "collaborators": [] }
     ]
   },
   {
     "name": "Prescription",
     "responsibilities": [
-      { "text": "Store medication details" },
-      { "text": "Track dosage and frequency" },
-      { "text": "Manage refills" }
-    ],
-    "collaborators": [
-      { "name": "Doctor" },
-      { "name": "Patient" },
-      { "name": "Pharmacy" }
+      { "description": "Store medication details", "collaborators": [{ "name": "Pharmacy" }] },
+      { "description": "Track dosage and frequency", "collaborators": [{ "name": "Doctor" }] },
+      { "description": "Manage refills", "collaborators": [{ "name": "Pharmacy" }] }
     ]
   },
   {
     "name": "Laboratory",
     "responsibilities": [
-      { "text": "Process test samples" },
-      { "text": "Generate test results" },
-      { "text": "Manage equipment" }
-    ],
-    "collaborators": [
-      { "name": "Doctor" },
-      { "name": "MedicalRecord" },
-      { "name": "LabTechnician" }
+      {
+        "description": "Process test samples",
+        "collaborators": [{ "name": "Doctor" }, { "name": "LabTechnician" }]
+      },
+      {
+        "description": "Generate test results",
+        "collaborators": [{ "name": "LabTechnician" }, { "name": "MedicalRecord" }]
+      },
+      { "description": "Manage equipment", "collaborators": [{ "name": "LabTechnician" }] }
     ]
   },
   {
     "name": "Medication",
     "responsibilities": [
-      { "text": "Store drug information" }
-    ],
-    "collaborators": [
-      { "name": "Prescription" },
-      { "name": "Pharmacy" }
+      {
+        "description": "Store drug information",
+        "collaborators": [{ "name": "Prescription" }, { "name": "Pharmacy" }]
+      }
     ]
   },
   {
     "name": "Room",
     "responsibilities": [
-      { "text": "Track room availability" },
-      { "text": "Manage room assignments" },
-      { "text": "Schedule cleaning" }
-    ],
-    "collaborators": [
-      { "name": "Appointment" },
-      { "name": "HousekeepingStaff" }
+      { "description": "Track room availability", "collaborators": [{ "name": "Appointment" }] },
+      { "description": "Manage room assignments", "collaborators": [{ "name": "Appointment" }] },
+      { "description": "Schedule cleaning", "collaborators": [{ "name": "HousekeepingStaff" }] }
     ]
   },
   {
     "name": "Pharmacy",
     "responsibilities": [
-      { "text": "Manage medication inventory" },
-      { "text": "Fill prescriptions" },
-      { "text": "Provide drug information" }
-    ],
-    "collaborators": [
-      { "name": "Prescription" },
-      { "name": "Medication" },
-      { "name": "Patient" }
+      { "description": "Manage medication inventory", "collaborators": [{ "name": "Medication" }] },
+      { "description": "Fill prescriptions", "collaborators": [{ "name": "Prescription" }] },
+      { "description": "Provide drug information", "collaborators": [{ "name": "Patient" }] }
     ]
   },
   {
     "name": "BillingDepartment",
     "responsibilities": [
-      { "text": "Generate invoices" },
-      { "text": "Process payments" },
-      { "text": "Manage insurance claims" },
-      { "text": "Handle financial inquiries" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "InsuranceProvider" },
-      { "name": "MedicalRecord" }
+      { "description": "Generate invoices", "collaborators": [{ "name": "InsuranceProvider" }] },
+      {
+        "description": "Process payments",
+        "collaborators": [{ "name": "Patient" }, { "name": "InsuranceProvider" }]
+      },
+      {
+        "description": "Manage insurance claims",
+        "collaborators": [{ "name": "MedicalRecord" }, { "name": "InsuranceProvider" }]
+      },
+      {
+        "description": "Handle financial inquiries",
+        "collaborators": [{ "name": "Patient" }, { "name": "InsuranceProvider" }]
+      }
     ]
   },
   {
     "name": "EmergencyDepartment",
     "responsibilities": [
-      { "text": "Triage patients" },
-      { "text": "Provide immediate care" },
-      { "text": "Coordinate with other departments" },
-      { "text": "Manage trauma cases" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "Doctor" },
-      { "name": "Nurse" },
-      { "name": "Ambulance" }
+      {
+        "description": "Triage patients",
+        "collaborators": [{ "name": "Patient" }, { "name": "Nurse" }, { "name": "Ambulance" }]
+      },
+      {
+        "description": "Provide immediate care",
+        "collaborators": [{ "name": "Patient" }, { "name": "Nurse" }, { "name": "Ambulance" }]
+      },
+      {
+        "description": "Coordinate with other departments",
+        "collaborators": [{ "name": "Doctor" }, { "name": "Nurse" }]
+      },
+      {
+        "description": "Manage trauma cases",
+        "collaborators": [{ "name": "Patient" }, { "name": "Ambulance" }]
+      }
     ]
   },
   {
     "name": "MedicalEquipment",
     "responsibilities": [
-      { "text": "Track equipment inventory" },
-      { "text": "Schedule maintenance" },
-      { "text": "Manage equipment assignments" }
-    ],
-    "collaborators": [
-      { "name": "TechnicalSupport" },
-      { "name": "Doctor" },
-      { "name": "Nurse" }
+      { "description": "Track equipment inventory", "collaborators": [] },
+      { "description": "Schedule maintenance", "collaborators": [{ "name": "TechnicalSupport" }] },
+      {
+        "description": "Manage equipment assignments",
+        "collaborators": [{ "name": "Doctor" }, { "name": "Nurse" }]
+      }
     ]
   },
   {
     "name": "Ambulance",
     "responsibilities": [
-      { "text": "Respond to emergency calls" },
-      { "text": "Provide on-site medical care" },
-      { "text": "Transport patients" },
-      { "text": "Communicate with hospital" }
-    ],
-    "collaborators": [
-      { "name": "EmergencyDepartment" },
-      { "name": "Patient" },
-      { "name": "Paramedic" }
+      {
+        "description": "Respond to emergency calls",
+        "collaborators": [{ "name": "EmergencyDepartment" }]
+      },
+      { "description": "Provide on-site medical care", "collaborators": [{ "name": "Paramedic" }] },
+      {
+        "description": "Transport patients",
+        "collaborators": [{ "name": "Patient" }, { "name": "Paramedic" }]
+      },
+      {
+        "description": "Communicate with hospital",
+        "collaborators": [{ "name": "EmergencyDepartment" }, { "name": "Paramedic" }]
+      }
     ]
   },
   {
     "name": "LabTechnician",
     "responsibilities": [
-      { "text": "Conduct laboratory tests" },
-      { "text": "Maintain lab equipment" },
-      { "text": "Record and verify results" }
-    ],
-    "collaborators": [
-      { "name": "Laboratory" },
-      { "name": "Doctor" },
-      { "name": "MedicalRecord" }
+      {
+        "description": "Conduct laboratory tests",
+        "collaborators": [{ "name": "Doctor" }, { "name": "Laboratory" }]
+      },
+      { "description": "Maintain lab equipment", "collaborators": [{ "name": "Laboratory" }] },
+      { "description": "Record and verify results", "collaborators": [{ "name": "MedicalRecord" }] }
     ]
   },
   {
     "name": "InsuranceProvider",
     "responsibilities": [
-      { "text": "Verify patient coverage" },
-      { "text": "Process claims" },
-      { "text": "Communicate with billing department" },
-      { "text": "Manage policy information" },
-      { "text": "Handle appeals" }
-    ],
-    "collaborators": [
-      { "name": "Patient" },
-      { "name": "BillingDepartment" },
-      { "name": "MedicalRecord" }
+      { "description": "Verify patient coverage", "collaborators": [{ "name": "Patient" }] },
+      { "description": "Process claims", "collaborators": [] },
+      {
+        "description": "Communicate with billing department",
+        "collaborators": [{ "name": "BillingDepartment" }]
+      },
+      {
+        "description": "Manage policy information",
+        "collaborators": [{ "name": "MedicalRecord" }]
+      },
+      {
+        "description": "Handle appeals",
+        "collaborators": [{ "name": "Patient" }, { "name": "MedicalRecord" }]
+      }
     ]
   }
 ]

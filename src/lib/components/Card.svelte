@@ -1,10 +1,15 @@
 <script module lang="ts">
   import type { Keyed } from '$lib/types';
 
-  export interface Props {
+  interface Data {
     name: string;
-    responsibilities: Keyed<{ text: string }>[];
-    collaborators: Keyed<{ name: string }>[];
+    responsibilities: Keyed<{ 
+      description: string;
+      collaborators: Keyed<{ name: string }>[];
+    }>[];
+  }
+
+  export interface Props extends Data {
     selectName?: (name: string) => void;
   }
 </script>
@@ -16,7 +21,6 @@
   let {
     name = $bindable(),
     responsibilities = $bindable(),
-    collaborators = $bindable(),
     selectName,
   }: Props = $props();
 
@@ -35,7 +39,27 @@
     <h3 class="card-title m-1 mb-0 italic"><ClassLabel disabled {name} /></h3>
     <hr class="border-primary">
     <div class="flex flex-row">
-      <div class="ps-0 grow">
+      <table>
+        <thead>
+          <tr>
+            <th>responsibilities</th>
+            <th>collaborators</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each responsibilities as r (r.id)}
+          <tr>
+            <td class="w-full"> <input bind:value={r.description} /> </td>
+            <td>
+              {#each r.collaborators as { name, id } (id)}
+                <ClassLabel {selectName} {name} />
+              {/each}
+            </td>
+          </tr>
+          {/each}
+        </tbody>
+      </table>
+      <!-- <div class="ps-0 grow">
         <h4>responsibilities</h4>
         <ul>
           {#each responsibilities as r (r.id)}
@@ -50,7 +74,7 @@
             <li> <ClassLabel {selectName} {name} /> </li>
           {/each}
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
