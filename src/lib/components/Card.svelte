@@ -73,6 +73,9 @@
     @apply text-base-content italic m-1 underline;
     text-decoration-color: oklch(var(--p));
   }
+  tr {
+    @apply border-b border-base-300;
+  }
 
   input {
     @apply text-ellipsis rounded-lg bg-transparent;
