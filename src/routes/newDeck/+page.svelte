@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-
   let loading = $state(false);
   let description = $state('');
   const schema = 'Deck';
@@ -34,7 +32,7 @@
           const deck = await response.json();
           console.log(deck);
           const b64payload = btoa(JSON.stringify(deck));
-          goto(`/?customDeckInfo=${b64payload}`);
+          localStorage.setItem("customDeckInfo", b64payload);
         }}
       />
     {/if}
