@@ -41,7 +41,7 @@
 
 <div
   title="Change Theme"
-  class="dropdown dropdown-end fixed top-2 right-2 z-30 [@supports(color:oklch(0%_0_0))]:block"
+  class="dropdown dropdown-end z-30 [@supports(color:oklch(0%_0_0))]:block"
   >
   <div tabindex="0" role="button" class="btn btn-neutral btn-circle">
     <svg
