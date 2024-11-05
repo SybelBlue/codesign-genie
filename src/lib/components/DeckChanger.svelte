@@ -26,7 +26,7 @@
   <div
     class="dropdown-content bg-base-200 text-base-content rounded-box top-px max-h-[calc(100vh-10rem)] w-56 overflow-y-auto border border-white/5 shadow-2xl outline outline-1 outline-black/5 mt-16">
     <div class="grid grid-cols-1 gap-3 p-3">
-      {#each Object.entries(decks) as [name, deck]}
+      {#each decks as name}
         <button
           class="outline-base-content text-start outline-offset-4"
           data-act-class="[&_svg]:visible"
@@ -46,9 +46,7 @@
                   <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z">
                   </path>
                 </svg>
-                <span class="flex-grow text-sm">
-                  {name} ({deck.length} cards)
-                </span>
+                <span class="flex-grow text-sm">{name}</span>
               </span>
             </span>
           </span>
