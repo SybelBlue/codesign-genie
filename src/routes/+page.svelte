@@ -1,27 +1,30 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import { availableClasses, debug } from '$lib/stores';
+  import { decodeDeck, exampleDecks } from '$lib/decks';
+  import type { CardProps } from '$lib/types';
+
+  import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import DeckChanger from '$lib/components/DeckChanger.svelte';
   import Editor from '$lib/components/Editor.svelte';
-  import { decodeDeck, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardProps } from '$lib/types';
-  import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
 
   let decks = $state(exampleDecks);
   let deckNames = $derived(Object.keys(decks));
 
   let selectedCard: CardProps | undefined = $state();
   let currentDeck = $state("rpg");
-
-  let params = $page.url.searchParams;
-  let deckInfo = params.get('customDeckInfo');
   let readyForCommit: boolean = $state(false);
-  if (deckInfo != null) {
-    decks['custom'] = decodeDeck(deckInfo);
-    currentDeck = 'custom';
-  }
+
+  let deckInfo: string | null = $state(null);
+  if (browser)
+    deckInfo = localStorage.getItem('customDeckInfo');
+  $effect(() => {
+    if (deckInfo) {
+      decks['custom'] = decodeDeck(deckInfo);
+      currentDeck = 'custom';
+    }
+  });
 
   $effect(() => {
     $availableClasses = decks[currentDeck].map(c => c.name);
@@ -85,7 +88,7 @@ ${JSON.stringify(commit.card)}
     }).then((response) =>
       response.json().then((deck) => {
         let b64payload = btoa(JSON.stringify(deck));
-        goto(`/?customDeckInfo=${b64payload}`);
+        localStorage.setItem("customDeckInfo", b64payload);
       })
     );
     selectedCard = undefined;
