@@ -40,6 +40,10 @@
     <hr class="border-primary">
     <div class="flex flex-row">
       <table>
+        <colgroup>
+          <col class="ps-0 grow">
+          <col class="pe-2 min-w-fit">
+        </colgroup>
         <thead>
           <tr>
             <th>responsibilities</th>
@@ -49,9 +53,10 @@
         <tbody>
           {#each responsibilities as r (r.id)}
           <tr>
-            <td class="w-full"> <input bind:value={r.description} /> </td>
+            <td> <input bind:value={r.description} /> </td>
             <td>
-              {#each r.collaborators as { name, id } (id)}
+              {#each r.collaborators as { name, id }, i (id)}
+                {#if i != 0} , &nbsp; {/if}
                 <ClassLabel {selectName} {name} />
               {/each}
             </td>
@@ -59,22 +64,6 @@
           {/each}
         </tbody>
       </table>
-      <!-- <div class="ps-0 grow">
-        <h4>responsibilities</h4>
-        <ul>
-          {#each responsibilities as r (r.id)}
-            <li class="w-full"> <input bind:value={r.text} /> </li>
-          {/each}
-        </ul>
-      </div>
-      <div class="pe-2 min-w-fit">
-        <h4>collaborators</h4>
-        <ul>
-          {#each collaborators as { name, id } (id)}
-            <li> <ClassLabel {selectName} {name} /> </li>
-          {/each}
-        </ul>
-      </div> -->
     </div>
   </div>
 </div>
