@@ -12,7 +12,6 @@
     <nav class="flex items-center gap-4">
       <a href="/" class="px-2 py-1 hover:underline">Sort</a>
       <DeckChanger decks={$deckNames} />
-      <DeckChanger decks={$deckNames} />
       <ThemeChanger />
     </nav>
   </div>
