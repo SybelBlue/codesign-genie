@@ -1,6 +1,7 @@
 <script>
-  // Add any necessary imports or logic here
-  import ThemeChanger from '$lib/components/ThemeChange.svelte';
+  import ThemeChanger from './ThemeChange.svelte';
+  import DeckChanger from './DeckChanger.svelte';
+  import { deckNames } from '$lib/stores';
 </script>
 
 <header class="bg-primary text-primary-content shadow-md">
@@ -9,7 +10,7 @@
     <nav>
       <!-- Add navigation items or other toolbar content here -->
       <a href="/" class="px-2 py-1 hover:underline">Sort</a>
-      <a href="/about" class="px-2 py-1 hover:underline">About</a>
+      <DeckChanger decks={$deckNames} />
       <ThemeChanger />
     </nav>
   </div>
