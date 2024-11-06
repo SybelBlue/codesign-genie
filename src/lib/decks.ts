@@ -13,24 +13,27 @@ export const exampleDecks: Record<string, CardBoardProps['cards']> = {
   rpg: rpgJson.map((card) =>
     withId({
       name: card.name,
-      responsibilities: card.responsibilities.map((r) => withId(
-        {description: r.description, collaborators: r.collaborators.map(withId)}
-      )),
-    })),
+      responsibilities: card.responsibilities.map((r) =>
+        withId({ description: r.description, collaborators: r.collaborators.map(withId) })
+      )
+    })
+  ),
   library: libraryJson.map((card) =>
     withId({
       name: card.name,
-      responsibilities: card.responsibilities.map((r) => withId(
-        {description: r.description, collaborators: r.collaborators.map(withId)}
-      )),
-    })),
+      responsibilities: card.responsibilities.map((r) =>
+        withId({ description: r.description, collaborators: r.collaborators.map(withId) })
+      )
+    })
+  ),
   hospital: hospitalJson.map((card) =>
     withId({
       name: card.name,
-      responsibilities: card.responsibilities.map((r) => withId(
-        {description: r.description, collaborators: r.collaborators.map(withId)}
-      )),
-    }))
+      responsibilities: card.responsibilities.map((r) =>
+        withId({ description: r.description, collaborators: r.collaborators.map(withId) })
+      )
+    })
+  )
 };
 
 export const decodeDeck = (deckInfo: string) => {

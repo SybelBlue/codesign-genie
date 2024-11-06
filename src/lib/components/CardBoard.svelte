@@ -32,16 +32,13 @@
     }
   };
 
-  const newCard = (name: string) => withId({
-    name,
-    responsibilities: [],
-    collaborators: [],
-  });
-
   let newClassCounter = 0;
   const addNewCard = () => {
-    const card = newCard('NewClass' + newClassCounter++);
-    cards = [...cards, card];
+    const card = withId({
+      name: 'NewClass' + newClassCounter++,
+      responsibilities: [],
+    });
+    cards.push(card);
     selectCard?.(card);
   };
 </script>
@@ -56,16 +53,18 @@
         {/if}
       </li>
     {/each}
-    <div
-      onfocus={addNewCard}
-      class="h-full btn btn-ghost tw-grow card dark:card-bordered shadow-xl"
-      role="gridcell"
-      tabindex=0
-      >
-      <div class="card-body">
-        <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
+    <li>
+      <div
+        onfocus={addNewCard}
+        class="h-full btn btn-ghost tw-grow card dark:card-bordered shadow-xl"
+        role="gridcell"
+        tabindex=0
+        >
+        <div class="card-body">
+          <div class="btn btn-circle btn-primary btn-outline my-auto"> + </div>
+        </div>
       </div>
-    </div>
+    </li>
   </ul>
 </div>
 
