@@ -38,7 +38,7 @@
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
-          <Card selectName={propagate} {...cardProps} />
+          <Card locked selectName={propagate} {...cardProps} />
         {/if}
       </li>
     {/each}
