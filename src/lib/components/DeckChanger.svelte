@@ -2,17 +2,17 @@
 <script lang="ts">
   interface Props {
     decks: string[];
-    currentDeck: string;
   }
 
-  let { decks, currentDeck = $bindable() }: Props = $props();
+  import { currentDeck } from '$lib/stores';
+  let { decks }: Props = $props();
 </script>
 
 <div
   title="Change Theme"
-  class="dropdown dropdown-end dropdown-top fixed bottom-2 right-2 z-30"
-  >
-  <div tabindex="0" role="button" class="btn btn-rounded">
+  class="dropdown dropdown-end z-30"
+>
+  <div tabindex="0" role="button" class="btn btn-ghost btn-rounded">
     <span class="inline font-normal">Change Deck</span>
     <svg
       width="12px"
@@ -30,7 +30,7 @@
         <button
           class="outline-base-content text-start outline-offset-4"
           data-act-class="[&_svg]:visible"
-          onclick={() => { currentDeck = name; }}
+          on:click={() => { $currentDeck = name; }}
           >
           <span
             class="bg-base-100 rounded-btn text-base-content block w-full cursor-pointer font-sans">
