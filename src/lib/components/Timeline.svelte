@@ -1,10 +1,16 @@
 <script lang="ts">
-    const timelineItems = [
-      { id: 1, text: "First Macintosh computer", date: "1984" },
-      { id: 2, text: "iMac", date: "1998" },
-      { id: 3, text: "iPod", date: "2001" },
-      { id: 4, text: "iPhone", date: "2007" },
-      { id: 5, text: "Apple Watch", date: "2015" }
+    interface TimelineItem {
+        id: number;
+        text: string;
+        date: string;
+    }
+    // hardcoded for until data is pulled from diff
+    const timelineItems: TimelineItem[] = [
+      { id: 1, text: "initial commit", date: "11/14/2024" },
+      { id: 2, text: "updated manna", date: "11/14/2024" },
+      { id: 3, text: "updated character", date: "11/14/2024" },
+      { id: 4, text: "removed Dialogue System", date: "11/14/2024" },
+      { id: 5, text: "add Power up System", date: "11/14/2024" }
     ];
   
   </script>
@@ -26,7 +32,7 @@
       <li>
         {#if index !== 0}<hr />{/if}
         <div class="timeline-middle">
-          {@html checkmarkIcon}
+          {@render checkmarkIcon()}
         </div>
         <div class="timeline-end timeline-box">
           <div class="font-bold">{item.text}</div>
