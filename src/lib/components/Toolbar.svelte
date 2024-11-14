@@ -1,6 +1,7 @@
 <script lang="ts">
   import ThemeChanger from './ThemeChange.svelte';
   import DeckChanger from './DeckChanger.svelte';
+  import TimelinePanel from './TimelinePanel.svelte';
   import { deckNames } from '$lib/stores';
 
   let showTimeline = $state(false);
@@ -9,13 +10,13 @@
 <header class="shadow-md rounded-b-3xl mb-2">
   <div class="container mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-4">
-        <nav class="flex items-center gap-4"> 
-          <button 
-            class="btn btn-ghost btn-sm" 
-            on:click={() => showTimeline = !showTimeline}
-          >
-            {showTimeline ? 'Hide' : 'Show'} Timeline
-          </button>
+      <nav class="flex items-center gap-4"> 
+        <button 
+          class="btn btn-ghost btn-sm" 
+          onclick={() => showTimeline = !showTimeline}
+        >
+          {showTimeline ? 'Hide' : 'Show'} Timeline
+        </button>
       </nav>
     </div>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">
@@ -26,5 +27,8 @@
       <DeckChanger decks={$deckNames} />
       <ThemeChanger />
     </nav>
+  </div>
 </header>
+
+<TimelinePanel show={showTimeline} />
 
