@@ -2,7 +2,7 @@
     import { slide } from 'svelte/transition';
     import Timeline from './Timeline.svelte';
     
-    export let show: boolean;
+let { show }: { show: boolean } = $props();
   </script>
   
   {#if show}
