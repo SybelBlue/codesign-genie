@@ -16,8 +16,13 @@ export const debug = (() => {
 
 export const currentDeck = toStore<Keyed<CardProps>[]>(
   () => {
-    if (!browser || !localStorage.getItem('customDeckInfo')) {
-      return null;
+    if (!browser) {
+      console.error("Tried to read currentDeck on server!");
+      return [];
+    }
+
+    if (!localStorage.getItem('customDeckInfo')) {
+      return [];
     }
 
     const b64string = localStorage.getItem('customDeckInfo') as string;
@@ -26,7 +31,8 @@ export const currentDeck = toStore<Keyed<CardProps>[]>(
   },
   (cards) => {
     if (!browser) {
-      return null;
+      console.error("Tried to set currentDeck on server!");
+      return [];
     }
 
     if (!cards) {
