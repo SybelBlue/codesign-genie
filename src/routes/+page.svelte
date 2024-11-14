@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { page } from '$app/stores';
+
   import { debug } from '$lib/stores';
   import type { CardProps, Deck } from '$lib/types';
 
@@ -7,10 +9,20 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
 
   import { currentDeck } from '$lib/stores';
-  import { deckWithIds } from '$lib/decks';
+  import { deckWithIds, exampleDecks } from '$lib/decks';
 
   let selectedCard: CardProps | undefined = $state();
   let readyForCommit: boolean = $state(false);
+
+  let deckName = $page.url.searchParams.get('deck');
+  if (deckName) {
+    currentDeck.set(exampleDecks[deckName]);
+  }
+
+  let clearDeck = $page.url.searchParams.get('clearDeck');
+  if (clearDeck) {
+    currentDeck.set([]);
+  }
 
   $debug = false;
 </script>
