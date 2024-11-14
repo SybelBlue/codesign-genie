@@ -50,12 +50,13 @@ const CARD_SCHEMA: JSONObjectSchema = {
       type: 'array',
       items: {
         type: 'object',
-        properties : {
+        properties: {
           description: {
             type: 'string',
-            description : 'The responsibilities that the resource has, e.g. Maintains a ledger of library cards'
+            description:
+              'The responsibilities that the resource has, e.g. Maintains a ledger of library cards'
           },
-          collaborators : {
+          collaborators: {
             type: 'array',
             items: {
               type: 'object',
@@ -69,7 +70,7 @@ const CARD_SCHEMA: JSONObjectSchema = {
           }
         }
       }
-    },
+    }
   },
   additionalProperties: false,
   required: ['name', 'responsibilities', 'collaborators']
@@ -116,6 +117,16 @@ export const TYPEDEFS = {
   }>;
 }
 `.trim()
+};
+
+export type Deck = {
+  cards: Array<{
+    name: string;
+    responsibilities: Array<{
+      description: string;
+      collaborators: Array<{ name: string }>;
+    }>;
+  }>;
 };
 
 import type { Props as CardProps } from '$lib/components/Card.svelte';

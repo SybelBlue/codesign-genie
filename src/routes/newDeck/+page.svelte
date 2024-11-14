@@ -1,4 +1,10 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+
+  import type { Deck } from '$lib/types';
+  import { deckWithIds } from '$lib/decks';
+  import { currentDeck } from '$lib/stores';
+
   let loading = $state(false);
   let description = $state('');
   const schema = 'Deck';
@@ -13,7 +19,7 @@
     name="userDescription"
     id="descriptionInput"
     class="input input-bordered m-2"
-></textarea>
+  ></textarea>
 
   <div class="flex justify-center ml-auto w-1/3">
     {#if loading}
@@ -29,10 +35,10 @@
             method: 'POST',
             body: JSON.stringify({ description, schema })
           });
-          const deck = await response.json();
+          let deck: Deck = await response.json();
           console.log(deck);
-          const b64payload = btoa(JSON.stringify(deck));
-          localStorage.setItem("customDeckInfo", b64payload);
+          currentDeck.set(deckWithIds(deck));
+          goto('/');
         }}
       />
     {/if}
