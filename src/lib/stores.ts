@@ -14,7 +14,7 @@ export const debug = (() => {
   );
 })();
 
-export const currentDeck = toStore<Keyed<CardProps>[] | null>(
+export const currentDeck = toStore<Keyed<CardProps>[]>(
   () => {
     if (!browser || !localStorage.getItem('customDeckInfo')) {
       return null;
@@ -22,7 +22,7 @@ export const currentDeck = toStore<Keyed<CardProps>[] | null>(
 
     const b64string = localStorage.getItem('customDeckInfo') as string;
     const obj = JSON.parse(atob(b64string));
-    return obj.response.cards;
+    return obj;
   },
   (cards) => {
     if (!browser) {
