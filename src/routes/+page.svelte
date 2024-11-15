@@ -48,7 +48,7 @@
 
 <Toolbar />
 
-<main class="w-full">
+<main class="relative grow overflow-visible">
   <CardBoard
     bind:cards={decks[$currentDeck]}
     selectCard={(card) => {
@@ -56,12 +56,12 @@
       selectedCard = card;
     }}
     />
-</main>
 
-<Editor
-  bind:card={selectedCard}
-  onCommit={(commit) => {
-    console.log('Commit card', commit.message, commit.card);
-    selectedCard = undefined;
-  }}
-/>
+  <Editor
+    bind:card={selectedCard}
+    onCommit={(commit) => {
+      console.log('Commit card', commit.message, commit.card);
+      selectedCard = undefined;
+    }}
+    />
+</main>

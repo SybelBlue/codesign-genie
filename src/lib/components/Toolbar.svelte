@@ -8,7 +8,7 @@
   let showDeck = $state(false);
 </script>
 
-<header class="static top-0 w-full shadow-md rounded-b-3xl mb-2 z-50">
+<header class="sticky top-0 w-full shadow-md rounded-b-3xl mb-2 z-50">
   <div class="w-full px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-4">
       <nav class="flex items-center gap-4">
