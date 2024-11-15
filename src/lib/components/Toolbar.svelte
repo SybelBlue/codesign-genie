@@ -8,8 +8,8 @@
   let showDeck = $state(false);
 </script>
 
-<header class="bg-secondary shadow-md rounded-b-3xl mb-2">
-  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+<header class="bg-secondary shadow-md rounded-b-3xl mb-2 z-50">
+  <div class="w-full px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-4">
       <nav class="flex items-center gap-4"> 
         <button 
