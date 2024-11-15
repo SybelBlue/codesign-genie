@@ -1,5 +1,5 @@
 <script lang="ts">
-    interface TimelineItem {
+    type TimelineItem {
         id: number;
         text: string;
         date: string;
