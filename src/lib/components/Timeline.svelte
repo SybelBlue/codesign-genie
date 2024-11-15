@@ -1,5 +1,5 @@
 <script lang="ts">
-    type TimelineItem {
+    type TimelineItem = {
         id: number;
         text: string;
         date: string;
