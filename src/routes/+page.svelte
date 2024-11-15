@@ -35,7 +35,7 @@
   <title>CARA / {$currentDeck}</title>
   <meta name="description" content="crc card design game" />
 
-  <!-- patch to delay pageload until theme is ready in deployment -->
+  <!-- patch to delay page load until theme is ready in deployment -->
   {#if !$debug}
     <script async crossorigin="anonymous">
       var selectedTheme = localStorage.getItem('theme');
@@ -45,20 +45,18 @@
     </script>
   {/if}
 </svelte:head>
-<div class="flex flex-col min-h-screen w-full">
-  <Toolbar />
-  <main class="flex-1 w-full">
-    <div class="grid grid-cols-1">
-      <CardBoard
-        bind:cards={decks[$currentDeck]}
-        selectCard={(card) => {
-          console.log('Card selected:', card.name);
-          selectedCard = card;
-        }}
-      />
-    </div>
-  </main>
-</div>
+
+<Toolbar />
+
+<main class="w-full">
+  <CardBoard
+    bind:cards={decks[$currentDeck]}
+    selectCard={(card) => {
+      console.log('Card selected:', card.name);
+      selectedCard = card;
+    }}
+    />
+</main>
 
 <Editor
   bind:card={selectedCard}

@@ -1,7 +1,6 @@
 <script module lang="ts">
   import type { Props as CardProps } from './Card.svelte';
   import type { Keyed } from '$lib/types';
-  import Toolbar from './Toolbar.svelte';
 
   export interface Props {
     cards: Keyed<CardProps>[];
