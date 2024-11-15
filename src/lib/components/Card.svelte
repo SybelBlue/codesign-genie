@@ -19,29 +19,23 @@
   import { highlightedClass } from '$lib/stores';
   import ClassLabel from '$lib/components/ClassLabel.svelte';
 
-  let {
-    name = $bindable(),
-    responsibilities = $bindable(),
-    locked,
-    selectName,
-  }: Props = $props();
+  let { name = $bindable(), responsibilities = $bindable(), locked, selectName }: Props = $props();
 
   let highlight = $derived($highlightedClass === name);
 </script>
-
 
 <div
   onfocus={() => selectName?.(name)}
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
-  tabindex=0
-  >
+  tabindex="0"
+>
   <section class="card-body">
     <h3 class="card-title m-1 mb-0 italic">
       <ClassLabel disabled {selectName} {name} />
     </h3>
-    <hr class="border-primary">
+    <hr class="border-primary" />
     <table class="table table-auto table-sm">
       <thead>
         <tr>

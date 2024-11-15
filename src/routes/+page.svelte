@@ -25,8 +25,8 @@
   }
 
   $effect(() => {
-    $availableClasses = decks[$currentDeck].map(c => c.name);
-  })
+    $availableClasses = decks[$currentDeck].map((c) => c.name);
+  });
 
   $debug = false;
 </script>
@@ -38,9 +38,9 @@
   <!-- patch to delay pageload until theme is ready in deployment -->
   {#if !$debug}
     <script async crossorigin="anonymous">
-      var selectedTheme = localStorage.getItem("theme");
-      if(selectedTheme) {
-          document.documentElement.setAttribute("data-theme", selectedTheme);
+      var selectedTheme = localStorage.getItem('theme');
+      if (selectedTheme) {
+        document.documentElement.setAttribute('data-theme', selectedTheme);
       }
     </script>
   {/if}
@@ -49,12 +49,12 @@
   <Toolbar />
   <main class="flex-1 w-full">
     <div class="grid grid-cols-1">
-    <CardBoard
-      bind:cards={decks[$currentDeck]}
-  selectCard={(card) => {
-    console.log("Card selected:", card.name)
-        selectedCard = card;
-      }}
+      <CardBoard
+        bind:cards={decks[$currentDeck]}
+        selectCard={(card) => {
+          console.log('Card selected:', card.name);
+          selectedCard = card;
+        }}
       />
     </div>
   </main>
@@ -63,13 +63,7 @@
 <Editor
   bind:card={selectedCard}
   onCommit={(commit) => {
-    console.log(
-      "Commit card",
-      commit.message,
-      commit.card
-    );
+    console.log('Commit card', commit.message, commit.card);
     selectedCard = undefined;
   }}
-  />
-
-
+/>

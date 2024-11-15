@@ -13,15 +13,15 @@
 </script>
 
 <span
-  onmouseenter={() => $highlightedClass = disabled ? undefined : name}
-  onmouseleave={() => $highlightedClass = undefined}
+  onmouseenter={() => ($highlightedClass = disabled ? undefined : name)}
+  onmouseleave={() => ($highlightedClass = undefined)}
   onfocus={() => selectName?.(name)}
   class:enabled={!disabled && hasACard}
   class:no-card={!hasACard}
   class="text-accent"
   role="link"
-  tabindex=0
-  >{name}</span>
+  tabindex="0">{name}</span
+>
 
 <style lang="postcss">
   span {
@@ -33,10 +33,10 @@
     }
 
     &.no-card {
-      color: var(--fallback-nc,oklch(var(--nc)/0.8));
+      color: var(--fallback-nc, oklch(var(--nc) / 0.8));
 
       &:hover {
-        color: var(--fallback-nc,oklch(var(--nc)/0.3));
+        color: var(--fallback-nc, oklch(var(--nc) / 0.3));
       }
     }
   }

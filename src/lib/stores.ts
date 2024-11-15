@@ -14,4 +14,4 @@ export const debug = (() => {
 
 // WIP: values will be dynamic post-milestone 2: button on Toolbar.svelte is hardcoded and disabled until then
 export const deckNames = writable<string[]>([]);
-export const currentDeck = writable<string>("rpg");
+export const currentDeck = writable<string>('rpg');

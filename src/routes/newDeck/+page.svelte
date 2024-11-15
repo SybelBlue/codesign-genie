@@ -15,7 +15,7 @@
     name="userDescription"
     id="descriptionInput"
     class="input input-bordered m-2"
-></textarea>
+  ></textarea>
 
   <div class="flex justify-center ml-auto w-1/3">
     {#if loading}
