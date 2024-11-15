@@ -6,6 +6,7 @@
   import { decodeDeck, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
+  import Toolbar from '$lib/components/Toolbar.svelte';
 
   let decks = $state(exampleDecks);
 
@@ -44,14 +45,20 @@
     </script>
   {/if}
 </svelte:head>
-
-<CardBoard
-  bind:cards={decks[$currentDeck]}
+<div class="flex flex-col min-h-screen w-full">
+  <Toolbar />
+  <main class="flex-1 w-full">
+    <div class="grid grid-cols-1">
+    <CardBoard
+      bind:cards={decks[$currentDeck]}
   selectCard={(card) => {
     console.log("Card selected:", card.name)
-    selectedCard = card;
-  }}
-  />
+        selectedCard = card;
+      }}
+      />
+    </div>
+  </main>
+</div>
 
 <Editor
   bind:card={selectedCard}
