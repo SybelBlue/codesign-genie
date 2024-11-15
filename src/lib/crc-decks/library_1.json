@@ -6,11 +6,7 @@
       { "text": "Track availability status" },
       { "text": "Maintain loan history" }
     ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Loan" },
-      { "name": "Member" }
-    ]
+    "collaborators": [{ "name": "Library" }, { "name": "Loan" }, { "name": "Member" }]
   },
   {
     "name": "Member",
@@ -19,11 +15,7 @@
       { "text": "Track current loans" },
       { "text": "Manage loan history" }
     ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Loan" },
-      { "name": "Book" }
-    ]
+    "collaborators": [{ "name": "Library" }, { "name": "Loan" }, { "name": "Book" }]
   },
   {
     "name": "Library",
@@ -46,11 +38,7 @@
       { "text": "Calculate due dates and fines" },
       { "text": "Handle renewals" }
     ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Member" },
-      { "name": "Library" }
-    ]
+    "collaborators": [{ "name": "Book" }, { "name": "Member" }, { "name": "Library" }]
   },
   {
     "name": "Librarian",
@@ -59,11 +47,7 @@
       { "text": "Manage member accounts" },
       { "text": "Handle overdue notices and fines" }
     ],
-    "collaborators": [
-      { "name": "Library" },
-      { "name": "Member" },
-      { "name": "Loan" }
-    ]
+    "collaborators": [{ "name": "Library" }, { "name": "Member" }, { "name": "Loan" }]
   },
   {
     "name": "Catalog",
@@ -72,9 +56,6 @@
       { "text": "Provide search functionality" },
       { "text": "Update book information" }
     ],
-    "collaborators": [
-      { "name": "Book" },
-      { "name": "Library" }
-    ]
+    "collaborators": [{ "name": "Book" }, { "name": "Library" }]
   }
 ]
