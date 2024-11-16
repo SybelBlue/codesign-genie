@@ -7,6 +7,7 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
+  import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 
   let decks = $state(exampleDecks);
 
@@ -28,7 +29,9 @@
     $availableClasses = decks[$currentDeck].map((c) => c.name);
   });
 
-  $debug = false;
+  $debug = true;
+
+  let showTimeline = $state(true);
 </script>
 
 <svelte:head>
@@ -46,7 +49,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar />
+<Toolbar bind:showTimeline={showTimeline} />
 
 <main class="relative grow overflow-visible">
   <CardBoard
@@ -64,4 +67,6 @@
       selectedCard = undefined;
     }}
     />
+
+  <TimelinePanel show={showTimeline} />
 </main>

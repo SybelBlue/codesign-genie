@@ -1,10 +1,16 @@
 <script lang="ts">
   import ThemeChanger from './ThemeChange.svelte';
   // import DeckChanger from './DeckChanger.svelte';
-  import TimelinePanel from './TimelinePanel.svelte';
   // import { deckNames } from '$lib/stores';
 
-  let showTimeline = $state(false);
+  type Props = {
+    showTimeline: boolean;
+  }
+
+  let {
+    showTimeline = $bindable(),
+  }: Props = $props();
+
   let showDeck = $state(false);
 </script>
 
@@ -33,5 +39,3 @@
     </nav>
   </div>
 </header>
-
-<TimelinePanel show={showTimeline} />
