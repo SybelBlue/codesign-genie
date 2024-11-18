@@ -4,10 +4,10 @@
   import { clickOutside } from '$lib/actions';
   import Timeline from './Timeline.svelte';
   import Card from './Card.svelte';
-
-  import microdiff from 'microdiff';
   import { withId } from '$lib/decks';
 
+  import microdiff from 'microdiff';
+  import { diffWords } from 'diff';
 
   type Props = {
     show: boolean;
@@ -40,7 +40,9 @@
   });
 
   $inspect(newCard).with(() => {
-    console.table(microdiff(baseCard, newCard));
+    const diff = microdiff(baseCard, newCard);
+    console.table(diff);
+    console.table(diff.filter((d) => d.type === 'CHANGE').flatMap(d => diffWords(d.oldValue, d.value)))
   })
 </script>
 
