@@ -47,7 +47,7 @@
   }
 
   .grid-container {
-    @apply grid p-1 gap-2;
+    @apply max-h-full grid p-1 gap-2;
     /* responsive sizing */
     @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
   }

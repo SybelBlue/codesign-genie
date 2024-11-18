@@ -31,19 +31,17 @@
     const c = JSON.parse(JSON.stringify(baseCard)) as CardProps;
     const firstResp = c.responsibilities[0];
     firstResp.collaborators.push(withId({ name: 'Enemy' }));
-    firstResp.description = firstResp.description.replace('etc.)', 'gold, etc.)');
+    if (!Array.isArray(firstResp.description)) {
+      let old = firstResp.description;
+      firstResp.description = old.replace('etc.)', 'gold, etc.)');
+      firstResp.description = diffWords(old, firstResp.description);
+    }
     c.responsibilities.push(withId({
       description: 'new responsibility',
       collaborators: [{ name: 'Inventory' }].map(withId),
     }));
     return c;
   });
-
-  $inspect(newCard).with(() => {
-    const diff = microdiff(baseCard, newCard);
-    console.table(diff);
-    console.table(diff.filter((d) => d.type === 'CHANGE').flatMap(d => diffWords(d.oldValue, d.value)))
-  })
 </script>
 
 {#if show}

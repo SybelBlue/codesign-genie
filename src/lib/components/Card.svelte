@@ -1,10 +1,11 @@
 <script module lang="ts">
+  import type { Change } from 'diff';
   import type { Keyed } from '$lib/types';
 
   interface Data {
     name: string;
     responsibilities: Keyed<{
-      description: string;
+      description: string | Change[];
       collaborators: Keyed<{ name: string }>[];
     }>[];
   }
@@ -23,6 +24,24 @@
 
   let highlight = $derived($highlightedClass === name);
 </script>
+
+{#snippet changetext(v: string | Change[])}
+  {#if Array.isArray(v)}
+    {#each v as chg}
+      {#if chg.added}
+        <span class="text-primary italic">{chg.value}</span>
+      {/if}
+      {#if chg.removed}
+        <span class="text-secondary line-through">{chg.value}</span>
+      {/if}
+      {#if !chg.added && !chg.removed}
+        <span>{chg.value}</span>
+      {/if}
+    {/each}
+  {:else}
+    <span>{v}</span>
+  {/if}
+{/snippet}
 
 <div
   onfocus={() => selectName?.(name)}
@@ -48,7 +67,7 @@
           <tr class="hover break-words">
             <td class="desc">
               {#if locked}
-                <span>{r.description}</span>
+                {@render changetext(r.description)}
               {:else}
                 <input bind:value={r.description} />
               {/if}
