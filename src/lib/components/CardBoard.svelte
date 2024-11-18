@@ -43,7 +43,7 @@
 
 <style lang="postcss">
   #backdrop {
-    @apply relative top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
+    @apply relative top-0 left-0 bg-base-100;
   }
 
   .grid-container {
@@ -54,11 +54,11 @@
 
   /* Create stacking context for each sticky element */
   li {
-    @apply relative;
+    @apply relative snap-start;
     z-index: 1;
 
     &.surface {
-      @apply sticky top-0 bottom-0 isolate pointer-events-none;
+      @apply sticky snap-none top-0 bottom-0 isolate pointer-events-none;
       z-index: 2;
     }
   }

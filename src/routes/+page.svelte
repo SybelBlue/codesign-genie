@@ -33,7 +33,7 @@
 
   $debug = true;
 
-  let showTimeline = $state(true);
+  let showTimeline = $state($debug);
 </script>
 
 <svelte:head>
@@ -53,7 +53,7 @@
 
 <Toolbar bind:showTimeline={showTimeline} />
 
-<main class="static max-h-screen max-w-screen overflow-scroll">
+<main class="overflow-scroll snap-y">
   <!-- sets the sizing for Editor -->
   <div class="absolute w-full h-full">
     <Editor
