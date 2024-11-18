@@ -15,8 +15,8 @@
     "test:unit": "vitest"
   },
   "devDependencies": {
-    "@fontsource/fira-mono": "^5.0.0",
     "@fontsource-variable/caveat": "^5.1.0",
+    "@fontsource/fira-mono": "^5.0.0",
     "@playwright/test": "^1.28.1",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
@@ -45,6 +45,7 @@
   "dependencies": {
     "@types/npm": "^7.19.3",
     "@types/reveal.js": "^5.0.4",
+    "microdiff": "^1.4.0",
     "reveal.js": "^5.1.0"
   }
 }

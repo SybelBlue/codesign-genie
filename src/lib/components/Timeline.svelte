@@ -7,18 +7,19 @@
 
   export type Props = {
     commits: Commit[];
+    vertical?: boolean;
   };
 </script>
 <script lang="ts">
   let {
-    commits: timelineItems
+    commits: timelineItems,
+    vertical
   }: Props = $props();
 </script>
-
-<ul class="timeline timeline-compact timeline-vertical">
-  {#each timelineItems as item, index}
+<ul class="timeline timeline-compact max-h-full overflow-scroll" class:vertical={vertical}>
+  {#each timelineItems.toReversed() as item, index}
     <li>
-      {#if index !== 0}<hr />{/if}
+      <hr />
       <div class="timeline-middle">
         <!-- checkmark icon -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
@@ -29,7 +30,7 @@
           />
         </svg>
       </div>
-      <div class="timeline-end timeline-box">
+      <div class="timeline-end timeline-box snap-start">
         <div class="font-bold">{item.text}</div>
         <div class="text-sm opacity-70">{item.date}</div>
       </div>
@@ -37,3 +38,14 @@
     </li>
   {/each}
 </ul>
+
+<style lang="postcss">
+  ul {
+    &.vertical {
+      @apply timeline-vertical snap-y;
+    }
+    &:not(.vertical) {
+      @apply timeline-horizontal snap-x;
+    }
+  }
+</style>
