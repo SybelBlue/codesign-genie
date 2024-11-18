@@ -25,8 +25,10 @@
     $currentDeck = 'custom';
   }
 
+  let cards = $derived(decks[$currentDeck]);
+
   $effect(() => {
-    $availableClasses = decks[$currentDeck].map((c) => c.name);
+    $availableClasses = cards.map((c) => c.name);
   });
 
   $debug = true;
@@ -51,7 +53,20 @@
 
 <Toolbar bind:showTimeline={showTimeline} />
 
-<main class="relative grow overflow-visible">
+<main class="static max-h-screen max-w-screen overflow-scroll">
+  <!-- sets the sizing for Editor -->
+  <div class="absolute w-full h-full">
+    <Editor
+      bind:card={selectedCard}
+      onCommit={(commit) => {
+        console.log('Commit card', commit.message, commit.card);
+        selectedCard = undefined;
+      }}
+      />
+  </div>
+  {#if cards}
+    <TimelinePanel bind:show={showTimeline} baseCard={cards[0]}/>
+  {/if}
   <CardBoard
     bind:cards={decks[$currentDeck]}
     selectCard={(card) => {
@@ -59,14 +74,4 @@
       selectedCard = card;
     }}
     />
-
-  <Editor
-    bind:card={selectedCard}
-    onCommit={(commit) => {
-      console.log('Commit card', commit.message, commit.card);
-      selectedCard = undefined;
-    }}
-    />
-
-  <TimelinePanel show={showTimeline} />
 </main>

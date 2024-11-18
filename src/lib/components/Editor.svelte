@@ -24,7 +24,7 @@
       if (card && Date.now() - lastChange > 200) card = undefined;
     }}
     transition:slide
-    class="absolute left-0 w-1/2 h-screen z-50"
+    class="absolute top-0 left-0 w-1/2 h-full z-50"
   >
     <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
       <!-- "X" button in top right -->
