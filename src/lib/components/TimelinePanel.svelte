@@ -1,8 +1,9 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
-  import type { CardProps, Deck, Keyed } from '$lib/types';
+  import type { CardProps, Commit, Deck, Keyed } from '$lib/types';
   import { withId } from '$lib/decks';
+  import { availableClasses } from '$lib/stores';
 
   import type { Data as CardData } from './Card.svelte';
   import CardBoard from './CardBoard.svelte';
@@ -17,16 +18,6 @@
   };
 
   let { show = $bindable(), currentDeck, verticalTimeline }: Props = $props();
-
-  const timelineItems = [
-    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
-    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-    { id: 5, state: [], text: 'add A System', date: '11/5/2024' },
-    { id: 6, state: [], text: 'add B System', date: '11/6/2024' },
-    { id: 7, state: [], text: 'add C System', date: '11/7/2024' },
-  ];
 
   type Zipped<T, K> =
     | { id: K, type: 'left', left: T }
@@ -76,7 +67,7 @@
           case 'both':
             return {
               id: z.id,
-              description: diffWords(z.left.description, z.right.description),
+              description: z.left.description === z.right.description ? z.left.description : diffWords(z.left.description, z.right.description),
               collaborators: mergeKeyed(z.left.collaborators, z.right.collaborators, o => o.name).map(({ type, id: name }) => {
               switch (type) {
                   case 'left':
@@ -93,7 +84,7 @@
   }
 
   const diffCard = (primary: CardData<string>, secondary: CardData<string> | null, swapOrder=false): CardProps => {
-    const [prev, curr] = swapOrder ? [secondary, primary] : [primary, secondary];
+    const [prev, curr] = !swapOrder ? [secondary, primary] : [primary, secondary];
     return {
       name: primary.name,
       responsibilities: diffResponsibilities(prev?.responsibilities ?? [], curr?.responsibilities ?? []),
@@ -102,17 +93,52 @@
 
   const diffDecks = (prev: Deck, curr: Deck): Keyed<CardProps>[] => {
     return mergeKeyed(prev, curr, o => o.id)
-      .map(z => {
+      .flatMap(z => {
         switch (z.type) {
           case 'left':
-            return { id: z.id, ...diffCard(z.left, null)}
+            return [{ id: z.id, ...diffCard(z.left, null)}]
           case 'right':
-            return { id: z.id, ...diffCard(z.right, null, true)}
+            return [{ id: z.id, ...diffCard(z.right, null, true)}]
           case 'both':
-            return { id: z.id, ...diffCard(z.left, z.right)}
+            const diff = diffCard(z.left, z.right);
+            if (diff.responsibilities.find(r => Array.isArray(r.description) || r.collaborators.find(c => Array.isArray(c.name))))
+              return [{ id: z.id, ...diff}];
+            return [];
         }
       });
   };
+
+  /// fake data ///
+  const randomizedEdits = (() => {
+    const out = JSON.parse(JSON.stringify(currentDeck)) as Deck;
+    const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
+    const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
+    const changed = [];
+    for (let i = 0, n = 2 + Math.random() * 4; i < n; i++) {
+      const idx = randomIdx(out);
+      const card = out[idx];
+      const actions = [
+        () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
+        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!')},
+        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem($availableClasses)})) },
+      ];
+      actions[randomIdx(actions)]();
+      changed.push(card);
+    }
+    console.table(changed)
+    return out;
+  })();
+
+  const timelineItems: Commit[] = [
+    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+    { id: 5, state: [], text: 'add A System', date: '11/5/2024' },
+    { id: 6, state: [], text: 'add B System', date: '11/6/2024' },
+    { id: 7, state: randomizedEdits, text: 'random edits', date: '11/7/2024' },
+  ];
+  /// fake data ///
 
   let diffedCards = $derived(diffDecks(timelineItems[timelineItems.length - 1].state, currentDeck))
 </script>

@@ -6,7 +6,6 @@
   import { decodeDeck, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
-  import type { Data as CardData } from '$lib/components/Card.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 

@@ -7,13 +7,11 @@
   };
 </script>
 <script lang="ts">
-  let {
-    commits: timelineItems,
-    vertical
-  }: Props = $props();
+  let { commits, vertical }: Props = $props();
 </script>
+
 <ul class="timeline timeline-compact max-h-full overflow-scroll" class:vertical={vertical}>
-  {#each timelineItems.toReversed() as item, index}
+  {#each commits.toReversed() as item, index}
     <li>
       <hr />
       <div class="timeline-middle">
@@ -30,7 +28,7 @@
         <div class="font-bold">{item.text}</div>
         <div class="text-sm opacity-70">{item.date}</div>
       </div>
-      {#if index !== timelineItems.length - 1}<hr />{/if}
+      {#if index !== commits.length - 1}<hr />{/if}
     </li>
   {/each}
 </ul>
