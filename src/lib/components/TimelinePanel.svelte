@@ -1,15 +1,14 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
-  import Timeline from './Timeline.svelte';
+  import type { CardProps, Deck, Keyed } from '$lib/types';
   import { withId } from '$lib/decks';
 
   import type { Data as CardData } from './Card.svelte';
+  import CardBoard from './CardBoard.svelte';
+  import Timeline from './Timeline.svelte';
 
   import { diffWords, type Change } from 'diff';
-  import CardBoard from './CardBoard.svelte';
-  import type { CardProps, Deck, Key, Keyed } from '$lib/types';
-  import type { T } from '@vitest/runner/dist/tasks-3ZnPj1LR.js';
 
   type Props = {
     show: boolean;
