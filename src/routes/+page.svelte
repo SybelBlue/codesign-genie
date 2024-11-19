@@ -54,7 +54,7 @@
 
 <Toolbar bind:showTimeline={showTimeline} />
 
-<main>
+<main class="overflow-scroll snap-y">
   <!-- sets the sizing for Editor -->
   <div class="absolute w-full h-full">
     <Editor
