@@ -48,13 +48,14 @@ const CARD_SCHEMA: JSONObjectSchema = {
     },
     responsibilities: {
       type: 'array',
+      description: 'The responsibilities that the resource has, e.g. Maintains a ledger of library cards',
       items: {
         type: 'object',
         properties: {
           description: {
             type: 'string',
             description:
-              'The responsibilities that the resource has, e.g. Maintains a ledger of library cards'
+              'A responsibility that the resource has, e.g. Maintains a ledger of library cards'
           },
           collaborators: {
             type: 'array',
@@ -83,7 +84,8 @@ const DECK_SCHEMA: JSONObjectSchema = {
   properties: {
     cards: {
       type: 'array',
-      items: CARD_SCHEMA
+      items: CARD_SCHEMA,
+      description: 'A list of all the cards in the deck'
     }
   },
   additionalProperties: false,

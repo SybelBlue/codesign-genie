@@ -68,7 +68,7 @@ Consider this deck:
 { "cards" : ${JSON.stringify($currentDeck)} }
 \`\`\`
 
-Given that we are now upserting the following card, describing the change as "${commit.message}", update the deck to remain consistent. Reproduce all cards, even if they should be unchanged.
+Given that we are now upserting the following card, describing the change as "${commit.message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.
 \`\`\`json
 ${JSON.stringify(commit.card)}
 \`\`\`
