@@ -26,6 +26,14 @@
   }
 
   let cards = $derived(decks[$currentDeck]);
+  const mine = false, present = true;
+  const [coerceCurr, coercePrev] =
+    mine ?
+      present ? ['caraMid', 'caraNow'] : ['caraNow', 'caraFuture']
+      : ['nelson0', 'nelson1'];
+  $effect(() => {
+    if ($currentDeck != coerceCurr) $currentDeck = coerceCurr;
+  })
 
   $effect(() => {
     $availableClasses = cards.map((c) => c.name);
@@ -33,7 +41,7 @@
 
   $debug = true;
 
-  let showTimeline = $state(false);
+  let showTimeline = $state(true);
 
   /// fake data ///
   const randomizedEdits = (deck: Deck) => {
@@ -57,15 +65,19 @@
   };
 
   let lastDeck = cards;
+  // const fakeCommits = [
+  //   { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
+  //   { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
+  //   { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
+  //   { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+  //   { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+  //   { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+  //   { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+  // ].toReversed();
   const fakeCommits = [
-    { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
-    { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
-    { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
-    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
-  ].toReversed();
+    // { id: 2, date: '12/XX/2024', text: 'future', state: decks.caraFuture },
+    { id: 1, date: '11/10/2024', text: 'now', state: decks[coercePrev] },
+  ]
   /// fake data ///
   const commits: Commit[] = fakeCommits;
 </script>

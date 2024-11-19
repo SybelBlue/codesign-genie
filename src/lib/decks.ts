@@ -3,6 +3,8 @@ import type { Deck, Keyed } from './types';
 import libraryJson from '$lib/crc-decks/library.json';
 import rpgJson from '$lib/crc-decks/rpg.json';
 import hospitalJson from '$lib/crc-decks/hospital.json';
+import nelson0 from '$lib/crc-decks/nelson-deck0.json';
+import nelson1 from '$lib/crc-decks/nelson-deck1.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -33,8 +35,93 @@ export const exampleDecks: Record<string, Deck> = {
         withId({ description: r.description, collaborators: r.collaborators.map(withId) })
       )
     })
-  )
+  ),
+  nelson0,
+  nelson1: nelson1.map((c) => {
+    const pair = nelson0.find((x) => x.name == c.name);
+    return {
+      ...c,
+      id: pair?.id ?? c.id,
+      responsibilities: pair
+        ? c.responsibilities.map((r, idx) => ({
+            ...r,
+            id: pair.responsibilities[idx].id
+          }))
+        : c.responsibilities
+    };
+  }),
+  caraMid: [
+    {
+      name: 'Coherence',
+      responsibilities: [].map(withId)
+    },
+    {
+      name: 'DesignAid',
+      responsibilities: [
+        {
+          description: 'Basic Cards',
+          collaborators: ['Cards', 'Svelte', 'DaisyUI'].map((name) => withId({ name }))
+        }
+      ].map(withId)
+    }
+  ].map(withId)
 };
+
+const dummyCard = (name: string): Deck[number] => withId({ name, responsibilities: [] });
+exampleDecks.caraNow = (() => {
+  const out = JSON.parse(JSON.stringify(exampleDecks.caraMid)) as Deck;
+  out[0].responsibilities = [
+    {
+      description: 'Reliance on json_schema',
+      collaborators: ['OpenAI'].map((name) => withId({ name }))
+    },
+    {
+      description: '2-stage Generation',
+      collaborators: ['OpenAI', 'GenAI'].map((name) => withId({ name }))
+    }
+  ].map(withId);
+  out[1].responsibilities.push(
+    ...[
+      {
+        description: 'Reliance on json_schema',
+        collaborators: ['OpenAI'].map((name) => withId({ name }))
+      }
+    ].map(withId)
+  );
+  return out;
+})();
+exampleDecks.caraFuture = (() => {
+  const out = JSON.parse(JSON.stringify(exampleDecks.caraNow)) as Deck;
+  console.table(out);
+  out[0].responsibilities[1].description = 'Merge ' + out[0].responsibilities[1].description;
+  out[0].responsibilities.splice(0, 1);
+  out[0].responsibilities.push(
+    withId({
+      description: 'Comparable Backends',
+      collaborators: 'OpenAI GenAI'.split(' ').map((name) => withId({ name }))
+    })
+  );
+  out[1].responsibilities.push(
+    ...[
+      {
+        description: 'Free Editing',
+        collaborators: ['Svelte'].map((name) => withId({ name }))
+      }
+    ].map(withId)
+  );
+  return out;
+})();
+const nameDummies: Deck = [
+  ...new Set(
+    [...exampleDecks.caraFuture, ...exampleDecks.caraMid, ...exampleDecks.caraNow]
+      .flatMap((c) => c.responsibilities)
+      .flatMap((r) => r.collaborators)
+      .map((c) => c.name)
+  )
+].map(dummyCard);
+exampleDecks.caraMid.push(...nameDummies);
+exampleDecks.caraNow.push(...nameDummies);
+exampleDecks.caraFuture.push(...nameDummies);
 
 export const decodeDeck = (deckInfo: string) => {
   const json_string = atob(deckInfo);
