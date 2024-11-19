@@ -1,9 +1,10 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { debug } from '$lib/stores';
-  import type { CardProps } from '$lib/types';
 
-  import ThemeChanger from '$lib/components/ThemeChange.svelte';
+  import type { CardProps } from '$lib/types';
+  import Toolbar from '$lib/components/Toolbar.svelte';
+
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
 
@@ -30,7 +31,7 @@
   <title>CARA</title>
   <meta name="description" content="crc card design game" />
 
-  <!-- patch to delay pageload until theme is ready in deployment -->
+  <!-- patch to delay page load until theme is ready in deployment -->
   {#if !$debug}
     <script async crossorigin="anonymous">
       var selectedTheme = localStorage.getItem('theme');
@@ -41,28 +42,29 @@
   {/if}
 </svelte:head>
 
-<ThemeChanger />
+<Toolbar />
 
-<CardBoard
-  bind:cards={$currentDeck}
-  selectCard={(card) => {
-    console.log('Card selected:', card.name);
-    readyForCommit = true;
-    selectedCard = card;
-  }}
-/>
+<main class="relative grow overflow-visible">
+  <CardBoard
+    bind:cards={$currentDeck}
+    selectCard={(card) => {
+      console.log('Card selected:', card.name);
+      readyForCommit = true;
+      selectedCard = card;
+    }}
+  />
 
-<Editor
-  bind:card={selectedCard}
-  {readyForCommit}
-  onCommit={async (commit) => {
-    console.log('Commit card', commit.message, commit.card);
-    readyForCommit = false;
-    await fetch('/api/object', {
-      method: 'POST',
-      body: JSON.stringify({
-        // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-        description: `
+  <Editor
+    bind:card={selectedCard}
+    {readyForCommit}
+    onCommit={async (commit) => {
+      console.log('Commit card', commit.message, commit.card);
+      readyForCommit = false;
+      await fetch('/api/object', {
+        method: 'POST',
+        body: JSON.stringify({
+          // TODO: currently we're passing in the deck/card with ids. That may reduce quality
+          description: `
 Consider this deck:
 \`\`\`json
 { "cards" : ${JSON.stringify(currentDeck)} }
@@ -73,15 +75,16 @@ Given that we are now upserting the following card, describing the change as "${
 ${JSON.stringify(commit.card)}
 \`\`\`
 `.trim(),
-        schema: 'Deck'
-      })
-    }).then((response) =>
-      response.json().then(({response: deck}) => {
-        console.log(deck);
-        let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
-        goto(`/?deckInfo=${deckInfo}`)
-      })
-    );
-    selectedCard = undefined;
-  }}
-/>
+          schema: 'Deck'
+        })
+      }).then((response) =>
+        response.json().then(({response: deck}) => {
+          console.log(deck);
+          let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+          goto(`/?deckInfo=${deckInfo}`)
+        })
+      );
+      selectedCard = undefined;
+    }}
+  />
+</main>

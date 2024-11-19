@@ -14,20 +14,16 @@
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
 
-  let {
-    cards = $bindable(),
-    animateIn = !$debug,
-    selectCard,
-  }: Props = $props();
+  let { cards = $bindable(), animateIn = !$debug, selectCard }: Props = $props();
 
-  if (animateIn) setTimeout(() => animateIn = false, 200);
+  if (animateIn) setTimeout(() => (animateIn = false), 200);
 
   const propagate = (name: string) => {
     const card = cards.find((card) => card.name == name);
     if (card) {
       selectCard?.(card);
     } else {
-      console.error("Did not find card of name", name);
+      console.error('Did not find card of name', name);
     }
   };
 </script>
@@ -38,7 +34,7 @@
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
-          <Card selectName={propagate} {...cardProps} />
+          <Card locked selectName={propagate} {...cardProps} />
         {/if}
       </li>
     {/each}
