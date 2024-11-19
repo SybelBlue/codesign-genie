@@ -65,7 +65,7 @@
           description: `
 Consider this deck:
 \`\`\`json
-{ "cards" : ${JSON.stringify(currentDeck)} }
+{ "cards" : ${JSON.stringify($currentDeck)} }
 \`\`\`
 
 Given that we are now upserting the following card, describing the change as "${commit.message}", update the deck to remain consistent. Reproduce all cards, even if they should be unchanged.
