@@ -3,17 +3,16 @@
 
   export type Props = {
     commits: Commit[];
-    vertical?: boolean;
     highlightCommit: number;
     useCommit?: (c: Commit) => void;
   };
 </script>
 <script lang="ts">
-  let { commits, vertical, highlightCommit, useCommit }: Props = $props();
+  let { commits, highlightCommit, useCommit }: Props = $props();
   let rangeStop = $derived(highlightCommit ? commits.findIndex(c => c.id === highlightCommit) : -1)
 </script>
 
-<ul class="timeline timeline-compact max-h-full overflow-auto" class:vertical={vertical}>
+<ul class="timeline timeline-compact timeline-horizontal snap-x max-h-full overflow-auto">
   {#each commits.toReversed() as item, index}
     {@const highlighted = 0 <= rangeStop && index < commits.length - rangeStop}
     <li>
@@ -38,15 +37,7 @@
 </ul>
 
 <style lang="postcss">
-  ul {
-    &.vertical {
-      @apply timeline-vertical snap-y;
-    }
-    &:not(.vertical) {
-      @apply timeline-horizontal snap-x;
-    }
-  }
   .highlight {
-    @apply btn-primary btn-active;
+    @apply bg-accent text-accent-content hover:bg-primary hover:text-primary-content;
   }
 </style>

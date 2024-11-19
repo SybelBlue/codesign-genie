@@ -18,11 +18,11 @@
 
   import { diffWords, type Change } from 'diff';
 
-  let { show = $bindable(), currentDeck, commits: timelineItems, expand, setDisplayDeck }: Props = $props();
+  let { show = $bindable(), currentDeck, commits, expand, setDisplayDeck }: Props = $props();
 
   type Zipped<T, K> =
-    | { id: K, type: 'left', left: T }
-    | { id: K, type: 'right', right: T }
+    | { id: K, type: 'left', left: T, right: null }
+    | { id: K, type: 'right', left: null, right: T }
     | { id: K, type: 'both', left: T, right: T };
 
   const mergeKeyed = <T, K>(left: T[], right: T[], key: (_: T) => K): Zipped<T, K>[] => {
@@ -33,12 +33,12 @@
       const id = key(l);
       const r = rightKeyed.find(m => m.id === id);
       lIds.add(id);
-      out.push(r === undefined ? { id, type: 'left', left: l } : { id, type: 'both', left: l, right: r.data });
+      out.push(r == null ? { id, type: 'left', left: l, right: null } : { id, type: 'both', left: l, right: r.data });
     }
     for (const m of rightKeyed) {
       const { data: r, id } = m;
       if (!lIds.has(id)) {
-        out.push({ id, type: 'right', right: r });
+        out.push({ id, type: 'right', left: null, right: r });
       }
     }
     return out;
@@ -55,84 +55,72 @@
     let omitted = false;
     const merged = mergeKeyed(prev, curr, o => o.id);
     const out = merged.flatMap(z => {
-        switch (z.type) {
-          case 'left':
-            return [{
-              id: z.id,
-              description: [change.removed(z.left.description)],
-              collaborators: z.left.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]})),
-              sortKey: -1,
-            }]
-          case 'right':
-            return [{
-              id: z.id,
-              description: [change.added(z.right.description)],
-              collaborators: z.right.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]})),
-              sortKey: -1,
-            }]
-          case 'both':
-            const description = z.left.description === z.right.description ? z.left.description : diffWords(z.left.description, z.right.description);
-            const collaborators = mergeKeyed(z.left.collaborators, z.right.collaborators, o => o.name).map(({ type, id: name }) => {
-              switch (type) {
-                case 'left':
-                  return withId({ name: [change.removed(name)] });
-                case 'right':
-                  return withId({ name: [change.added(name)] });
-                case 'both':
-                  return withId({ name });
-              }
-            });
-            const changed = !Boolean(Array.isArray(description) || collaborators.find(c => Array.isArray(c.name)));
-            const diffed = { id: z.id, description, collaborators, sortKey: changed ? -1 : 0 };
-            const omit = !expand && merged.length > 2 && changed;
-            omitted ||= omit;
-            return omit ? []: [diffed];
-        }
-      });
-      if (omitted) {
-        out.push(withId({ description: '...', collaborators: [], sortKey: 1 }))
+      switch (z.type) {
+        case 'left':
+          return [{
+            id: z.id,
+            description: [change.removed(z.left.description)],
+            collaborators: z.left.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]})),
+            sortKey: -1,
+          }]
+        case 'right':
+          return [{
+            id: z.id,
+            description: [change.added(z.right.description)],
+            collaborators: z.right.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]})),
+            sortKey: -1,
+          }]
+        case 'both':
+          const description = z.left.description === z.right.description ? z.left.description : diffWords(z.left.description, z.right.description);
+          const collaborators = mergeKeyed(z.left.collaborators, z.right.collaborators, o => o.name).map(({ type, id: name }) => {
+            switch (type) {
+              case 'left':
+                return withId({ name: [change.removed(name)] });
+              case 'right':
+                return withId({ name: [change.added(name)] });
+              case 'both':
+                return withId({ name });
+            }
+          });
+          const changed = !Boolean(Array.isArray(description) || collaborators.find(c => Array.isArray(c.name)));
+          const diffed = { id: z.id, description, collaborators, sortKey: changed ? -1 : 0 };
+          const omit = !expand && merged.length > 2 && changed;
+          omitted ||= omit;
+          return omit ? []: [diffed];
       }
-      return out;
-  }
-
-  const diffCard = (primary: SimpleCard, secondary: SimpleCard | null, swapOrder=false): CardProps => {
-    const [prev, curr] = !swapOrder ? [secondary, primary] : [primary, secondary];
-    return {
-      name: primary.name,
-      responsibilities: diffResponsibilities(prev?.responsibilities ?? [], curr?.responsibilities ?? []),
+    });
+    if (omitted) {
+      out.push(withId({ description: '...', collaborators: [], sortKey: 1 }))
     }
-  };
+    return out;
+  }
 
   const diffDecks = (prev: Deck, curr: Deck): Keyed<CardProps>[] => {
     const out: Keyed<CardProps>[] = [], unchanged: Keyed<CardProps>[] = [];
     for (const z of mergeKeyed(prev, curr, o => o.id)) {
-      switch (z.type) {
-        case 'left':
-          out.push({ id: z.id, ...diffCard(z.left, null)});
-          continue;
-        case 'right':
-          out.push({ id: z.id, ...diffCard(z.right, null, true)});
-          continue;
-        case 'both':
-          const diff = diffCard(z.left, z.right);
-          const _changed = diff.responsibilities.find(r => Array.isArray(r.description) || r.collaborators.find(c => Array.isArray(c.name)));
-          (_changed ? out : unchanged).push({ id: z.id, ...diff});
-          continue;
-      }
+      const diff = {
+        id: z.id,
+        name: z.type == 'left' ? z.left.name : z.right.name,
+        responsibilities: diffResponsibilities(z.left?.responsibilities ?? [], z.right?.responsibilities ?? []),
+      };
+      const target = z.type != 'both' || diff.responsibilities.find(r => Array.isArray(r.description) || r.collaborators.find(c => Array.isArray(c.name)))
+        ? out
+        : unchanged;
+      target.push(diff);
     }
     out.push(...unchanged);
     return out;
   };
 
   let compareDeck: Deck | undefined = $state(undefined);
-  let highlightedCommitId: number = $state(timelineItems[timelineItems.length - 1].id);
+  let highlightedCommitId: number = $state(commits[commits.length - 1].id);
 
   const setCompareCommit = (c: Commit) => {
     compareDeck = c.state;
     highlightedCommitId = c.id;
   }
 
-  let diffedCards = $derived(diffDecks(compareDeck ?? timelineItems[timelineItems.length - 1].state, currentDeck));
+  let diffedCards = $derived(diffDecks(currentDeck, compareDeck ?? commits[commits.length - 1].state));
 
   $effect(() => {
     setDisplayDeck?.(show ? diffedCards : currentDeck);
@@ -146,6 +134,10 @@
     transition:slide={{ duration: 300, axis: 'y' }}
     use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
     >
-    <Timeline commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
+    <Timeline
+      useCommit={setCompareCommit}
+      highlightCommit={highlightedCommitId}
+      {commits}
+      />
   </div>
 {/if}
