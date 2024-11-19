@@ -6,7 +6,7 @@ import hospitalJson from '$lib/crc-decks/hospital.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
-  return (o) => ({ ...o, id: nextId++ });
+  return (o) => ({ id: nextId++, ...o });
 })();
 
 export const deckWithIds = (deck: Deck): CardBoardProps['cards'] => {
