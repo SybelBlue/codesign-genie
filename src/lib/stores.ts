@@ -1,4 +1,4 @@
-import { browser, dev } from '$app/environment';
+import { dev } from '$app/environment';
 import { toStore, writable } from 'svelte/store';
 
 import type { CardProps, Keyed } from '$lib/types';
