@@ -3,7 +3,6 @@
   import { clickOutside } from '$lib/actions';
   import type { CardProps, Commit, Deck, Keyed } from '$lib/types';
   import { withId } from '$lib/decks';
-  import { availableClasses } from '$lib/stores';
 
   import type { Data as CardData } from './Card.svelte';
   import CardBoard from './CardBoard.svelte';
@@ -43,29 +42,32 @@
     return out;
   }
 
-  const diffResponsibilities = (prev: CardData<string>['responsibilities'], curr: CardData<string>['responsibilities']): CardProps['responsibilities'] => {
+  type SimpleCard = CardData<string>;
+
+  const diffResponsibilities = (prev: SimpleCard['responsibilities'], curr: SimpleCard['responsibilities']): CardProps['responsibilities'] => {
     const change = {
       added: (value: string): Change => ({ removed: false, added: true, value }),
       removed: (value: string): Change => ({ removed: true, added: false, value }),
       none: (value: string): Change => ({ removed: false, added: false, value }),
     };
-    return mergeKeyed(prev, curr, o => o.id)
-      .map(z => {
+    let omitted = false;
+    const merged = mergeKeyed(prev, curr, o => o.id);
+    const out = merged.flatMap(z => {
         switch (z.type) {
           case 'left':
-            return {
+            return [{
               id: z.id,
               description: [change.removed(z.left.description)],
               collaborators: z.left.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
-            }
+            }]
           case 'right':
-            return {
+            return [{
               id: z.id,
               description: [change.added(z.right.description)],
               collaborators: z.right.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
-            }
+            }]
           case 'both':
-            return {
+            const diffed = {
               id: z.id,
               description: z.left.description === z.right.description ? z.left.description : diffWords(z.left.description, z.right.description),
               collaborators: mergeKeyed(z.left.collaborators, z.right.collaborators, o => o.name).map(({ type, id: name }) => {
@@ -79,11 +81,18 @@
                 }
               })
             };
+            const omit = merged.length > 2 && !Boolean(Array.isArray(diffed.description) || diffed.collaborators.find(c => Array.isArray(c.name)));
+            omitted ||= omit;
+            return omit ? []: [diffed];
         }
       });
+      if (omitted) {
+        out.push(withId({ description: '...', collaborators: []}))
+      }
+      return out;
   }
 
-  const diffCard = (primary: CardData<string>, secondary: CardData<string> | null, swapOrder=false): CardProps => {
+  const diffCard = (primary: SimpleCard, secondary: SimpleCard | null, swapOrder=false): CardProps => {
     const [prev, curr] = !swapOrder ? [secondary, primary] : [primary, secondary];
     return {
       name: primary.name,
@@ -119,8 +128,9 @@
       const card = out[idx];
       const actions = [
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
-        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!')},
-        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem($availableClasses)})) },
+        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!'); },
+        () => { let r = randomElem(card.responsibilities); r.collaborators.splice(randomIdx(r.collaborators), 1); },
+        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem(out).name })) },
       ];
       actions[randomIdx(actions)]();
       changed.push(card);
