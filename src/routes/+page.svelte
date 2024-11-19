@@ -1,16 +1,14 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { debug } from '$lib/stores';
-
-  import type { CardProps } from '$lib/types';
-  import Toolbar from '$lib/components/Toolbar.svelte';
+  import { goto } from '$app/navigation';
+  import { debug, currentDeckInit } from '$lib/stores';
 
   import Editor from '$lib/components/Editor.svelte';
-  import CardBoard from '$lib/components/CardBoard.svelte';
-
-  import { currentDeckInit } from '$lib/stores';
   import { deckWithIds, exampleDecks } from '$lib/decks';
-  import { goto } from '$app/navigation';
+  import CardBoard from '$lib/components/CardBoard.svelte';
+  import type { CardProps } from '$lib/types';
+  import Toolbar from '$lib/components/Toolbar.svelte';
+  
 
   let selectedCard: CardProps | undefined = $state();
   let readyForCommit: boolean = $state(false);
