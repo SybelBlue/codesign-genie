@@ -26,7 +26,7 @@
   }
 
   let cards = $derived(decks[$currentDeck]);
-  const mine = false, present = true;
+  const mine = false, present = false;
   const [coerceCurr, coercePrev] =
     mine ?
       present ? ['caraMid', 'caraNow'] : ['caraNow', 'caraFuture']
@@ -75,9 +75,9 @@
   //   { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
   // ].toReversed();
   const fakeCommits = [
-    // { id: 2, date: '12/XX/2024', text: 'future', state: decks.caraFuture },
     { id: 1, date: '11/10/2024', text: 'now', state: decks[coercePrev] },
-  ]
+  ];
+  if (mine && !present) fakeCommits.unshift({ id: 2, date: '12/XX/2024', text: 'future', state: decks.caraFuture });
   /// fake data ///
   const commits: Commit[] = fakeCommits;
 </script>

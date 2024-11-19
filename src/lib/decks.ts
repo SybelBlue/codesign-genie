@@ -63,6 +63,13 @@ export const exampleDecks: Record<string, Deck> = {
           collaborators: ['Cards', 'Svelte', 'DaisyUI'].map((name) => withId({ name }))
         }
       ].map(withId)
+    },
+    {
+      name: 'Example',
+      responsibilities: [
+        { description: 'Removed', collaborators: [] },
+        { description: 'Changeede text', collaborators: [] }
+      ].map(withId)
     }
   ].map(withId)
 };
@@ -83,29 +90,47 @@ exampleDecks.caraNow = (() => {
   out[1].responsibilities.push(
     ...[
       {
-        description: 'Reliance on json_schema',
-        collaborators: ['OpenAI'].map((name) => withId({ name }))
+        description: 'Visual Diffing',
+        collaborators: ['JsDiff'].map((name) => withId({ name }))
+      },
+      {
+        description: 'Commit Timeline',
+        collaborators: [].map((name) => withId({ name }))
+      },
+      {
+        description: 'Multiple Backends',
+        collaborators: 'GenAI'.split(' ').map((name) => withId({ name }))
       }
     ].map(withId)
   );
+  out[2].responsibilities[1].description = 'Changed text';
+  out[2].responsibilities[0] = withId({
+    description: 'Added',
+    collaborators: []
+  });
+
   return out;
 })();
 exampleDecks.caraFuture = (() => {
   const out = JSON.parse(JSON.stringify(exampleDecks.caraNow)) as Deck;
   console.table(out);
   out[0].responsibilities[1].description = 'Merge ' + out[0].responsibilities[1].description;
+  out[1].responsibilities[3] = {
+    id: out[1].responsibilities[3].id,
+    description: 'Comparable Backends',
+    collaborators: [...out[1].responsibilities[3].collaborators, withId({ name: 'OpenAI' })]
+  };
   out[0].responsibilities.splice(0, 1);
-  out[0].responsibilities.push(
-    withId({
-      description: 'Comparable Backends',
-      collaborators: 'OpenAI GenAI'.split(' ').map((name) => withId({ name }))
-    })
-  );
+  out[1].responsibilities[2].description = 'Branching ' + out[1].responsibilities[2].description;
   out[1].responsibilities.push(
     ...[
       {
-        description: 'Free Editing',
+        description: 'Free Editing*',
         collaborators: ['Svelte'].map((name) => withId({ name }))
+      },
+      {
+        description: 'Cost Estimation*',
+        collaborators: ['Svelte', 'GenAI'].map((name) => withId({ name }))
       }
     ].map(withId)
   );
