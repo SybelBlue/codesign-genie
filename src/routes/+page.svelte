@@ -1,27 +1,26 @@
 <script lang="ts">
   import { page } from '$app/stores';
-
   import { debug } from '$lib/stores';
-  import type { CardProps, Deck } from '$lib/types';
+  import type { CardProps } from '$lib/types';
 
   import ThemeChanger from '$lib/components/ThemeChange.svelte';
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
 
-  import { currentDeck } from '$lib/stores';
+  import { currentDeckInit } from '$lib/stores';
   import { deckWithIds, exampleDecks } from '$lib/decks';
+  import { goto } from '$app/navigation';
 
   let selectedCard: CardProps | undefined = $state();
   let readyForCommit: boolean = $state(false);
 
-  let deckName = $page.url.searchParams.get('deck');
+  const deckInfo = $page.url.searchParams.get("deckInfo") ?? btoa("[]");
+  console.log(deckInfo);
+  let currentDeck = currentDeckInit(atob(deckInfo));
+
+  let deckName = $page.url.searchParams.get('deckName');
   if (deckName) {
     currentDeck.set(exampleDecks[deckName]);
-  }
-
-  let clearDeck = $page.url.searchParams.get('clearDeck');
-  if (clearDeck) {
-    currentDeck.set([]);
   }
 
   $debug = false;
@@ -77,8 +76,10 @@ ${JSON.stringify(commit.card)}
         schema: 'Deck'
       })
     }).then((response) =>
-      response.json().then((deck: Deck) => {
-        currentDeck.set(deckWithIds(deck));
+      response.json().then(({response: deck}) => {
+        console.log(deck);
+        let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+        goto(`/?deckInfo=${deckInfo}`)
       })
     );
     selectedCard = undefined;

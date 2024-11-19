@@ -14,33 +14,17 @@ export const debug = (() => {
   );
 })();
 
-export const currentDeck = toStore<Keyed<CardProps>[]>(
-  () => {
-    if (!browser) {
-      console.error("Tried to read currentDeck on server!");
-      return [];
-    }
 
-    if (!localStorage.getItem('customDeckInfo')) {
-      return [];
+export const currentDeckInit = ((starting_value = "[]") => {
+  
+  let deckInfo: string = starting_value;
+  return toStore<Keyed<CardProps>[]>(
+    () => {
+      const obj = JSON.parse(deckInfo);
+      return obj;
+    },
+    (cards) => {
+      deckInfo = JSON.stringify(cards);
     }
-
-    const b64string = localStorage.getItem('customDeckInfo') as string;
-    const obj = JSON.parse(atob(b64string));
-    return obj;
-  },
-  (cards) => {
-    if (!browser) {
-      console.error("Tried to set currentDeck on server!");
-      return [];
-    }
-
-    if (!cards) {
-      localStorage.removeItem('customDeckInfo');
-      return;
-    }
-
-    let b64payload = btoa(JSON.stringify(cards));
-    localStorage.setItem('customDeckInfo', b64payload);
-  }
-);
+  )
+});

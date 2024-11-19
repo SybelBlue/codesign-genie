@@ -3,7 +3,6 @@
 
   import type { Deck } from '$lib/types';
   import { deckWithIds } from '$lib/decks';
-  import { currentDeck } from '$lib/stores';
 
   let loading = $state(false);
   let description = $state('');
@@ -37,8 +36,8 @@
           });
           let deck: Deck = await response.json();
           console.log(deck);
-          currentDeck.set(deckWithIds(deck));
-          goto('/');
+          let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+          goto(`/?deckInfo=${deckInfo}`)
         }}
       />
     {/if}
