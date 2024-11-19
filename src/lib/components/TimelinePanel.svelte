@@ -8,6 +8,7 @@
 
   import { diffWords, type Change } from 'diff';
   import CardBoard from './CardBoard.svelte';
+  import type { CardProps } from '$lib/types';
 
   type Props = {
     show: boolean;
@@ -18,13 +19,13 @@
   let { show = $bindable(), baseCard, verticalTimeline }: Props = $props();
 
   const timelineItems = [
-    { id: 1, text: 'initial commit', date: '11/1/2024' },
-    { id: 2, text: 'updated manna', date: '11/2/2024' },
-    { id: 3, text: 'updated character', date: '11/3/2024' },
-    { id: 4, text: 'removed Dialogue System', date: '11/4/2024' },
-    { id: 5, text: 'add A System', date: '11/5/2024' },
-    { id: 6, text: 'add B System', date: '11/6/2024' },
-    { id: 7, text: 'add C System', date: '11/7/2024' },
+    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+    { id: 5, state: [], text: 'add A System', date: '11/5/2024' },
+    { id: 6, state: [], text: 'add B System', date: '11/6/2024' },
+    { id: 7, state: [], text: 'add C System', date: '11/7/2024' },
   ];
 
   const cardDataClone = (c: CardData<string>): CardData<string> =>
@@ -47,33 +48,28 @@
     return c;
   });
 
-  let displayCard = $derived.by(() => {
-    const out: CardData<string | Change[]> = cardDataClone(newCard);
+  const diffResponsibilities = (prev: CardData<string>['responsibilities'], curr: CardData<string>['responsibilities']): CardProps['responsibilities'] => {
     const change = {
       added: (value: string): Change => ({ removed: false, added: true, value }),
       removed: (value: string): Change => ({ removed: true, added: false, value }),
       none: (value: string): Change => ({ removed: false, added: false, value }),
     };
-    out.responsibilities = [
-        ...new Set([
-          ...baseCard.responsibilities.map(o => o.id),
-          ...newCard.responsibilities.map(o => o.id)
-        ])
-      ]
+    const allIds = [...new Set([...prev.map(o => o.id),...curr.map(o => o.id) ])];
+    return allIds
       .map(id => {
-        const b = baseCard.responsibilities.find(o => o.id === id);
-        const n = newCard.responsibilities.find(o => o.id === id);
-        if (b && n) {
-          const nColNames = n.collaborators.map(c => c.name),
-            bColNames = b.collaborators.map(c => c.name);
+        const p = prev.find(o => o.id === id);
+        const c = curr.find(o => o.id === id);
+        if (p && c) {
+          const cColNames = c.collaborators.map(c => c.name),
+            pColNames = p.collaborators.map(c => c.name);
 
           return {
             id,
-            description: diffWords(b.description, n.description),
+            description: diffWords(p.description, c.description),
             collaborators: [
-              ...new Set([...nColNames, ...bColNames])
+              ...new Set([...cColNames, ...pColNames])
             ].map(name => {
-              const inN = nColNames.includes(name), inB = bColNames.includes(name);
+              const inN = cColNames.includes(name), inB = pColNames.includes(name);
               if (inN && inB) return withId({ name });
               if (inN) return withId({ name: [change.added(name)] });
               if (inB) return withId({ name: [change.removed(name)] });
@@ -81,24 +77,33 @@
             })
           };
         }
-        if (b) {
+        if (p) {
           return {
             id,
-            description: [change.removed(b.description)],
-            collaborators: b.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
+            description: [change.removed(p.description)],
+            collaborators: p.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
           }
         }
-        if (n) {
+        if (c) {
           return {
             id,
-            description: [change.added(n.description)],
-            collaborators: n.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
+            description: [change.added(c.description)],
+            collaborators: c.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
           }
         }
         throw new Error("impossible! - came from n or b");
       });
-    return out;
-  });
+  }
+
+  const diffCard = (primary: CardData<string>, secondary: CardData<string> | null, reversed=false): CardProps => {
+    const [prev, curr] = reversed ? [secondary, primary] : [primary, secondary];
+    return {
+      name: primary.name,
+      responsibilities: diffResponsibilities(prev?.responsibilities ?? [], curr?.responsibilities ?? []),
+    }
+  };
+
+  let displayCard = $derived(diffCard(baseCard, newCard));
 </script>
 
 {#if show}

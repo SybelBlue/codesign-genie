@@ -10,10 +10,12 @@
     }>[];
   }
 
-  export interface Props extends Data<string | Change[]> {
+  type DisplayProps = {
     locked?: boolean;
     selectName?: (name: string) => void;
-  }
+  };
+
+  export type Props<S = string | Change[]> = Data<S> & DisplayProps;
 </script>
 
 <script lang="ts">

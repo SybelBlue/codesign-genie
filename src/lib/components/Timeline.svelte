@@ -1,9 +1,5 @@
 <script module lang="ts">
-  export type Commit = {
-    id: number;
-    text: string;
-    date: string;
-  };
+  import type { Commit } from "$lib/types";
 
   export type Props = {
     commits: Commit[];
