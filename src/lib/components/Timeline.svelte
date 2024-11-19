@@ -4,15 +4,18 @@
   export type Props = {
     commits: Commit[];
     vertical?: boolean;
+    highlightCommit: number;
     useCommit?: (c: Commit) => void;
   };
 </script>
 <script lang="ts">
-  let { commits, vertical, useCommit }: Props = $props();
+  let { commits, vertical, highlightCommit, useCommit }: Props = $props();
+  let rangeStop = $derived(highlightCommit ? commits.findIndex(c => c.id === highlightCommit) : -1)
 </script>
 
-<ul class="timeline timeline-compact max-h-full overflow-scroll" class:vertical={vertical}>
+<ul class="timeline timeline-compact max-h-full overflow-auto" class:vertical={vertical}>
   {#each commits.toReversed() as item, index}
+    {@const highlighted = 0 <= rangeStop && index < commits.length - rangeStop}
     <li>
       <hr />
       <div class="timeline-middle">
@@ -25,7 +28,7 @@
           />
         </svg>
       </div>
-      <button class="btn timeline-end timeline-box snap-start" onclick={() => useCommit?.(item)}>
+      <button class:highlight={highlighted} class="btn timeline-end timeline-box snap-start" onclick={() => useCommit?.(item)}>
         <div class="font-bold">{item.text}</div>
         <div class="text-sm opacity-70">{item.date}</div>
       </button>
@@ -42,5 +45,8 @@
     &:not(.vertical) {
       @apply timeline-horizontal snap-x;
     }
+  }
+  .highlight {
+    @apply btn-primary btn-active;
   }
 </style>

@@ -119,6 +119,13 @@
   };
 
   let compareDeck: Deck | undefined = $state(undefined);
+  let highlightedCommitId: number = $state(timelineItems[timelineItems.length - 1].id);
+
+  const setCompareCommit = (c: Commit) => {
+    compareDeck = c.state;
+    highlightedCommitId = c.id;
+  }
+
   let diffedCards = $derived(diffDecks(compareDeck ?? timelineItems[timelineItems.length - 1].state, currentDeck));
 </script>
 
@@ -129,13 +136,13 @@
     use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
     >
     {#if !verticalTimeline}
-      <Timeline commits={timelineItems} useCommit={(c) => (compareDeck = c.state)} />
+      <Timeline commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
     {/if}
     <div class="flex bg-base-100 w-full rounded-lg p-2">
       {#if verticalTimeline}
         <div class="flex-0 max-h-[40vh]">
           <h3 class="text-lg font-bold mb-2 text-center">Timeline</h3>
-          <Timeline vertical commits={timelineItems} useCommit={(c) => (compareDeck = c.state)} />
+          <Timeline vertical commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
         </div>
       {/if}
       <CardBoard cards={diffedCards} />

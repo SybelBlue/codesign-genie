@@ -33,7 +33,7 @@
 
   $debug = true;
 
-  let showTimeline = $state(true);
+  let showTimeline = $state(false);
 
   /// fake data ///
   const randomizedEdits = (deck: Deck) => {
@@ -53,20 +53,19 @@
       actions[randomIdx(actions)]();
       changed.push(card);
     }
-    console.table(changed);
     return out;
   };
 
   let lastDeck = cards;
   const fakeCommits = [
-    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
-    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-    { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
-    { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
     { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
-  ];
+    { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
+    { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
+    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+  ].toReversed();
   /// fake data ///
   const commits: Commit[] = fakeCommits;
 </script>
