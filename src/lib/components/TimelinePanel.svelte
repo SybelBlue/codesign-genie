@@ -12,11 +12,11 @@
 
   type Props = {
     show: boolean;
-    baseCard: CardData<string>;
+    currentDeck: Deck;
     verticalTimeline?: boolean;
   };
 
-  let { show = $bindable(), baseCard, verticalTimeline }: Props = $props();
+  let { show = $bindable(), currentDeck, verticalTimeline }: Props = $props();
 
   const timelineItems = [
     { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
@@ -114,27 +114,7 @@
       });
   };
 
-const cardDataClone = (c: CardData<string>): CardData<string> =>
-  JSON.parse(JSON.stringify(c)) as CardData<string>;
-
-let newCard = $derived.by(() => {
-  const c = cardDataClone(baseCard);
-  c.name = "Agent";
-  const firstResp = c.responsibilities[0];
-  firstResp.collaborators.push(withId({ name: 'Enemy' }));
-  if (!Array.isArray(firstResp.description)) {
-    let old = firstResp.description;
-    firstResp.description = old.replace('etc.', 'gold');
-  }
-  c.responsibilities.splice(2, 1);
-  c.responsibilities.push(withId({
-    description: 'new responsibility',
-    collaborators: [{ name: 'Inventory' }].map(withId),
-  }));
-  return c;
-});
-
-  let displayCard = $derived(diffCard(baseCard, newCard));
+  let diffedCards = $derived(diffDecks(timelineItems[timelineItems.length - 1].state, currentDeck))
 </script>
 
 {#if show}
@@ -153,7 +133,7 @@ let newCard = $derived.by(() => {
           <Timeline vertical commits={timelineItems} />
         </div>
       {/if}
-      <CardBoard cards={[displayCard].map(withId)} />
+      <CardBoard cards={diffedCards} />
     </div>
   </div>
 {/if}

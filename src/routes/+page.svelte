@@ -66,7 +66,7 @@
       />
   </div>
   {#if cards}
-    <TimelinePanel bind:show={showTimeline} baseCard={cards[0] as CardData<string>}/>
+    <TimelinePanel bind:show={showTimeline} currentDeck={cards}/>
   {/if}
   <CardBoard
     bind:cards={decks[$currentDeck]}
