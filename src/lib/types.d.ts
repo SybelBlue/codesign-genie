@@ -48,7 +48,8 @@ const CARD_SCHEMA: JSONObjectSchema = {
     },
     responsibilities: {
       type: 'array',
-      description: 'The responsibilities that the resource has, e.g. Maintains a ledger of library cards',
+      description:
+        'The responsibilities that the resource has, e.g. Maintains a ledger of library cards',
       items: {
         type: 'object',
         properties: {
@@ -121,7 +122,7 @@ export const TYPEDEFS = {
 `.trim()
 };
 
-export type Deck = {
+export type DeckJson = {
   cards: Array<{
     name: string;
     responsibilities: Array<{
@@ -130,9 +131,6 @@ export type Deck = {
     }>;
   }>;
 };
-
-import type { Props as CardProps } from '$lib/components/Card.svelte';
-import type { Props as CardBoardProps } from './components/CardBoard.svelte';
 
 export type SimpleCard = CardProps<string>;
 export type SimpleDeck = Keyed<SimpleCard>[];
@@ -144,4 +142,9 @@ export type Commit = {
   state: SimpleDeck;
 };
 
-export { CardProps, CardBoardProps };
+import type { Props as CardProps } from '$lib/components/Card.svelte';
+import type { Props as CardBoardProps } from './components/CardBoard.svelte';
+
+export type Deck = CardBoardProps['cards'];
+
+export { CardProps };

@@ -6,7 +6,7 @@
   import Editor from '$lib/components/Editor.svelte';
   import { deckWithIds, exampleDecks, withId } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardBoardProps, CardProps, Commit, SimpleDeck, Keyed } from '$lib/types';
+  import type { Deck, CardProps, Commit, SimpleDeck, Keyed } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
 
   let selectedCard: CardProps | undefined = $state();
@@ -20,7 +20,7 @@
     cards.set(exampleDecks[deckName]);
   }
 
-  let displayDeck: CardBoardProps['cards'] | undefined = $state();
+  let displayDeck: Deck | undefined = $state();
 
   const setDisplayDeck = (d: Keyed<CardProps>[]) => (displayDeck = d);
 

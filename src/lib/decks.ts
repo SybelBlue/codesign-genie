@@ -1,4 +1,4 @@
-import type { Keyed, Deck, SimpleDeck } from './types';
+import type { Keyed, DeckJson, SimpleDeck } from './types';
 
 import libraryJson from '$lib/crc-decks/library.json';
 import rpgJson from '$lib/crc-decks/rpg.json';
@@ -9,7 +9,7 @@ export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   return (o) => ({ ...o, id: nextId++ });
 })();
 
-export const deckWithIds = (deck: Deck): SimpleDeck => {
+export const deckWithIds = (deck: DeckJson): SimpleDeck => {
   return deck.cards.map((card) =>
     withId({
       name: card.name,
