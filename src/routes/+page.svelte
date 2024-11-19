@@ -3,9 +3,9 @@
   import { availableClasses, debug, deckNames, currentDeck } from '$lib/stores';
 
   import Editor from '$lib/components/Editor.svelte';
-  import { decodeDeck, exampleDecks } from '$lib/decks';
+  import { decodeDeck, exampleDecks, withId } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardProps } from '$lib/types';
+  import type { CardProps, Commit, Deck } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 
@@ -34,6 +34,41 @@
   $debug = true;
 
   let showTimeline = $state(true);
+
+  /// fake data ///
+  const randomizedEdits = (deck: Deck) => {
+    const out = JSON.parse(JSON.stringify(deck)) as Deck;
+    const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
+    const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
+    const changed = [];
+    for (let i = 0, n = Math.random() * 4; i < n; i++) {
+      const idx = randomIdx(out);
+      const card = out[idx];
+      const actions = [
+        () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
+        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!'); },
+        () => { let r = randomElem(card.responsibilities); r.collaborators.splice(randomIdx(r.collaborators), 1); },
+        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem(out).name })) },
+      ];
+      actions[randomIdx(actions)]();
+      changed.push(card);
+    }
+    console.table(changed);
+    return out;
+  };
+
+  let lastDeck = cards;
+  const fakeCommits = [
+    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+    { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
+    { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
+    { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
+  ];
+  /// fake data ///
+  const commits: Commit[] = fakeCommits;
 </script>
 
 <svelte:head>
@@ -65,7 +100,7 @@
       />
   </div>
   {#if cards}
-    <TimelinePanel bind:show={showTimeline} currentDeck={cards}/>
+    <TimelinePanel bind:show={showTimeline} currentDeck={cards} {commits}/>
   {/if}
   <CardBoard
     bind:cards={decks[$currentDeck]}

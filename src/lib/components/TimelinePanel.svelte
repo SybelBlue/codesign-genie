@@ -13,10 +13,11 @@
   type Props = {
     show: boolean;
     currentDeck: Deck;
+    commits: Commit[];
     verticalTimeline?: boolean;
   };
 
-  let { show = $bindable(), currentDeck, verticalTimeline }: Props = $props();
+  let { show = $bindable(), currentDeck, commits: timelineItems, verticalTimeline }: Props = $props();
 
   type Zipped<T, K> =
     | { id: K, type: 'left', left: T }
@@ -117,40 +118,8 @@
       });
   };
 
-  /// fake data ///
-  const randomizedEdits = (() => {
-    const out = JSON.parse(JSON.stringify(currentDeck)) as Deck;
-    const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
-    const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
-    const changed = [];
-    for (let i = 0, n = 2 + Math.random() * 4; i < n; i++) {
-      const idx = randomIdx(out);
-      const card = out[idx];
-      const actions = [
-        () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
-        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!'); },
-        () => { let r = randomElem(card.responsibilities); r.collaborators.splice(randomIdx(r.collaborators), 1); },
-        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem(out).name })) },
-      ];
-      actions[randomIdx(actions)]();
-      changed.push(card);
-    }
-    console.table(changed)
-    return out;
-  })();
-
-  const timelineItems: Commit[] = [
-    { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
-    { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-    { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-    { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-    { id: 5, state: [], text: 'add A System', date: '11/5/2024' },
-    { id: 6, state: [], text: 'add B System', date: '11/6/2024' },
-    { id: 7, state: randomizedEdits, text: 'random edits', date: '11/7/2024' },
-  ];
-  /// fake data ///
-
-  let diffedCards = $derived(diffDecks(timelineItems[timelineItems.length - 1].state, currentDeck))
+  let compareDeck: Deck | undefined = $state(undefined);
+  let diffedCards = $derived(diffDecks(compareDeck ?? timelineItems[timelineItems.length - 1].state, currentDeck));
 </script>
 
 {#if show}
@@ -160,13 +129,13 @@
     use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
     >
     {#if !verticalTimeline}
-      <Timeline commits={timelineItems} />
+      <Timeline commits={timelineItems} useCommit={(c) => (compareDeck = c.state)} />
     {/if}
     <div class="flex bg-base-100 w-full rounded-lg p-2">
       {#if verticalTimeline}
         <div class="flex-0 max-h-[40vh]">
           <h3 class="text-lg font-bold mb-2 text-center">Timeline</h3>
-          <Timeline vertical commits={timelineItems} />
+          <Timeline vertical commits={timelineItems} useCommit={(c) => (compareDeck = c.state)} />
         </div>
       {/if}
       <CardBoard cards={diffedCards} />

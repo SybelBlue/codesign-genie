@@ -4,10 +4,11 @@
   export type Props = {
     commits: Commit[];
     vertical?: boolean;
+    useCommit?: (c: Commit) => void;
   };
 </script>
 <script lang="ts">
-  let { commits, vertical }: Props = $props();
+  let { commits, vertical, useCommit }: Props = $props();
 </script>
 
 <ul class="timeline timeline-compact max-h-full overflow-scroll" class:vertical={vertical}>
@@ -24,10 +25,10 @@
           />
         </svg>
       </div>
-      <div class="timeline-end timeline-box snap-start">
+      <button class="btn timeline-end timeline-box snap-start" onclick={() => useCommit?.(item)}>
         <div class="font-bold">{item.text}</div>
         <div class="text-sm opacity-70">{item.date}</div>
-      </div>
+      </button>
       {#if index !== commits.length - 1}<hr />{/if}
     </li>
   {/each}
