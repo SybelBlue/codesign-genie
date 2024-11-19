@@ -34,7 +34,7 @@
             method: 'POST',
             body: JSON.stringify({ description, schema })
           });
-          let deck: Deck = await response.json();
+          const {response: deck} = await response.json();
           console.log(deck);
           let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
           goto(`/?deckInfo=${deckInfo}`)
