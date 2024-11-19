@@ -1,14 +1,21 @@
 <script lang="ts">
   import ThemeChanger from './ThemeChange.svelte';
+  import TimelinePanel from './TimelinePanel.svelte';
+  import type {Props as TimelinePanelProps} from './TimelinePanel.svelte';
   // import DeckChanger from './DeckChanger.svelte';
   // import { deckNames } from '$lib/stores';
 
   type Props = {
-    showTimeline: boolean;
-  }
+      [Property in keyof TimelinePanelProps as Exclude<Property, "show">]: TimelinePanelProps[Property];
+  } & {
+    showTimeline?: boolean;
+  };
 
   let {
-    showTimeline = $bindable(),
+    showTimeline = false,
+    currentDeck,
+    setDisplayDeck,
+    commits,
   }: Props = $props();
 
   let showDeck = $state(false);
@@ -38,4 +45,11 @@
       <ThemeChanger />
     </nav>
   </div>
+  <TimelinePanel
+    bind:show={showTimeline}
+    {currentDeck}
+    {setDisplayDeck}
+    {commits}
+    expand
+    />
 </header>

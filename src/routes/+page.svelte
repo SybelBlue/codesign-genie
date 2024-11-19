@@ -5,7 +5,7 @@
   import Editor from '$lib/components/Editor.svelte';
   import { decodeDeck, exampleDecks, withId } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardProps, Commit, Deck } from '$lib/types';
+  import type { CardBoardProps, CardProps, Commit, Deck, Keyed } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 
@@ -27,13 +27,17 @@
 
   let cards = $derived(decks[$currentDeck]);
 
+  let displayDeck: CardBoardProps['cards'] | undefined = $state();
+
+  const setDisplayDeck = (d: Keyed<CardProps>[]) => (displayDeck = d);
+
+  $effect(() => { setDisplayDeck(cards); })
+
   $effect(() => {
     $availableClasses = cards.map((c) => c.name);
   });
 
   $debug = true;
-
-  let showTimeline = $state(false);
 
   /// fake data ///
   const randomizedEdits = (deck: Deck) => {
@@ -56,7 +60,8 @@
     return out;
   };
 
-  let lastDeck = cards;
+  // svelte-ignore state_referenced_locally
+    let lastDeck = cards;
   const fakeCommits = [
     { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
     { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
@@ -85,7 +90,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar bind:showTimeline={showTimeline} />
+<Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
 
 <main class="overflow-scroll snap-y">
   <!-- sets the sizing for Editor -->
@@ -98,14 +103,11 @@
       }}
       />
   </div>
-  {#if cards}
-    <TimelinePanel bind:show={showTimeline} currentDeck={cards} {commits}/>
-  {/if}
   <CardBoard
-    bind:cards={decks[$currentDeck]}
+    cards={displayDeck ?? cards}
     selectCard={(card) => {
       console.log('Card selected:', card.name);
-      selectedCard = card;
+      selectedCard = cards.find(c => c.id == card.id);
     }}
     />
 </main>

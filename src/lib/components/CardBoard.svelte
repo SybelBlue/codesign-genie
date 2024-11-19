@@ -5,7 +5,7 @@
   export interface Props {
     cards: Keyed<CardProps>[];
     animateIn?: boolean;
-    selectCard?: (c: CardProps) => void;
+    selectCard?: (c: Keyed<CardProps>) => void;
   }
 </script>
 

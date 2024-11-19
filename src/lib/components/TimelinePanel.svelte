@@ -1,3 +1,12 @@
+<script module lang="ts">
+  export type Props = {
+    currentDeck: Deck;
+    commits: Commit[];
+    show?: boolean;
+    expand?: boolean;
+    setDisplayDeck?: (d: Keyed<CardProps>[]) => void;
+  };
+</script>
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
@@ -5,20 +14,11 @@
   import { withId } from '$lib/decks';
 
   import type { Data as CardData } from './Card.svelte';
-  import CardBoard from './CardBoard.svelte';
   import Timeline from './Timeline.svelte';
 
   import { diffWords, type Change } from 'diff';
 
-  type Props = {
-    show: boolean;
-    currentDeck: Deck;
-    commits: Commit[];
-    verticalTimeline?: boolean;
-    collapse?: boolean;
-  };
-
-  let { show = $bindable(), currentDeck, commits: timelineItems, verticalTimeline, collapse = false }: Props = $props();
+  let { show = $bindable(), currentDeck, commits: timelineItems, expand, setDisplayDeck }: Props = $props();
 
   type Zipped<T, K> =
     | { id: K, type: 'left', left: T }
@@ -84,7 +84,7 @@
             });
             const changed = !Boolean(Array.isArray(description) || collaborators.find(c => Array.isArray(c.name)));
             const diffed = { id: z.id, description, collaborators, sortKey: changed ? -1 : 0 };
-            const omit = collapse && merged.length > 2 && changed;
+            const omit = !expand && merged.length > 2 && changed;
             omitted ||= omit;
             return omit ? []: [diffed];
         }
@@ -104,20 +104,24 @@
   };
 
   const diffDecks = (prev: Deck, curr: Deck): Keyed<CardProps>[] => {
-    return mergeKeyed(prev, curr, o => o.id)
-      .flatMap(z => {
-        switch (z.type) {
-          case 'left':
-            return [{ id: z.id, ...diffCard(z.left, null)}]
-          case 'right':
-            return [{ id: z.id, ...diffCard(z.right, null, true)}]
-          case 'both':
-            const diff = diffCard(z.left, z.right);
-            if (diff.responsibilities.find(r => Array.isArray(r.description) || r.collaborators.find(c => Array.isArray(c.name))))
-              return [{ id: z.id, ...diff}];
-            return [];
-        }
-      });
+    const out: Keyed<CardProps>[] = [], unchanged: Keyed<CardProps>[] = [];
+    for (const z of mergeKeyed(prev, curr, o => o.id)) {
+      switch (z.type) {
+        case 'left':
+          out.push({ id: z.id, ...diffCard(z.left, null)});
+          continue;
+        case 'right':
+          out.push({ id: z.id, ...diffCard(z.right, null, true)});
+          continue;
+        case 'both':
+          const diff = diffCard(z.left, z.right);
+          const _changed = diff.responsibilities.find(r => Array.isArray(r.description) || r.collaborators.find(c => Array.isArray(c.name)));
+          (_changed ? out : unchanged).push({ id: z.id, ...diff});
+          continue;
+      }
+    }
+    out.push(...unchanged);
+    return out;
   };
 
   let compareDeck: Deck | undefined = $state(undefined);
@@ -129,25 +133,19 @@
   }
 
   let diffedCards = $derived(diffDecks(compareDeck ?? timelineItems[timelineItems.length - 1].state, currentDeck));
+
+  $effect(() => {
+    setDisplayDeck?.(show ? diffedCards : currentDeck);
+  })
 </script>
 
 {#if show}
+  <hr class="border-t-2 border-primary mx-4" />
   <div
-    class="sticky left-0 top-0 p-4 bg-base-200 shadow-lg overflow-y-auto z-50"
+    class="bg-base-100 p-4 w-fit rounded-lg"
     transition:slide={{ duration: 300, axis: 'y' }}
     use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
     >
-    {#if !verticalTimeline}
-      <Timeline commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
-    {/if}
-    <div class="flex bg-base-100 w-full rounded-lg p-2">
-      {#if verticalTimeline}
-        <div class="flex-0 max-h-[40vh]">
-          <h3 class="text-lg font-bold mb-2 text-center">Timeline</h3>
-          <Timeline vertical commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
-        </div>
-      {/if}
-      <CardBoard cards={diffedCards} />
-    </div>
+    <Timeline commits={timelineItems} useCommit={setCompareCommit} highlightCommit={highlightedCommitId} />
   </div>
 {/if}
