@@ -5,10 +5,15 @@
 
   interface Props {
     card?: CardProps;
+    readyForCommit: boolean;
     onCommit?: (commit: { card: CardProps; message: string }) => void;
   }
 
-  let { card = $bindable(), onCommit }: Props = $props();
+  let { 
+    readyForCommit = $bindable(false),
+    card = $bindable(),
+    onCommit
+  }: Props = $props();
 
   let lastChange = $derived.by(() => {
     card;
@@ -65,19 +70,23 @@
           id="commitMessageInput"
           bind:value={message}
         />
-        <input
-          class="btn btn-outline w-1/4"
-          type="submit"
-          value="propose"
-          id="submitBtn"
-          onclick={() => {
-            if (card) {
-              onCommit?.({ card, message });
-            } else {
-              console.error('Tried to commit undefined card!');
-            }
-          }}
-        />
+        {#if readyForCommit}
+          <input
+            class="btn btn-outline w-1/4"
+            type="submit"
+            value="propose"
+            id="submitBtn"
+            onclick={() => {
+              if (card) {
+                onCommit?.({ card, message });
+              } else {
+                console.error("Tried to commit undefined card!");
+              }
+            }}
+            >
+        {:else}
+          <div class="loading loading-ring loading-lg mb-auto"></div>
+        {/if}
       </div>
       <!-- -->
     </div>

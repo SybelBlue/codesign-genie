@@ -1,6 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
+  import type { Deck } from '$lib/types';
+  import { deckWithIds } from '$lib/decks';
+
   let loading = $state(false);
   let description = $state('');
   const schema = 'Deck';
@@ -31,10 +34,10 @@
             method: 'POST',
             body: JSON.stringify({ description, schema })
           });
-          const deck = await response.json();
+          const {response: deck} = await response.json();
           console.log(deck);
-          const b64payload = btoa(JSON.stringify(deck));
-          goto(`/?customDeckInfo=${b64payload}`);
+          let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+          goto(`/?deckInfo=${deckInfo}`);
         }}
       />
     {/if}
