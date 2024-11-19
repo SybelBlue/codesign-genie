@@ -8,7 +8,8 @@
 
   import { diffWords, type Change } from 'diff';
   import CardBoard from './CardBoard.svelte';
-  import type { CardProps } from '$lib/types';
+  import type { CardProps, Deck, Key, Keyed } from '$lib/types';
+  import type { T } from '@vitest/runner/dist/tasks-3ZnPj1LR.js';
 
   type Props = {
     show: boolean;
@@ -28,25 +29,29 @@
     { id: 7, state: [], text: 'add C System', date: '11/7/2024' },
   ];
 
-  const cardDataClone = (c: CardData<string>): CardData<string> =>
-    JSON.parse(JSON.stringify(c)) as CardData<string>;
+  type Zipped<T, K> =
+    | { id: K, type: 'left', left: T }
+    | { id: K, type: 'right', right: T }
+    | { id: K, type: 'both', left: T, right: T };
 
-  let newCard = $derived.by(() => {
-    const c = cardDataClone(baseCard);
-    c.name = "Agent";
-    const firstResp = c.responsibilities[0];
-    firstResp.collaborators.push(withId({ name: 'Enemy' }));
-    if (!Array.isArray(firstResp.description)) {
-      let old = firstResp.description;
-      firstResp.description = old.replace('etc.', 'gold');
+  const mergeKeyed = <T, K>(left: T[], right: T[], key: (_: T) => K): Zipped<T, K>[] => {
+    const out: Zipped<T, K>[] = [];
+    const lIds = new Set();
+    const rightKeyed = right.map(o => ({ data: o, id: key(o) }));
+    for (const l of left) {
+      const id = key(l);
+      const r = rightKeyed.find(m => m.id === id);
+      lIds.add(id);
+      out.push(r === undefined ? { id, type: 'left', left: l } : { id, type: 'both', left: l, right: r.data });
     }
-    c.responsibilities.splice(2, 1);
-    c.responsibilities.push(withId({
-      description: 'new responsibility',
-      collaborators: [{ name: 'Inventory' }].map(withId),
-    }));
-    return c;
-  });
+    for (const m of rightKeyed) {
+      const { data: r, id } = m;
+      if (!lIds.has(id)) {
+        out.push({ id, type: 'right', right: r });
+      }
+    }
+    return out;
+  }
 
   const diffResponsibilities = (prev: CardData<string>['responsibilities'], curr: CardData<string>['responsibilities']): CardProps['responsibilities'] => {
     const change = {
@@ -54,54 +59,81 @@
       removed: (value: string): Change => ({ removed: true, added: false, value }),
       none: (value: string): Change => ({ removed: false, added: false, value }),
     };
-    const allIds = [...new Set([...prev.map(o => o.id),...curr.map(o => o.id) ])];
-    return allIds
-      .map(id => {
-        const p = prev.find(o => o.id === id);
-        const c = curr.find(o => o.id === id);
-        if (p && c) {
-          const cColNames = c.collaborators.map(c => c.name),
-            pColNames = p.collaborators.map(c => c.name);
-
-          return {
-            id,
-            description: diffWords(p.description, c.description),
-            collaborators: [
-              ...new Set([...cColNames, ...pColNames])
-            ].map(name => {
-              const inN = cColNames.includes(name), inB = pColNames.includes(name);
-              if (inN && inB) return withId({ name });
-              if (inN) return withId({ name: [change.added(name)] });
-              if (inB) return withId({ name: [change.removed(name)] });
-              throw new Error('impossible! - came from n or b names');
-            })
-          };
+    return mergeKeyed(prev, curr, o => o.id)
+      .map(z => {
+        switch (z.type) {
+          case 'left':
+            return {
+              id: z.id,
+              description: [change.removed(z.left.description)],
+              collaborators: z.left.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
+            }
+          case 'right':
+            return {
+              id: z.id,
+              description: [change.added(z.right.description)],
+              collaborators: z.right.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
+            }
+          case 'both':
+            return {
+              id: z.id,
+              description: diffWords(z.left.description, z.right.description),
+              collaborators: mergeKeyed(z.left.collaborators, z.right.collaborators, o => o.name).map(({ type, id: name }) => {
+              switch (type) {
+                  case 'left':
+                    return withId({ name: [change.removed(name)] });
+                  case 'right':
+                    return withId({ name: [change.added(name)] });
+                  case 'both':
+                    return withId({ name });
+                }
+              })
+            };
         }
-        if (p) {
-          return {
-            id,
-            description: [change.removed(p.description)],
-            collaborators: p.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
-          }
-        }
-        if (c) {
-          return {
-            id,
-            description: [change.added(c.description)],
-            collaborators: c.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
-          }
-        }
-        throw new Error("impossible! - came from n or b");
       });
   }
 
-  const diffCard = (primary: CardData<string>, secondary: CardData<string> | null, reversed=false): CardProps => {
-    const [prev, curr] = reversed ? [secondary, primary] : [primary, secondary];
+  const diffCard = (primary: CardData<string>, secondary: CardData<string> | null, swapOrder=false): CardProps => {
+    const [prev, curr] = swapOrder ? [secondary, primary] : [primary, secondary];
     return {
       name: primary.name,
       responsibilities: diffResponsibilities(prev?.responsibilities ?? [], curr?.responsibilities ?? []),
     }
   };
+
+  const diffDecks = (prev: Deck, curr: Deck): Keyed<CardProps>[] => {
+    return mergeKeyed(prev, curr, o => o.id)
+      .map(z => {
+        switch (z.type) {
+          case 'left':
+            return { id: z.id, ...diffCard(z.left, null)}
+          case 'right':
+            return { id: z.id, ...diffCard(z.right, null, true)}
+          case 'both':
+            return { id: z.id, ...diffCard(z.left, z.right)}
+        }
+      });
+  };
+
+const cardDataClone = (c: CardData<string>): CardData<string> =>
+  JSON.parse(JSON.stringify(c)) as CardData<string>;
+
+let newCard = $derived.by(() => {
+  const c = cardDataClone(baseCard);
+  c.name = "Agent";
+  const firstResp = c.responsibilities[0];
+  firstResp.collaborators.push(withId({ name: 'Enemy' }));
+  if (!Array.isArray(firstResp.description)) {
+    let old = firstResp.description;
+    firstResp.description = old.replace('etc.', 'gold');
+  }
+  c.responsibilities.splice(2, 1);
+  c.responsibilities.push(withId({
+    description: 'new responsibility',
+    collaborators: [{ name: 'Inventory' }].map(withId),
+  }));
+  return c;
+});
 
   let displayCard = $derived(diffCard(baseCard, newCard));
 </script>
