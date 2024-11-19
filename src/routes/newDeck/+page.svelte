@@ -37,7 +37,7 @@
           const {response: deck} = await response.json();
           console.log(deck);
           let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
-          goto(`/?deckInfo=${deckInfo}`)
+          goto(`/?deckInfo=${deckInfo}`);
         }}
       />
     {/if}
