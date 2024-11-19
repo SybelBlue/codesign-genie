@@ -2,15 +2,15 @@
   import type { Change } from 'diff';
   import type { Keyed } from '$lib/types';
 
-  interface Data {
+  export interface Data<S> {
     name: string;
     responsibilities: Keyed<{
-      description: string | Change[];
-      collaborators: Keyed<{ name: string }>[];
+      description: S;
+      collaborators: Keyed<{ name: S }>[];
     }>[];
   }
 
-  export interface Props extends Data {
+  export interface Props extends Data<string | Change[]> {
     locked?: boolean;
     selectName?: (name: string) => void;
   }
@@ -43,6 +43,14 @@
   {/if}
 {/snippet}
 
+{#snippet changelabel(v: string | Change[])}
+  {#if Array.isArray(v)}
+    <span>todo</span>
+  {:else}
+    <ClassLabel {selectName} name={v} />
+  {/if}
+{/snippet}
+
 <div
   onfocus={() => selectName?.(name)}
   class:highlight
@@ -63,7 +71,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each responsibilities as r (r.id)}
+        {#each responsibilities as r}
           <tr class="hover break-words">
             <td class="desc">
               {#if locked}
@@ -73,9 +81,9 @@
               {/if}
             </td>
             <td class="text-right">
-              {#each r.collaborators as { name, id }, i (id)}
+              {#each r.collaborators as { name, id }, i}
                 {#if i}<span> </span>{/if}
-                <ClassLabel {selectName} {name} />
+                {@render changelabel(name)}
               {/each}
             </td>
           </tr>

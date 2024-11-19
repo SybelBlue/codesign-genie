@@ -6,6 +6,7 @@
   import { decodeDeck, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
+  import type { Data as CardData } from '$lib/components/Card.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 
@@ -53,7 +54,7 @@
 
 <Toolbar bind:showTimeline={showTimeline} />
 
-<main class="overflow-scroll snap-y">
+<main>
   <!-- sets the sizing for Editor -->
   <div class="absolute w-full h-full">
     <Editor
@@ -65,7 +66,7 @@
       />
   </div>
   {#if cards}
-    <TimelinePanel bind:show={showTimeline} baseCard={cards[0]}/>
+    <TimelinePanel bind:show={showTimeline} baseCard={cards[0] as CardData<string>}/>
   {/if}
   <CardBoard
     bind:cards={decks[$currentDeck]}
