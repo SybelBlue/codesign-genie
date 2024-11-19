@@ -34,6 +34,20 @@ describe('AI Backends', async () => {
       ).rejects.toThrow();
     });
   });
+        it('should handle OpenAI errors', async () => {
+            const description = "Create a person named Alice who is 25 years old";
+            const openai_test = new OpenAIBackend();
+            await expect(
+                openai_test.generateObject(
+                    description,
+                    'TestSchema' as ValidSchema,
+                    TYPEDEFS.TestSchema,
+                    'invalid-key' 
+                )
+            ).rejects.toThrow();
+        });
+
+    });
 
   describe('CohereBackend', () => {
     it('should generate an object based on description', async () => {
