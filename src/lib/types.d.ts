@@ -89,14 +89,27 @@ const DECK_SCHEMA: JSONObjectSchema = {
   additionalProperties: false,
   required: ['cards']
 };
+const TEST_SCHEMA: JSONObjectSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+    age: { type: 'number' }
+  },
+  required: ['name', 'age']
+};
 
-export type ValidSchema = 'Card' | 'Deck';
+export type ValidSchema = 'Card' | 'Deck' | 'TestSchema';
 export const SCHEMAS = {
   Card: CARD_SCHEMA,
-  Deck: DECK_SCHEMA
+  Deck: DECK_SCHEMA,
+  TestSchema: TEST_SCHEMA
 };
 
 export const TYPEDEFS = {
+  TestSchema: `type TestSchema = {
+    name: string;
+    age: number;
+  }`,
   Card: `
 {
   name: string;
@@ -118,6 +131,8 @@ export const TYPEDEFS = {
 }
 `.trim()
 };
+
+export type ValidSchema = keyof typeof SCHEMAS;
 
 import type { Props as CardProps } from '$lib/components/Card.svelte';
 import type { Props as CardBoardProps } from './components/CardBoard.svelte';
