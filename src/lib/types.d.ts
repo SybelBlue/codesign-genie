@@ -122,13 +122,14 @@ export const TYPEDEFS = {
 import type { Props as CardProps } from '$lib/components/Card.svelte';
 import type { Props as CardBoardProps } from './components/CardBoard.svelte';
 
-export type Deck = Keyed<CardProps<string>>[];
+export type SimpleCard = CardProps<string>;
+export type SimpleDeck = Keyed<SimpleCard>[];
 
 export type Commit = {
   id: number;
   text: string;
   date: string;
-  state: Deck;
+  state: SimpleDeck;
 };
 
 export { CardProps, CardBoardProps };

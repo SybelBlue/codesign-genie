@@ -5,7 +5,7 @@
   import Editor from '$lib/components/Editor.svelte';
   import { decodeDeck, exampleDecks, withId } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardBoardProps, CardProps, Commit, Deck, Keyed } from '$lib/types';
+  import type { CardBoardProps, CardProps, Commit, SimpleDeck, Keyed } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import TimelinePanel from '$lib/components/TimelinePanel.svelte';
 
@@ -40,8 +40,8 @@
   $debug = true;
 
   /// fake data ///
-  const randomizedEdits = (deck: Deck) => {
-    const out = JSON.parse(JSON.stringify(deck)) as Deck;
+  const randomizedEdits = (deck: SimpleDeck) => {
+    const out = JSON.parse(JSON.stringify(deck)) as SimpleDeck;
     const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
     const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
     const changed = [];

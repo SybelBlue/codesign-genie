@@ -1,6 +1,6 @@
 <script module lang="ts">
   export type Props = {
-    currentDeck: Deck;
+    currentDeck: SimpleDeck;
     commits: Commit[];
     show?: boolean;
     expand?: boolean;
@@ -10,7 +10,7 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
-  import type { CardProps, Commit, Deck, Keyed } from '$lib/types';
+  import type { CardProps, Commit, SimpleDeck, Keyed } from '$lib/types';
   import { withId } from '$lib/decks';
 
   import type { Data as CardData } from './Card.svelte';
@@ -95,7 +95,7 @@
     return out;
   }
 
-  const diffDecks = (prev: Deck, curr: Deck): Keyed<CardProps>[] => {
+  const diffDecks = (prev: SimpleDeck, curr: SimpleDeck): Keyed<CardProps>[] => {
     const out: Keyed<CardProps>[] = [], unchanged: Keyed<CardProps>[] = [];
     for (const z of mergeKeyed(prev, curr, o => o.id)) {
       const diff = {
@@ -112,7 +112,7 @@
     return out;
   };
 
-  let compareDeck: Deck | undefined = $state(undefined);
+  let compareDeck: SimpleDeck | undefined = $state(undefined);
   let highlightedCommitId: number = $state(commits[commits.length - 1].id);
 
   const setCompareCommit = (c: Commit) => {
