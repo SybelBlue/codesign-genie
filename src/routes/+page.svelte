@@ -34,7 +34,7 @@
 
   $debug = true;
 
-  let showTimeline = $state($debug);
+  let showTimeline = $state(true);
 </script>
 
 <svelte:head>

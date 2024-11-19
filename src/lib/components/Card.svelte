@@ -25,14 +25,14 @@
   let highlight = $derived($highlightedClass === name);
 </script>
 
-{#snippet changetext(v: string | Change[])}
+{#snippet diff(v: string | Change[])}
   {#if Array.isArray(v)}
     {#each v as chg}
       {#if chg.added}
-        <span class="text-primary italic">{chg.value}</span>
+        <span class="text-primary decoration-primary underline">{chg.value}</span>
       {/if}
       {#if chg.removed}
-        <span class="text-secondary line-through">{chg.value}</span>
+        <span class="text-secondary decoration-secondary line-through">{chg.value}</span>
       {/if}
       {#if !chg.added && !chg.removed}
         <span>{chg.value}</span>
@@ -43,9 +43,11 @@
   {/if}
 {/snippet}
 
-{#snippet changelabel(v: string | Change[])}
+{#snippet diffLabel(v: string | Change[])}
   {#if Array.isArray(v)}
-    <span>todo</span>
+    <ClassLabel {selectName} name={v.map(c => c.removed ? '' : c.value).join('')}>
+      {@render diff(v)}
+    </ClassLabel>
   {:else}
     <ClassLabel {selectName} name={v} />
   {/if}
@@ -75,7 +77,7 @@
           <tr class="hover break-words">
             <td class="desc">
               {#if locked}
-                {@render changetext(r.description)}
+                {@render diff(r.description)}
               {:else}
                 <input bind:value={r.description} />
               {/if}
@@ -83,7 +85,7 @@
             <td class="text-right">
               {#each r.collaborators as { name, id }, i}
                 {#if i}<span> </span>{/if}
-                {@render changelabel(name)}
+                {@render diffLabel(name)}
               {/each}
             </td>
           </tr>

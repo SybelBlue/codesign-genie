@@ -1,14 +1,13 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
-  import type { CardProps } from '$lib/types';
   import { clickOutside } from '$lib/actions';
   import Timeline from './Timeline.svelte';
-  import Card from './Card.svelte';
   import { withId } from '$lib/decks';
 
   import type { Data as CardData } from './Card.svelte';
 
-  import { diffWords } from 'diff';
+  import { diffWords, type Change } from 'diff';
+  import CardBoard from './CardBoard.svelte';
 
   type Props = {
     show: boolean;
@@ -28,30 +27,12 @@
     { id: 7, text: 'add C System', date: '11/7/2024' },
   ];
 
-  const getPath = (obj: any, path: string | number | (string | number)[]) => {
-    if (!Array.isArray(path)) return obj[path];
-    return path.reduce((out, p) => out[p], obj);
-  }
-
-  const setPath = (obj: any, path: string | number | (string | number)[], value: any) => {
-    if (!Array.isArray(path)) return obj[path] = value;
-    let out = obj;
-    const last = path.length - 1;;
-    path.forEach((p, idx) => {
-      if (idx !== last) {
-        out = out[p];
-      } else {
-        out[p] = value;
-      }
-    })
-    return out;
-  }
-
   const cardDataClone = (c: CardData<string>): CardData<string> =>
     JSON.parse(JSON.stringify(c)) as CardData<string>;
 
   let newCard = $derived.by(() => {
-    const c = cardDataClone(baseCard)
+    const c = cardDataClone(baseCard);
+    c.name = "Agent";
     const firstResp = c.responsibilities[0];
     firstResp.collaborators.push(withId({ name: 'Enemy' }));
     if (!Array.isArray(firstResp.description)) {
@@ -66,8 +47,13 @@
     return c;
   });
 
-  let diffCard = $derived.by(() => {
-    const out: CardProps = cardDataClone(baseCard);
+  let displayCard = $derived.by(() => {
+    const out: CardData<string | Change[]> = cardDataClone(newCard);
+    const change = {
+      added: (value: string): Change => ({ removed: false, added: true, value }),
+      removed: (value: string): Change => ({ removed: true, added: false, value }),
+      none: (value: string): Change => ({ removed: false, added: false, value }),
+    };
     out.responsibilities = [
         ...new Set([
           ...baseCard.responsibilities.map(o => o.id),
@@ -78,27 +64,38 @@
         const b = baseCard.responsibilities.find(o => o.id === id);
         const n = newCard.responsibilities.find(o => o.id === id);
         if (b && n) {
+          const nColNames = n.collaborators.map(c => c.name),
+            bColNames = b.collaborators.map(c => c.name);
+
           return {
             id,
             description: diffWords(b.description, n.description),
-            collaborators: n.collaborators // todo fix this!
+            collaborators: [
+              ...new Set([...nColNames, ...bColNames])
+            ].map(name => {
+              const inN = nColNames.includes(name), inB = bColNames.includes(name);
+              if (inN && inB) return withId({ name });
+              if (inN) return withId({ name: [change.added(name)] });
+              if (inB) return withId({ name: [change.removed(name)] });
+              throw new Error('impossible! - came from n or b names');
+            })
           };
         }
         if (b) {
           return {
             id,
-            description: [{ removed: true, added: false, value: b.description }],
-            collaborators: b.collaborators.map(c => ({ id: c.id, name: [{ removed: true, added: false, value: c.name }]}))
+            description: [change.removed(b.description)],
+            collaborators: b.collaborators.map(c => ({ id: c.id, name: [change.removed(c.name)]}))
           }
         }
         if (n) {
           return {
             id,
-            description: [{ removed: false, added: true, value: n.description }],
-            collaborators: n.collaborators.map(c => ({ id: c.id, name: [{ removed: false, added: true, value: c.name }]}))
+            description: [change.added(n.description)],
+            collaborators: n.collaborators.map(c => ({ id: c.id, name: [change.added(c.name)]}))
           }
         }
-        throw new Error("impossible!");
+        throw new Error("impossible! - came from n or b");
       });
     return out;
   });
@@ -109,29 +106,18 @@
     class="sticky left-0 top-0 p-4 bg-base-200 shadow-lg overflow-y-auto z-50"
     transition:slide={{ duration: 300, axis: 'y' }}
     use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
-  >
-  {#if !verticalTimeline}
-    <Timeline commits={timelineItems} />
-  {/if}
-  <div class="flex bg-base-100 w-full rounded-lg p-2">
-    {#if verticalTimeline}
-      <!-- Column 1?: Placeholder -->
-      <div class="flex-0 max-h-[40vh]">
-        <h3 class="text-lg font-bold mb-2 text-center">Timeline</h3>
-        <Timeline vertical commits={timelineItems} />
-      </div>
+    >
+    {#if !verticalTimeline}
+      <Timeline commits={timelineItems} />
     {/if}
-      <!-- Column 2: Placeholder -->
-      <div class="grow py-4">
-        <h3 class="text-lg font-bold mb-2 text-center">Previous State</h3>
-        <Card locked {...baseCard}/>
-      </div>
-      <div class="divider divider-horizontal"></div>
-      <!-- Column 3: Placeholder -->
-      <div class="grow py-4 text-center">
-        <h3 class="text-lg font-bold mb-2">Current State</h3>
-        <Card locked {...diffCard}/>
-      </div>
-  </div>
+    <div class="flex bg-base-100 w-full rounded-lg p-2">
+      {#if verticalTimeline}
+        <div class="flex-0 max-h-[40vh]">
+          <h3 class="text-lg font-bold mb-2 text-center">Timeline</h3>
+          <Timeline vertical commits={timelineItems} />
+        </div>
+      {/if}
+      <CardBoard cards={[displayCard].map(withId)} />
+    </div>
   </div>
 {/if}
