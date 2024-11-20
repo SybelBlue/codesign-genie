@@ -47,7 +47,7 @@
 
 {#snippet diffLabel(v: string | Change[])}
   {#if Array.isArray(v)}
-    <ClassLabel {selectName} name={v.map(c => c.removed ? '' : c.value).join('')}>
+    <ClassLabel {selectName} name={v.map((c) => (c.removed ? '' : c.value)).join('')}>
       {@render diff(v)}
     </ClassLabel>
   {:else}

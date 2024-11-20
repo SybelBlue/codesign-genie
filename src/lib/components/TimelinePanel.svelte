@@ -7,6 +7,7 @@
     setDisplayDeck?: (_: Deck) => void;
   };
 </script>
+
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
@@ -16,7 +17,13 @@
 
   import { diffDecks } from '$lib/diff';
 
-  let { show = $bindable(), currentDeck, commits, expand = false, setDisplayDeck }: Props = $props();
+  let {
+    show = $bindable(),
+    currentDeck,
+    commits,
+    expand = false,
+    setDisplayDeck
+  }: Props = $props();
 
   let compareDeck: SimpleDeck | undefined = $state(undefined);
   let highlightedCommitId: number = $state(commits[commits.length - 1].id);
@@ -24,19 +31,15 @@
   const setCompareCommit = (c: Commit) => {
     compareDeck = c.state;
     highlightedCommitId = c.id;
-  }
+  };
 
   let diffedCards = $derived(
-    diffDecks(
-      currentDeck,
-      compareDeck ?? commits[commits.length - 1].state,
-      expand
-    )
+    diffDecks(currentDeck, compareDeck ?? commits[commits.length - 1].state, expand)
   );
 
   $effect(() => {
     setDisplayDeck?.(show ? diffedCards : currentDeck);
-  })
+  });
 </script>
 
 {#if show}
@@ -44,12 +47,11 @@
   <div
     class="bg-base-100 p-4 w-fit rounded-lg"
     transition:slide={{ duration: 300, axis: 'y' }}
-    use:clickOutside={(e) => { e.stopPropagation(); show = false; }}
-    >
-    <Timeline
-      useCommit={setCompareCommit}
-      highlightCommit={highlightedCommitId}
-      {commits}
-      />
+    use:clickOutside={(e) => {
+      e.stopPropagation();
+      show = false;
+    }}
+  >
+    <Timeline useCommit={setCompareCommit} highlightCommit={highlightedCommitId} {commits} />
   </div>
 {/if}

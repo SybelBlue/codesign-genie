@@ -23,7 +23,7 @@
   class="text-accent"
   role="link"
   tabindex="0"
-  >
+>
   {#if children}
     {@render children()}
   {:else}

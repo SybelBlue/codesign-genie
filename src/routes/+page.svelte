@@ -12,21 +12,23 @@
   let selectedCard: CardProps | undefined = $state();
   let readyForCommit: boolean = $state(false);
 
-  const rawDeckInfo = $page.url.searchParams.get("deckInfo");
+  const rawDeckInfo = $page.url.searchParams.get('deckInfo');
   let cards = currentDeckInit(rawDeckInfo ? atob(rawDeckInfo) : JSON.stringify(exampleDecks.rpg));
 
   let deckName = $page.url.searchParams.get('deckName');
   if (deckName) {
-    console.log(deckName, $cards.length)
+    console.log(deckName, $cards.length);
     $cards = exampleDecks[deckName];
-    console.log($cards.length)
+    console.log($cards.length);
   }
 
   let displayDeck: Deck | undefined = $state();
 
-  const setDisplayDeck = (d: Deck) => { displayDeck = d; };
+  const setDisplayDeck = (d: Deck) => {
+    displayDeck = d;
+  };
 
-  $effect(() => setDisplayDeck($cards))
+  $effect(() => setDisplayDeck($cards));
 
   $effect(() => {
     // note: prevents all changes!
@@ -39,16 +41,26 @@
   const randomizedEdits = (deck: SimpleDeck) => {
     const out = JSON.parse(JSON.stringify(deck)) as SimpleDeck;
     const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
-    const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
+    const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
     const changed = [];
     for (let i = 0, n = Math.random() * 4; i < n; i++) {
       const idx = randomIdx(out);
       const card = out[idx];
       const actions = [
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
-        () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!'); },
-        () => { let r = randomElem(card.responsibilities); r.collaborators.splice(randomIdx(r.collaborators), 1); },
-        () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem(out).name })) },
+        () => {
+          let r = randomElem(card.responsibilities);
+          r.description = r.description.replace(/\b\w+$/, '- todo!');
+        },
+        () => {
+          let r = randomElem(card.responsibilities);
+          r.collaborators.splice(randomIdx(r.collaborators), 1);
+        },
+        () => {
+          randomElem(card.responsibilities).collaborators.push(
+            withId({ name: randomElem(out).name })
+          );
+        }
       ];
       actions[randomIdx(actions)]();
       changed.push(card);
@@ -61,13 +73,28 @@
     if (!$cards) return [];
     let lastDeck = $cards;
     return [
-      { id: 7, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add C (rand)', date: '11/7/2024' },
-      { id: 6, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add B (rand)', date: '11/6/2024' },
-      { id: 5, state: (lastDeck = randomizedEdits(lastDeck)), text: 'add A (rand)', date: '11/5/2024' },
+      {
+        id: 7,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add C (rand)',
+        date: '11/7/2024'
+      },
+      {
+        id: 6,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add B (rand)',
+        date: '11/6/2024'
+      },
+      {
+        id: 5,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add A (rand)',
+        date: '11/5/2024'
+      },
       { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
       { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
       { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-      { id: 1, state: [], text: 'initial commit', date: '11/1/2024' },
+      { id: 1, state: [], text: 'initial commit', date: '11/1/2024' }
     ].toReversed();
   });
   /// fake data ///
@@ -117,15 +144,15 @@
             schema: 'Deck'
           })
         }).then((response) =>
-          response.json().then(({response: deck}) => {
+          response.json().then(({ response: deck }) => {
             console.log(deck);
             let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
-            goto(`/?deckInfo=${deckInfo}`)
+            goto(`/?deckInfo=${deckInfo}`);
           })
         );
         selectedCard = undefined;
       }}
-      />
+    />
   </div>
   <CardBoard
     cards={displayDeck ?? $cards}
@@ -134,5 +161,5 @@
       readyForCommit = true;
       selectedCard = card;
     }}
-    />
+  />
 </main>

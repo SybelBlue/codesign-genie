@@ -9,11 +9,7 @@
     onCommit?: (commit: { card: CardProps; message: string }) => void;
   }
 
-  let { 
-    readyForCommit = $bindable(false),
-    card = $bindable(),
-    onCommit
-  }: Props = $props();
+  let { readyForCommit = $bindable(false), card = $bindable(), onCommit }: Props = $props();
 
   let lastChange = $derived.by(() => {
     card;
@@ -80,10 +76,10 @@
               if (card) {
                 onCommit?.({ card, message });
               } else {
-                console.error("Tried to commit undefined card!");
+                console.error('Tried to commit undefined card!');
               }
             }}
-            >
+          />
         {:else}
           <div class="loading loading-ring loading-lg mb-auto"></div>
         {/if}
