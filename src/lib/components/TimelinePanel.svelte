@@ -10,7 +10,8 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { clickOutside } from '$lib/actions';
-  import type { Commit, SimpleDeck, Deck } from '$lib/types';
+  import type { Commit, SimpleDeck, Deck, Keyed, Key } from '$lib/types';
+  import microdiff from 'microdiff';
 
   import Timeline from './Timeline.svelte';
 
@@ -26,16 +27,24 @@
     highlightedCommitId = c.id;
   }
 
-  let diffedCards = $derived(
-    diffDecks(
-      currentDeck,
-      compareDeck ?? commits[commits.length - 1].state,
-      expand
-    )
-  );
+  let compareDeckOrDefault = $derived(compareDeck ?? commits[commits.length - 1].state);
+  let diffedCards = $derived( diffDecks( currentDeck, compareDeckOrDefault, expand ) );
 
   $effect(() => {
     setDisplayDeck?.(show ? diffedCards : currentDeck);
+  })
+
+  $effect(() => {
+    const keysToRecord = <T>(data: Keyed<T>[]): Record<Key, Keyed<T>> => {
+      const record: Record<Key, Keyed<T>> = {};
+      for (const kt of data) record[kt.id] = kt;
+      return record;
+    }
+    const deckToRecord = (deck: Deck) =>
+      keysToRecord(deck.map(c => ({...c, responsibilities: keysToRecord(c.responsibilities)})));
+    const [cmp, curr] = [deckToRecord(compareDeckOrDefault), deckToRecord(currentDeck)];
+    const diff = microdiff(curr, cmp, { cyclesFix: false });
+    console.table(diff.map(d => ({...d, path: d.path.join('/')})))
   })
 </script>
 

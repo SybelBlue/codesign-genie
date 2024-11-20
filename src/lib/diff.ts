@@ -1,7 +1,6 @@
 import type { CardProps as Card, SimpleDeck, Deck, SimpleCard, Key } from '$lib/types';
 import { withId } from '$lib/decks';
 import { diffWords, type Change } from 'diff';
-import microdiff from 'microdiff';
 
 type Zipped<T, K> =
   | { id: K; type: 'left'; left: T; right: null }

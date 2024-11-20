@@ -41,11 +41,12 @@
     const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
     const randomElem = <T>(list: T[]): T => list[randomIdx(list)];
     const changed = [];
-    for (let i = 0, n = Math.random() * 4; i < n; i++) {
+    for (let i = 0, n = Math.random() * 4 + 2; i < n; i++) {
       const idx = randomIdx(out);
       const card = out[idx];
       const actions = [
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
+        () => card.responsibilities.push(withId({ description: 'todo', collaborators: []})),
         () => { let r = randomElem(card.responsibilities); r.description = r.description.replace(/\b\w+$/, '- todo!'); },
         () => { let r = randomElem(card.responsibilities); r.collaborators.splice(randomIdx(r.collaborators), 1); },
         () => { randomElem(card.responsibilities).collaborators.push(withId({ name: randomElem(out).name })) },
