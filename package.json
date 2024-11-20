@@ -45,10 +45,11 @@
     "vitest": "^2.0.4"
   },
   "dependencies": {
+    "@types/diff": "^6.0.0",
     "@types/npm": "^7.19.3",
     "@types/reveal.js": "^5.0.4",
     "cohere-ai": "^7.14.0",
-    "openai": "^4.72.0",
-    "reveal.js": "^5.1.0"
+    "diff": "^7.0.0",
+    "openai": "^4.72.0"
   }
 }

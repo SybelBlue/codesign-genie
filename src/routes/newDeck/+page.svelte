@@ -1,7 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import type { Deck } from '$lib/types';
   import { deckWithIds } from '$lib/decks';
 
   let loading = $state(false);

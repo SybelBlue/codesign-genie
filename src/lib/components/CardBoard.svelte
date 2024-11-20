@@ -5,7 +5,7 @@
   export interface Props {
     cards: Keyed<CardProps>[];
     animateIn?: boolean;
-    selectCard?: (c: CardProps) => void;
+    selectCard?: (c: Keyed<CardProps>) => void;
   }
 </script>
 
@@ -43,22 +43,22 @@
 
 <style lang="postcss">
   #backdrop {
-    @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
+    @apply relative top-0 left-0 bg-base-100;
   }
 
   .grid-container {
-    @apply grid p-1 gap-2;
+    @apply max-h-full grid p-1 gap-2;
     /* responsive sizing */
     @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
   }
 
   /* Create stacking context for each sticky element */
   li {
-    @apply relative;
+    @apply relative snap-start;
     z-index: 1;
 
     &.surface {
-      @apply sticky top-0 bottom-0 isolate pointer-events-none;
+      @apply sticky snap-none top-0 bottom-0 isolate pointer-events-none;
       z-index: 2;
     }
   }
