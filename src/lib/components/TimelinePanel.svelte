@@ -10,7 +10,6 @@
 
 <script lang="ts">
   import { slide } from 'svelte/transition';
-  import { clickOutside } from '$lib/actions';
   import type { Commit, SimpleDeck, Deck } from '$lib/types';
 
   import Timeline from './Timeline.svelte';
@@ -18,7 +17,7 @@
   import { diffDecks } from '$lib/diff';
 
   let {
-    show = $bindable(),
+    show,
     currentDeck,
     commits,
     expand = false,
@@ -47,10 +46,6 @@
   <div
     class="bg-base-100 p-4 w-fit rounded-lg"
     transition:slide={{ duration: 300, axis: 'y' }}
-    use:clickOutside={(e) => {
-      e.stopPropagation();
-      show = false;
-    }}
   >
     <Timeline useCommit={setCompareCommit} highlightCommit={highlightedCommitId} {commits} />
   </div>

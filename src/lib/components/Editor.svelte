@@ -1,15 +1,16 @@
 <script lang="ts">
-  import Card, { type Props as CardProps } from './Card.svelte';
   import { clickOutside } from '$lib/actions';
   import { slide } from 'svelte/transition';
+  import type { SimpleCard } from '$lib/types';
+  import Card from './Card.svelte';
 
   interface Props {
-    card?: CardProps;
+    card?: SimpleCard;
     readyForCommit: boolean;
-    onCommit?: (commit: { card: CardProps; message: string }) => void;
+    propose?: (card: SimpleCard, message: string) => void;
   }
 
-  let { readyForCommit = $bindable(false), card = $bindable(), onCommit }: Props = $props();
+  let { readyForCommit = $bindable(false), card = $bindable(), propose }: Props = $props();
 
   let lastChange = $derived.by(() => {
     card;
@@ -74,7 +75,7 @@
             id="submitBtn"
             onclick={() => {
               if (card) {
-                onCommit?.({ card, message });
+                propose?.(card, message);
               } else {
                 console.error('Tried to commit undefined card!');
               }

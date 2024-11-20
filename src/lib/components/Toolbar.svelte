@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { clickOutside } from '$lib/actions';
   import ThemeChanger from './ThemeChange.svelte';
   import TimelinePanel from './TimelinePanel.svelte';
   import type { Props as TimelinePanelProps } from './TimelinePanel.svelte';
@@ -15,7 +16,10 @@
   let { showTimeline = false, currentDeck, setDisplayDeck, commits }: Props = $props();
 </script>
 
-<header class="bg-base-100 w-full shadow-md rounded-b-3xl mb-2 z-50">
+<header
+  class="bg-base-100 w-full shadow-md rounded-b-3xl mb-2 z-50"
+  use:clickOutside={() => (showTimeline = false)}
+>
   <div class="w-full px-4 py-3 flex items-center justify-between">
     <nav class="flex-1 flex gap-4">
       <button
@@ -47,5 +51,5 @@
       </div>
     </nav>
   </div>
-  <TimelinePanel bind:show={showTimeline} {currentDeck} {setDisplayDeck} {commits} expand />
+  <TimelinePanel show={showTimeline} {currentDeck} {setDisplayDeck} {commits} expand />
 </header>

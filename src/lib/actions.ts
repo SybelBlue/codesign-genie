@@ -1,4 +1,4 @@
-export function clickOutside(node: HTMLDivElement, onClick: (_: MouseEvent) => void) {
+export function clickOutside(node: HTMLElement, onClick: (_: MouseEvent) => void) {
   const handleClick = (event: MouseEvent) => {
     if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
       onClick(event);

@@ -1,11 +1,10 @@
 <script module lang="ts">
-  import type { Props as CardProps } from './Card.svelte';
-  import type { Keyed } from '$lib/types';
+  import type { Deck } from '$lib/types';
 
   export interface Props {
-    cards: Keyed<CardProps>[];
+    cards: Deck;
     animateIn?: boolean;
-    selectCard?: (c: Keyed<CardProps>) => void;
+    selectCard?: (c: Deck[number]) => void;
   }
 </script>
 

@@ -148,7 +148,6 @@ export type DeckJson = {
 };
 
 import type { Props as CardProps } from '$lib/components/Card.svelte';
-import type { Props as CardBoardProps } from './components/CardBoard.svelte';
 
 /** Valid `CardProps` without Diffs */
 export type SimpleCard = CardProps<string>;
@@ -163,6 +162,6 @@ export type Commit = {
 };
 
 /** The type `CardBoard` expects for `.cards` */
-export type Deck = CardBoardProps['cards'];
+export type Deck = Keyed<CardProps>[];
 
 export { CardProps };
