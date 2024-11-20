@@ -38,8 +38,7 @@
     const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
     const changed = [];
     for (let i = 0, n = Math.random() * 4; i < n; i++) {
-      const idx = randomIdx(out);
-      const card = out[idx];
+      const card = randomElem(out);
       const actions = [
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
         () => {
@@ -56,7 +55,7 @@
           );
         }
       ];
-      actions[randomIdx(actions)]();
+      randomElem(actions)();
       changed.push(card);
     }
     return out;
@@ -64,8 +63,8 @@
 
   // svelte-ignore state_referenced_locally
   const fakeCommits = $derived.by(() => {
-    if (!$cards) return [];
-    let lastDeck = $cards;
+    if (!cards || cards.length == 0) return [];
+    let lastDeck = cards;
     return [
       {
         id: 7,
@@ -97,20 +96,17 @@
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     console.log('Propose card', message, card);
     readyForCommit = false;
-    await fetch('/api/object', {
+    const response = await fetch('/api/object', {
       method: 'POST',
       body: JSON.stringify({
         // TODO: currently we're passing in the deck/card with ids. That may reduce quality
         description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
         schema: 'Deck'
       })
-    }).then((response) =>
-      response.json().then(({response: deck}) => {
-        console.log(deck);
-        let keyedDeck = deckWithIds(deck);
-        cards = keyedDeck;
-      })
-    );
+    });
+    const { response: deck } = await response.json();
+    console.log(deck);
+    cards = deckWithIds(deck);
     selectedCard = undefined;
   };
   const onSelectCard = (card: Deck[number]) => {
