@@ -44,6 +44,7 @@
 <style lang="postcss">
   #backdrop {
     @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
+    z-index: -1;
   }
 
   .grid-container {
