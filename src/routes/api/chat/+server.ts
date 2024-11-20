@@ -1,7 +1,6 @@
 // Defined in a `$REPO/.env` file as described in https://kit.svelte.dev/docs/modules#$env-static-private
 import { CHAT_API_KEY } from '$env/static/private';
 import type { Message, ChatRequest } from '$lib/types';
-import { CohereBackend, OpenAIBackend } from '$lib/ai';
 
 async function fetchChat(messages: Array<Message>, systemMessage: string = ''): Promise<String> {
   const ENDPOINT_URL: URL = new URL('https://api.openai.com/v1/chat/completions');
