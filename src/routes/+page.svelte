@@ -47,8 +47,7 @@
       currentDeck = keyedDeck;
     }}
     />
-  {/if}
-
+  {:else}
   <CardBoard
     bind:cards={currentDeck}
     selectCard={(card) => {
@@ -91,4 +90,5 @@ ${JSON.stringify(commit.card)}
       selectedCard = undefined;
     }}
   />
+  {/if}
 </main>
