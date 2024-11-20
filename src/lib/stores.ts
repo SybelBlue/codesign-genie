@@ -1,7 +1,7 @@
 import { dev } from '$app/environment';
 import { toStore, writable } from 'svelte/store';
 
-import type { CardProps, Keyed } from '$lib/types';
+import type { SimpleDeck } from '$lib/types';
 
 export const highlightedClass = writable<string | undefined>();
 export const availableClasses = writable<string[]>([]);
@@ -14,11 +14,9 @@ export const debug = (() => {
   );
 })();
 
-
-export const currentDeckInit = ((starting_value = "[]") => {
-  
+export const currentDeckInit = (starting_value = '[]') => {
   let deckInfo: string = starting_value;
-  return toStore<Keyed<CardProps>[]>(
+  return toStore<SimpleDeck>(
     () => {
       const obj = JSON.parse(deckInfo);
       return obj;
@@ -26,5 +24,5 @@ export const currentDeckInit = ((starting_value = "[]") => {
     (cards) => {
       deckInfo = JSON.stringify(cards);
     }
-  )
-});
+  );
+};

@@ -54,7 +54,8 @@ const CARD_SCHEMA: JSONObjectSchema = {
     },
     responsibilities: {
       type: 'array',
-      description: 'The responsibilities that the resource has, e.g. Maintains a ledger of library cards',
+      description:
+        'The responsibilities that the resource has, e.g. Maintains a ledger of library cards',
       items: {
         type: 'object',
         properties: {
@@ -101,14 +102,27 @@ const DECK_SCHEMA: JSONObjectSchema = {
   additionalProperties: false,
   required: ['cards']
 };
+const TEST_SCHEMA: JSONObjectSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+    age: { type: 'number' }
+  },
+  required: ['name', 'age']
+};
 
-export type ValidSchema = 'Card' | 'Deck';
+export type ValidSchema = 'Card' | 'Deck' | 'TestSchema';
 export const SCHEMAS = {
   Card: CARD_SCHEMA,
-  Deck: DECK_SCHEMA
+  Deck: DECK_SCHEMA,
+  TestSchema: TEST_SCHEMA
 };
 
 export const TYPEDEFS = {
+  TestSchema: `type TestSchema = {
+    name: string;
+    age: number;
+  }`,
   Card: `
 {
   id?: int;
@@ -141,7 +155,9 @@ export const TYPEDEFS = {
 `.trim()
 };
 
-export type Deck = {
+export type ValidSchema = keyof typeof SCHEMAS;
+
+export type DeckJson = {
   cards: Array<{
     id?: int;
     name: string;
@@ -157,6 +173,20 @@ export type Deck = {
 };
 
 import type { Props as CardProps } from '$lib/components/Card.svelte';
-import type { Props as CardBoardProps } from './components/CardBoard.svelte';
 
-export { CardProps, CardBoardProps };
+/** Valid `CardProps` without Diffs */
+export type SimpleCard = CardProps<string>;
+/** Valid `Deck` without Diffs */
+export type SimpleDeck = Keyed<SimpleCard>[];
+
+export type Commit = {
+  id: number;
+  text: string;
+  date: string;
+  state: SimpleDeck;
+};
+
+/** The type `CardBoard` expects for `.cards` */
+export type Deck = Keyed<CardProps>[];
+
+export { CardProps };

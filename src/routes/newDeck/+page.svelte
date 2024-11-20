@@ -1,7 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import type { Deck } from '$lib/types';
   import { deckWithIds } from '$lib/decks';
 
   let loading = $state(false);
@@ -34,7 +33,7 @@
             method: 'POST',
             body: JSON.stringify({ description, schema })
           });
-          const {response: deck} = await response.json();
+          const { response: deck } = await response.json();
           console.log(deck);
           let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
           goto(`/?deckInfo=${deckInfo}`);

@@ -1,18 +1,21 @@
 <script module lang="ts">
+  import type { Change } from 'diff';
   import type { Keyed } from '$lib/types';
 
-  interface Data {
+  export interface Data<S> {
     name: string;
     responsibilities: Keyed<{
-      description: string;
-      collaborators: Keyed<{ name: string }>[];
+      description: S;
+      collaborators: Keyed<{ name: S }>[];
     }>[];
   }
 
-  export interface Props extends Data {
+  type DisplayProps = {
     locked?: boolean;
     selectName?: (name: string) => void;
-  }
+  };
+
+  export type Props<S = string | Change[]> = Data<S> & DisplayProps;
 </script>
 
 <script lang="ts">
@@ -23,6 +26,34 @@
 
   let highlight = $derived($highlightedClass === name);
 </script>
+
+{#snippet diff(v: string | Change[])}
+  {#if Array.isArray(v)}
+    {#each v as chg}
+      {#if chg.added}
+        <span class="text-primary decoration-primary underline">{chg.value}</span>
+      {/if}
+      {#if chg.removed}
+        <span class="text-secondary decoration-secondary line-through">{chg.value}</span>
+      {/if}
+      {#if !chg.added && !chg.removed}
+        <span>{chg.value}</span>
+      {/if}
+    {/each}
+  {:else}
+    <span>{v}</span>
+  {/if}
+{/snippet}
+
+{#snippet diffLabel(v: string | Change[])}
+  {#if Array.isArray(v)}
+    <ClassLabel {selectName} name={v.map((c) => (c.removed ? '' : c.value)).join('')}>
+      {@render diff(v)}
+    </ClassLabel>
+  {:else}
+    <ClassLabel {selectName} name={v} />
+  {/if}
+{/snippet}
 
 <div
   onfocus={() => selectName?.(name)}
@@ -44,19 +75,19 @@
         </tr>
       </thead>
       <tbody>
-        {#each responsibilities as r (r.id)}
+        {#each responsibilities as r}
           <tr class="hover break-words">
             <td class="desc">
               {#if locked}
-                <span>{r.description}</span>
+                {@render diff(r.description)}
               {:else}
                 <input bind:value={r.description} />
               {/if}
             </td>
             <td class="text-right">
-              {#each r.collaborators as { name, id }, i (id)}
+              {#each r.collaborators as { name, id }, i}
                 {#if i}<span> </span>{/if}
-                <ClassLabel {selectName} {name} />
+                {@render diffLabel(name)}
               {/each}
             </td>
           </tr>

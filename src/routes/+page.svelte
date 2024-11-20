@@ -1,26 +1,141 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { debug } from '$lib/stores';
+  import { goto } from '$app/navigation';
+
+  import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
+  import { debug, availableClasses } from '$lib/stores';
+  import { deckWithIds, exampleDecks, withId } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
-  import { deckWithIds, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
-  import type { CardProps } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import DeckDialog from '$lib/components/DeckDialog.svelte';
   
 
-  let selectedCard: CardProps | undefined = $state();
+  let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
 
   const deckInfo = $page.url.searchParams.get("deckInfo") ?? btoa("[]");
   const deckName = $page.url.searchParams.get('deckName');
-  const deckInit = deckName ? exampleDecks[deckName] : JSON.parse(atob(deckInfo));
+  const deckInit: SimpleDeck = deckName ? exampleDecks[deckName] : JSON.parse(atob(deckInfo));
 
   console.log(deckInit);
-  let currentDeck = $state(deckInit);
+  let cards: Deck = $state(deckInit);
 
-  $debug = false;
+  $effect(() => {
+    // note: prevents all other changes to $availableClasses!
+    $availableClasses = cards.map((c) => c.name);
+  });
+
+  $debug = true;
+
+  /// fake data ///
+  const randomizedEdits = (deck: SimpleDeck) => {
+    const out = JSON.parse(JSON.stringify(deck)) as SimpleDeck;
+    const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
+    const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
+    const changed = [];
+    for (let i = 0, n = Math.random() * 4; i < n; i++) {
+      const idx = randomIdx(out);
+      const card = out[idx];
+      const actions = [
+        () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
+        () => {
+          let r = randomElem(card.responsibilities);
+          r.description = r.description.replace(/\b\w+$/, '- todo!');
+        },
+        () => {
+          let r = randomElem(card.responsibilities);
+          r.collaborators.splice(randomIdx(r.collaborators), 1);
+        },
+        () => {
+          randomElem(card.responsibilities).collaborators.push(
+            withId({ name: randomElem(out).name })
+          );
+        }
+      ];
+      actions[randomIdx(actions)]();
+      changed.push(card);
+    }
+    return out;
+  };
+
+  // svelte-ignore state_referenced_locally
+  const fakeCommits = $derived.by(() => {
+    if (!$cards) return [];
+    let lastDeck = $cards;
+    return [
+      {
+        id: 7,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add C (rand)',
+        date: '11/7/2024'
+      },
+      {
+        id: 6,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add B (rand)',
+        date: '11/6/2024'
+      },
+      {
+        id: 5,
+        state: (lastDeck = randomizedEdits(lastDeck)),
+        text: 'add A (rand)',
+        date: '11/5/2024'
+      },
+      { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
+      { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
+      { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
+      { id: 1, state: [], text: 'initial commit', date: '11/1/2024' }
+    ].toReversed();
+  });
+  /// fake data ///
+  const commits: Commit[] = $derived(fakeCommits);
+
+  const onProposeEdit = async (card: SimpleCard, message: string) => {
+    console.log('Propose card', message, card);
+    console.log('Commit card', commit.message, commit.card);
+      readyForCommit = false;
+      const response = await fetch('/api/object', {
+        method: 'POST',
+        body: JSON.stringify({
+          // TODO: currently we're passing in the deck/card with ids. That may reduce quality
+          description: `\nConsider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(currentDeck)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${commit.message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(commit.card)}
+\`\`\`
+`.trim(),
+          schema: 'Deck'
+        })
+      }).then((response) =>
+        response.json().then(({response: deck}) => {
+          console.log(deck);
+          let keyedDeck = deckWithIds(deck);
+          currentDeck = keyedDeck;
+        })
+      );
+      selectedCard = undefined;
+    const response = await fetch('/api/object', {
+      method: 'POST',
+      body: JSON.stringify({
+        // TODO: currently we're passing in the deck/card with ids. That may reduce quality
+        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify($cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
+        schema: 'Deck'
+      })
+    });
+    selectedCard = undefined;
+    const { response: deck } = await response.json();
+    console.log(deck);
+    let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+    goto(`/?deckInfo=${deckInfo}`);
+  };
+  const onSelectCard = (card: Deck[number]) => {
+    console.log('Card selected:', card.name);
+    readyForCommit = true;
+    selectedCard = cards.find((c) => c.id === card.id);
+  };
+
+  const setDisplayDeck = (deck: Deck) => {
+    cards = deck;
+  };
 </script>
 
 <svelte:head>
@@ -38,57 +153,17 @@
   {/if}
 </svelte:head>
 
-<Toolbar />
-
-<main class="relative grow overflow-visible">
-  {#if currentDeck.length == 0}
+<Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
+<main class="overflow-scroll snap-y">
+  {#if cards.length == 0}
   <DeckDialog
-    loadDeck={(keyedDeck) => {
-      currentDeck = keyedDeck;
-    }}
+    loadDeck={(keyedDeck) => {cards = keyedDeck;}}
     />
   {:else}
-  <CardBoard
-    bind:cards={currentDeck}
-    selectCard={(card) => {
-      console.log('Card selected:', card.name);
-      readyForCommit = true;
-      selectedCard = card;
-    }}
-  />
-
-  <Editor
-    bind:card={selectedCard}
-    {readyForCommit}
-    onCommit={async (commit) => {
-      console.log('Commit card', commit.message, commit.card);
-      readyForCommit = false;
-      await fetch('/api/object', {
-        method: 'POST',
-        body: JSON.stringify({
-          // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-          description: `
-Consider this deck:
-\`\`\`json
-{ "cards" : ${JSON.stringify(currentDeck)} }
-\`\`\`
-
-Given that we are now upserting the following card, describing the change as "${commit.message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.
-\`\`\`json
-${JSON.stringify(commit.card)}
-\`\`\`
-`.trim(),
-          schema: 'Deck'
-        })
-      }).then((response) =>
-        response.json().then(({response: deck}) => {
-          console.log(deck);
-          let keyedDeck = deckWithIds(deck);
-          currentDeck = keyedDeck;
-        })
-      );
-      selectedCard = undefined;
-    }}
-  />
+  <!-- sets the sizing for Editor -->
+  <div class="absolute w-full h-full">
+    <Editor bind:card={selectedCard} {readyForCommit} propose={onProposeEdit} />
+  </div>
+  <CardBoard {cards} selectCard={onSelectCard} />
   {/if}
 </main>

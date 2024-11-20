@@ -1,30 +1,55 @@
 <script lang="ts">
+  import { clickOutside } from '$lib/actions';
   import ThemeChanger from './ThemeChange.svelte';
-  // import DeckChanger from './DeckChanger.svelte';
   import TimelinePanel from './TimelinePanel.svelte';
-  // import { deckNames } from '$lib/stores';
+  import type { Props as TimelinePanelProps } from './TimelinePanel.svelte';
 
-  let showTimeline = $state(false);
+  type Props = {
+    [Property in keyof TimelinePanelProps as Exclude<
+      Property,
+      'show'
+    >]: TimelinePanelProps[Property];
+  } & {
+    showTimeline?: boolean;
+  };
+
+  let { showTimeline = false, currentDeck, setDisplayDeck, commits }: Props = $props();
 </script>
 
-<header class="sticky top-0 w-full shadow-md rounded-b-3xl mb-2 z-50">
+<header
+  class="bg-base-100 w-full shadow-md rounded-b-3xl mb-2 z-50"
+  use:clickOutside={() => (showTimeline = false)}
+>
   <div class="w-full px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <nav class="flex items-center gap-4">
-        <button class="btn btn-ghost btn-sm" onclick={() => (showTimeline = !showTimeline)}>
-          {showTimeline ? 'Hide' : 'Show'} Timeline
-        </button>
-      </nav>
-    </div>
+    <nav class="flex-1 flex gap-4">
+      <button
+        class="btn btn-ghost btn-sm input-bordered"
+        onclickcapture={() => (showTimeline = !showTimeline)}
+      >
+        {showTimeline ? 'Hide' : 'Show'} Timeline
+      </button>
+    </nav>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">
       {'{ cara }'}
     </h1>
-    <nav class="flex items-center gap-4">
-      <a href="/" class="px-2 py-1 hover:underline">Sort</a>
-
+    <nav class="flex-1 flex flex-row-reverse gap-4">
       <ThemeChanger />
+      <div class="join rounded-3xl">
+        {#snippet radioButton(label: string, checked = false)}
+          <input
+            class="join-item btn input-bordered"
+            type="radio"
+            name="sortOptions"
+            aria-label={label}
+            disabled={!checked}
+            {checked}
+          />
+        {/snippet}
+        {@render radioButton('none', true)}
+        {@render radioButton('alpha')}
+        {@render radioButton('recent')}
+      </div>
     </nav>
   </div>
+  <TimelinePanel show={showTimeline} {currentDeck} {setDisplayDeck} {commits} expand />
 </header>
-
-<TimelinePanel show={showTimeline} />

@@ -1,19 +1,16 @@
 <script lang="ts">
-  import Card, { type Props as CardProps } from './Card.svelte';
   import { clickOutside } from '$lib/actions';
   import { slide } from 'svelte/transition';
+  import type { SimpleCard } from '$lib/types';
+  import Card from './Card.svelte';
 
   interface Props {
-    card?: CardProps;
+    card?: SimpleCard;
     readyForCommit: boolean;
-    onCommit?: (commit: { card: CardProps; message: string }) => void;
+    propose?: (card: SimpleCard, message: string) => void;
   }
 
-  let { 
-    readyForCommit = $bindable(false),
-    card = $bindable(),
-    onCommit
-  }: Props = $props();
+  let { readyForCommit = $bindable(false), card = $bindable(), propose }: Props = $props();
 
   let lastChange = $derived.by(() => {
     card;
@@ -29,7 +26,7 @@
       if (card && Date.now() - lastChange > 200) card = undefined;
     }}
     transition:slide
-    class="absolute left-0 w-1/2 h-screen z-50"
+    class="absolute top-0 left-0 w-1/2 h-full z-50"
   >
     <div class="bg-base-100 h-screen grid grid-cols-1 shadow-xl">
       <!-- "X" button in top right -->
@@ -78,12 +75,12 @@
             id="submitBtn"
             onclick={() => {
               if (card) {
-                onCommit?.({ card, message });
+                propose?.(card, message);
               } else {
-                console.error("Tried to commit undefined card!");
+                console.error('Tried to commit undefined card!');
               }
             }}
-            >
+          />
         {:else}
           <div class="loading loading-ring loading-lg mb-auto"></div>
         {/if}
