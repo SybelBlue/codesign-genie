@@ -39,8 +39,6 @@
     $availableClasses = cards.map((c) => c.name);
   });
 
-  highlightedClass.subscribe(console.log)
-
   $debug = true;
 
   /// fake data ///
