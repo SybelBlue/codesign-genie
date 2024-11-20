@@ -38,7 +38,8 @@
     const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
     const changed = [];
     for (let i = 0, n = Math.random() * 4; i < n; i++) {
-      const card = randomElem(out);
+      const idx = randomIdx(out);
+      const card = out[idx];
       const actions = [
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
         () => {
@@ -55,7 +56,7 @@
           );
         }
       ];
-      randomElem(actions)();
+      actions[randomIdx(actions)]();
       changed.push(card);
     }
     return out;
@@ -63,7 +64,7 @@
 
   // svelte-ignore state_referenced_locally
   const fakeCommits = $derived.by(() => {
-    if (!cards || cards.length == 0) return [];
+    if (!cards) return [];
     let lastDeck = cards;
     return [
       {
