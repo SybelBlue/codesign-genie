@@ -23,25 +23,20 @@
 
 <header class="bg-base-100 w-full shadow-md rounded-b-3xl mb-2 z-50">
   <div class="w-full px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <nav class="flex items-center gap-4">
-        <button class="btn btn-ghost btn-sm" onclickcapture={() => (showTimeline = !showTimeline)}>
-          {showTimeline ? 'Hide' : 'Show'} Timeline
-        </button>
-      </nav>
-    </div>
+    <nav class="flex-1 flex items-center gap-4">
+      <button class="btn btn-ghost btn-sm" onclickcapture={() => (showTimeline = !showTimeline)}>
+        {showTimeline ? 'Hide' : 'Show'} Timeline
+      </button>
+    </nav>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">
       {'{ cara }'}
     </h1>
-    <nav class="flex items-center gap-4">
-      <a href="/" class="px-2 py-1 hover:underline">Sort</a>
-
-      <!-- button disabled for now until milestone 2: 11/2
-      <DeckChanger decks={$deckNames} />
-      -->
-      <button class="btn btn-ghost btn-sm" onclick={() => (showDeck = !showDeck)}>
-        {showDeck ? 'library' : 'rpg'}
-      </button>
+    <nav class="flex-1 flex items-center gap-4">
+      <div class="join rounded-3xl">
+        <input class="join-item btn" type="radio" name="options" aria-label="None" />
+        <input class="join-item btn" type="radio" name="options" aria-label="Alpha" />
+        <input class="join-item btn" type="radio" name="options" aria-label="Recent" />
+      </div>
       <ThemeChanger />
     </nav>
   </div>

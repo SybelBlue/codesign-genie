@@ -17,7 +17,9 @@
 
   let deckName = $page.url.searchParams.get('deckName');
   if (deckName) {
-    cards.set(exampleDecks[deckName]);
+    console.log(deckName, $cards.length)
+    $cards = exampleDecks[deckName];
+    console.log($cards.length)
   }
 
   let displayDeck: Deck | undefined = $state();
