@@ -1,8 +1,10 @@
 <script module lang="ts">
-  import type { Keyed, DiffText } from '$lib/types';
+  import type { Change, DiffText } from 'diff';
+  import { undiffWords } from 'diff';
+  import type { Keyed } from '$lib/types';
 
   export interface Data<S> {
-    name: string;
+    name: S;
     responsibilities: Keyed<{
       description: S;
       collaborators: Keyed<{ name: S }>[];
@@ -23,39 +25,31 @@
 
   let { name = $bindable(), responsibilities = $bindable(), locked, selectName }: Props = $props();
 
-  let highlight = $derived($highlightedClass === name);
+  let highlight = $derived($highlightedClass === undiffWords(name));
 </script>
 
 {#snippet diff(v: DiffText)}
   {#if Array.isArray(v)}
     {#each v as chg}
-      {#if chg.added}
-        <span class="text-primary decoration-primary underline">{chg.value}</span>
-      {/if}
-      {#if chg.removed}
-        <span class="text-secondary decoration-secondary line-through">{chg.value}</span>
-      {/if}
-      {#if !chg.added && !chg.removed}
-        <span>{chg.value}</span>
-      {/if}
+      {#if chg.added}<span class="text-primary decoration-primary underline">{chg.value}</span>{/if}{#if chg.removed}<span class="text-secondary decoration-secondary line-through">{chg.value}</span>{/if}{#if !chg.added && !chg.removed}<span>{chg.value}</span>{/if}
     {/each}
   {:else}
     <span>{v}</span>
   {/if}
 {/snippet}
 
-{#snippet diffLabel(v: DiffText)}
+{#snippet diffLabel(v: DiffText, disabled?: boolean)}
   {#if Array.isArray(v)}
-    <ClassLabel {selectName} name={v.map((c) => (c.removed ? '' : c.value)).join('')}>
+    <ClassLabel {disabled} {selectName} name={undiffWords(v)}>
       {@render diff(v)}
     </ClassLabel>
   {:else}
-    <ClassLabel {selectName} name={v} />
+    <ClassLabel {disabled} {selectName} name={v} />
   {/if}
 {/snippet}
 
 <div
-  onfocus={() => selectName?.(name)}
+  onfocus={() => selectName?.(undiffWords(name))}
   class:highlight
   class="tw-grow card dark:card-bordered shadow-xl bg-base-100 hover:z-20"
   role="gridcell"
@@ -63,7 +57,7 @@
 >
   <section class="card-body">
     <h3 class="card-title m-1 mb-0 italic">
-      <ClassLabel disabled {selectName} {name} />
+      {@render diffLabel(name, true)}
     </h3>
     <hr class="border-primary" />
     <table class="table table-auto table-sm">

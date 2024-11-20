@@ -12,6 +12,7 @@
   import { flip } from 'svelte/animate';
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
+  import { undiffWords } from '$lib/diff';
 
   let { cards = $bindable(), animateIn = !$debug, selectCard }: Props = $props();
 
@@ -33,7 +34,7 @@
 <div id="backdrop">
   <ul class="min-h-full grid p-1 gap-2 grid-cols-{columns}" bind:clientWidth={width}>
     {#each cards as { id, ...cardProps } (id)}
-      {@const surface = cardProps.name === $highlightedClass}
+      {@const surface = undiffWords(cardProps.name) === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
         {#if !animateIn}
           <Card locked selectName={propagate} {...cardProps} />

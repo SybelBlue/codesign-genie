@@ -9,7 +9,7 @@
     children?: Snippet;
   }
 
-  let { name, disabled = false, children, selectName }: Props = $props();
+  let { name, disabled, children, selectName }: Props = $props();
 
   let hasACard = $derived($availableClasses.includes(name));
 </script>

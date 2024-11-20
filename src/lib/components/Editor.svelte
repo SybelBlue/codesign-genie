@@ -2,15 +2,17 @@
   import { clickOutside } from '$lib/actions';
   import type { SimpleCard } from '$lib/types';
   import Card from './Card.svelte';
+  import type { Change } from '$lib/diff';
 
   interface Props {
     card: SimpleCard;
     readyForCommit: boolean;
     propose?: (card: SimpleCard, message: string) => void;
+    rename?: (oldName: string, newName: string) => void;
     close?: () => void;
   }
 
-  let { readyForCommit = $bindable(false), card, propose, close }: Props = $props();
+  let { readyForCommit = $bindable(false), card, propose, rename, close }: Props = $props();
 
   let lastChange = $derived.by(() => {
     card;
@@ -18,6 +20,14 @@
   });
 
   let message: string = $state('');
+
+  const startRename = (old: string | Change[]) => {
+    if (!card || !rename) return;
+    if (Array.isArray(card.name)) return;
+    if (card.name !== old) return;
+    const n = prompt(`Rename ${card.name} to...`);
+    if (n) rename(old, n);
+  }
 </script>
 
 <div
@@ -51,7 +61,7 @@
 
   <!-- The Card area -->
   <div class="mx-auto w-4/5">
-    <Card {...card} />
+    <Card selectName={startRename} {...card} />
   </div>
   <!-- -->
 
