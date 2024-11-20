@@ -17,9 +17,11 @@
 
   const deckInfo = $page.url.searchParams.get("deckInfo") ?? btoa("[]");
   const deckName = $page.url.searchParams.get('deckName');
-  const deckInit: SimpleDeck = deckName ? exampleDecks[deckName] : JSON.parse(atob(deckInfo));
+  const deckInit: SimpleDeck = deckName && deckName in exampleDecks 
+                               ? exampleDecks[deckName]
+                               : JSON.parse(atob(deckInfo));
 
-  console.log(deckInit);
+  console.log("Initializing deck", deckInit);
   let cards: Deck = $state(deckInit);
 
   $effect(() => {
@@ -94,38 +96,22 @@
 
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     console.log('Propose card', message, card);
-    console.log('Commit card', commit.message, commit.card);
-      readyForCommit = false;
-      const response = await fetch('/api/object', {
-        method: 'POST',
-        body: JSON.stringify({
-          // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-          description: `\nConsider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(currentDeck)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${commit.message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(commit.card)}
-\`\`\`
-`.trim(),
-          schema: 'Deck'
-        })
-      }).then((response) =>
-        response.json().then(({response: deck}) => {
-          console.log(deck);
-          let keyedDeck = deckWithIds(deck);
-          currentDeck = keyedDeck;
-        })
-      );
-      selectedCard = undefined;
-    const response = await fetch('/api/object', {
+    readyForCommit = false;
+    await fetch('/api/object', {
       method: 'POST',
       body: JSON.stringify({
         // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify($cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
+        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
         schema: 'Deck'
       })
-    });
+    }).then((response) =>
+      response.json().then(({response: deck}) => {
+        console.log(deck);
+        let keyedDeck = deckWithIds(deck);
+        cards = keyedDeck;
+      })
+    );
     selectedCard = undefined;
-    const { response: deck } = await response.json();
-    console.log(deck);
-    let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
-    goto(`/?deckInfo=${deckInfo}`);
   };
   const onSelectCard = (card: Deck[number]) => {
     console.log('Card selected:', card.name);
