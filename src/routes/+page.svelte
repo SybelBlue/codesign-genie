@@ -1,38 +1,32 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { availableClasses, debug, deckNames, currentDeck } from '$lib/stores';
+  import { goto } from '$app/navigation';
+  import { debug, currentDeckInit } from '$lib/stores';
 
   import Editor from '$lib/components/Editor.svelte';
-  import { decodeDeck, exampleDecks } from '$lib/decks';
+  import { deckWithIds, exampleDecks } from '$lib/decks';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import type { CardProps } from '$lib/types';
   import Toolbar from '$lib/components/Toolbar.svelte';
-
-  let decks = $state(exampleDecks);
-
-  // Update store when decks change
-  $effect(() => {
-    $deckNames = Object.keys(decks);
-  });
+  
 
   let selectedCard: CardProps | undefined = $state();
+  let readyForCommit: boolean = $state(false);
 
-  let params = $page.url.searchParams;
-  let deckInfo = params.get('customDeckInfo');
-  if (deckInfo != null) {
-    decks['custom'] = decodeDeck(deckInfo);
-    $currentDeck = 'custom';
+  const deckInfo = $page.url.searchParams.get("deckInfo") ?? btoa("[]");
+  console.log(deckInfo);
+  let currentDeck = currentDeckInit(atob(deckInfo));
+
+  let deckName = $page.url.searchParams.get('deckName');
+  if (deckName) {
+    currentDeck.set(exampleDecks[deckName]);
   }
-
-  $effect(() => {
-    $availableClasses = decks[$currentDeck].map((c) => c.name);
-  });
 
   $debug = false;
 </script>
 
 <svelte:head>
-  <title>CARA / {$currentDeck}</title>
+  <title>CARA</title>
   <meta name="description" content="crc card design game" />
 
   <!-- patch to delay page load until theme is ready in deployment -->
@@ -50,18 +44,45 @@
 
 <main class="relative grow overflow-visible">
   <CardBoard
-    bind:cards={decks[$currentDeck]}
+    bind:cards={$currentDeck}
     selectCard={(card) => {
       console.log('Card selected:', card.name);
+      readyForCommit = true;
       selectedCard = card;
     }}
-    />
+  />
 
   <Editor
     bind:card={selectedCard}
-    onCommit={(commit) => {
+    {readyForCommit}
+    onCommit={async (commit) => {
       console.log('Commit card', commit.message, commit.card);
+      readyForCommit = false;
+      await fetch('/api/object', {
+        method: 'POST',
+        body: JSON.stringify({
+          // TODO: currently we're passing in the deck/card with ids. That may reduce quality
+          description: `
+Consider this deck:
+\`\`\`json
+{ "cards" : ${JSON.stringify($currentDeck)} }
+\`\`\`
+
+Given that we are now upserting the following card, describing the change as "${commit.message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.
+\`\`\`json
+${JSON.stringify(commit.card)}
+\`\`\`
+`.trim(),
+          schema: 'Deck'
+        })
+      }).then((response) =>
+        response.json().then(({response: deck}) => {
+          console.log(deck);
+          let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
+          goto(`/?deckInfo=${deckInfo}`)
+        })
+      );
       selectedCard = undefined;
     }}
-    />
+  />
 </main>
