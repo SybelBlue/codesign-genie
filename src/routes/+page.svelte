@@ -22,11 +22,12 @@
                                : JSON.parse(atob(deckInfo));
 
   console.log("Initializing deck", deckInit);
-  let cards: Deck = $state(deckInit);
+  let cards: SimpleDeck = $state(deckInit);
+  let displayDeck: Deck = $state(deckInit);
 
   $effect(() => {
     // note: prevents all other changes to $availableClasses!
-    $availableClasses = cards.map((c) => c.name);
+    $availableClasses = displayDeck.map((c) => c.name);
   });
 
   $debug = true;
@@ -107,7 +108,7 @@
     });
     const { response: deck } = await response.json();
     console.log(deck);
-    cards = deckWithIds(deck);
+    cards = displayDeck = deckWithIds(deck);
     selectedCard = undefined;
   };
   const onSelectCard = (card: Deck[number]) => {
@@ -116,7 +117,7 @@
     selectedCard = cards.find((c) => c.id === card.id);
   };
 
-  const setDisplayDeck = (deck: Deck) => { cards = deck; };
+  const setDisplayDeck = (deck: Deck) => { displayDeck = deck; };
 </script>
 
 <svelte:head>
@@ -138,13 +139,13 @@
 <main class="overflow-scroll snap-y">
   {#if cards.length == 0}
   <DeckDialog
-    loadDeck={(keyedDeck) => {cards = keyedDeck;}}
+    loadDeck={(keyedDeck) => {cards = displayDeck = keyedDeck;}}
     />
   {:else}
   <!-- sets the sizing for Editor -->
   <div class="absolute w-full h-full">
     <Editor bind:card={selectedCard} {readyForCommit} propose={onProposeEdit} />
   </div>
-  <CardBoard {cards} selectCard={onSelectCard} />
+  <CardBoard cards={displayDeck} selectCard={onSelectCard} />
   {/if}
 </main>

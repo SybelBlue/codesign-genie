@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { CardBoardProps } from '$lib/types';
+  import type { SimpleDeck } from '$lib/types';
   import { deckWithIds } from '$lib/decks';
   import { exampleDecks } from '$lib/decks';
 
   type Props = {
-    loadDeck: (deck: CardBoardProps['cards']) => any;
+    loadDeck: (deck: SimpleDeck) => any;
   };
 
   let loading: boolean = $state(false);
