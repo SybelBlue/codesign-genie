@@ -5,7 +5,6 @@
     cards: Deck;
     animateIn?: boolean;
     selectCard?: (c: Deck[number]) => void;
-    columns?: number;
   }
 </script>
 
@@ -14,17 +13,12 @@
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
 
-  let { cards = $bindable(), animateIn = !$debug, selectCard, columns }: Props = $props();
+  let { cards = $bindable(), animateIn = !$debug, selectCard }: Props = $props();
 
   if (animateIn) setTimeout(() => (animateIn = false), 200);
 
-  const columnClass = $derived(
-    columns != undefined
-      ? columns > 0
-        ? `grid-cols-${columns}`
-        : 'hidden'
-      : 'xl:grid-cols-3 lg:grid-cols-2 grid-cols-1'
-  );
+  let width: number = $state(0);
+  let columns = $derived(Math.max(1, Math.round(width / 400 - 0.6)));
 
   const propagate = (name: string) => {
     const card = cards.find((card) => card.name == name);
@@ -36,8 +30,8 @@
   };
 </script>
 
-<div id="backdrop">
-  <ul class="grid-container {columnClass}">
+<div id="relative bg-base-100 min-h-full min-w-full max-h-full overflow-scroll snap-y">
+  <ul class="grid grid-cols-{columns} p-1 gap-2" bind:clientWidth={width}>
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
@@ -50,16 +44,6 @@
 </div>
 
 <style lang="postcss">
-  #backdrop {
-    @apply relative top-0 left-0 bg-base-100;
-  }
-
-  .grid-container {
-    @apply min-h-full max-h-full grid p-1 gap-2;
-    /* responsive sizing */
-  }
-
-  /* Create stacking context for each sticky element */
   li {
     @apply relative snap-start;
     z-index: 1;

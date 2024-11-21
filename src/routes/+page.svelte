@@ -40,9 +40,6 @@
 
   $debug = true;
 
-  let width: number = $state(0);
-  let columns = $derived(Math.max(1, Math.round(width / 400 - 0.6)));
-
   /// fake data ///
   const randomizedEdits = (deck: SimpleDeck) => {
     const out = JSON.parse(JSON.stringify(deck)) as SimpleDeck;
@@ -147,11 +144,8 @@
 
 <Toolbar currentDeck={$cards} {setDisplayDeck} {commits} />
 
-<main class="flex w-screen max-h-full overflow-hidden" bind:clientWidth={width}>
-  <div
-    class:hidden={!selectedCard}
-    class="w-1/{columns > 3 ? columns - 1 : 2} transition-all min-h-full max-h-full"
-  >
+<main class="flex w-screen max-h-full overflow-hidden">
+  <div class:split={selectedCard} class="transition-all min-h-full max-h-full">
     {#if selectedCard}
       <Editor
         card={selectedCard}
@@ -161,17 +155,13 @@
       />
     {/if}
   </div>
-  <div class="split grow static overflow-scroll snap-y">
-    <CardBoard
-      cards={displayDeck ?? $cards}
-      selectCard={onSelectCard}
-      columns={columns - (selectedCard ? 1 : 0)}
-    />
+  <div class="static split">
+    <CardBoard cards={displayDeck ?? $cards} selectCard={onSelectCard}/>
   </div>
 </main>
 
 <style lang="postcss">
   .split {
-    @apply transition-all flex-1;
+    @apply flex-1;
   }
 </style>

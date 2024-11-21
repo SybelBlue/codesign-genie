@@ -14,7 +14,6 @@ export default {
   ],
   safelist: [
     { pattern: /grid-cols-\d+/ },
-    { pattern: /[w|h]-\d+\/\d+/ },
   ],
   daisyui: {
     themes: true, // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
