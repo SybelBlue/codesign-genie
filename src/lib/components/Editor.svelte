@@ -2,7 +2,9 @@
   import { clickOutside } from '$lib/actions';
   import type { SimpleCard } from '$lib/types';
   import Card from './Card.svelte';
-  import type { Change } from '$lib/diff';
+  import { undiffWords, type Change } from '$lib/diff';
+  import { tick } from 'svelte';
+  import { availableClasses } from '$lib/stores';
 
   interface Props {
     card: SimpleCard;
@@ -19,14 +21,25 @@
     return Date.now();
   });
 
+  let messageBox: HTMLInputElement;
   let message: string = $state('');
+  let validSymbolName = $derived(Boolean(message) && !$availableClasses.includes(message));
 
-  const startRename = (old: string | Change[]) => {
+  let renameMode = $state(false);
+
+  const startRename = (clickedName: string | Change[]) => {
     if (!card || !rename) return;
     if (Array.isArray(card.name)) return;
-    if (card.name !== old) return;
-    const n = prompt(`Rename ${card.name} to...`);
-    if (n) rename(old, n);
+    if (card.name !== undiffWords(clickedName)) return;
+    messageBox.focus();
+    renameMode = true;
+  }
+  const finishRename = (oldName: string | Change[]) => {
+    if (Array.isArray(oldName)) return;
+    const newName = message;
+    message = '';
+    renameMode = false;
+    rename?.(oldName, newName);
   }
 </script>
 
@@ -66,31 +79,51 @@
   <!-- -->
 
   <!-- The "propose" area -->
-  <div class="flex justify-center w-5/6 mx-auto">
+  <form class="flex justify-center w-5/6 mx-auto join">
     <input
-      class="input input-bordered mr-2 w-3/4"
+      class:rename={renameMode}
+      class="message-box input input-bordered w-3/4 border-r-0 join-item"
       type="text"
       name="commitMessage"
       id="commitMessageInput"
+      bind:this={messageBox}
       bind:value={message}
     />
     {#if readyForCommit}
       <input
-        class="btn btn-outline min-w-fit w-1/4"
+        class:rename={renameMode}
+        class="submit-button btn btn-outline w-1/4 join-item"
         type="submit"
-        value="propose"
+        value={renameMode ? 'rename' : "propose"}
+        disabled={renameMode && !validSymbolName}
         id="submitBtn"
         onclick={() => {
-          if (card) {
-            propose?.(card, message);
-          } else {
+          if (!card) {
             console.error('Tried to commit undefined card!');
+            return;
+          }
+          if (renameMode) {
+            finishRename(card.name);
+          } else {
+            propose?.(card, message);
           }
         }}
       />
     {:else}
       <div class="loading loading-ring loading-lg mb-auto"></div>
     {/if}
-  </div>
+  </form>
   <!-- -->
 </div>
+
+<style lang="postcss">
+  input.rename {
+    @apply border-primary;
+    &.submit-button:enabled {
+      @apply bg-primary text-primary-content;
+    }
+    &.message-box {
+      @apply outline-none;
+    }
+  }
+</style>
