@@ -16,13 +16,7 @@
 
   import { diffDecks } from '$lib/diff';
 
-  let {
-    show,
-    currentDeck,
-    commits,
-    expand = false,
-    setDisplayDeck
-  }: Props = $props();
+  let { show, currentDeck, commits, expand = false, setDisplayDeck }: Props = $props();
 
   let compareDeck: SimpleDeck | undefined = $state(undefined);
   let highlightedCommitId: number = $state(commits[commits.length - 1].id);
@@ -43,10 +37,7 @@
 
 {#if show}
   <hr class="border-t-2 border-primary mx-4" />
-  <div
-    class="bg-base-100 p-4 w-fit rounded-lg"
-    transition:slide={{ duration: 300, axis: 'y' }}
-  >
+  <div class="bg-base-100 p-4 w-fit rounded-lg" transition:slide={{ duration: 300, axis: 'y' }}>
     <Timeline useCommit={setCompareCommit} highlightCommit={highlightedCommitId} {commits} />
   </div>
 {/if}
