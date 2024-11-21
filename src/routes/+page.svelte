@@ -116,9 +116,7 @@
     selectedCard = cards.find((c) => c.id === card.id);
   };
 
-  const setDisplayDeck = (deck: Deck) => {
-    cards = deck;
-  };
+  const setDisplayDeck = (deck: Deck) => { cards = deck; };
 </script>
 
 <svelte:head>
