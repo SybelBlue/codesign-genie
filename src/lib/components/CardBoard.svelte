@@ -17,6 +17,10 @@
 
   if (animateIn) setTimeout(() => (animateIn = false), 200);
 
+
+  let width: number = $state(0);
+  let colCount = $derived(Math.max(1, Math.round(width / 400 - 0.6)));
+
   const propagate = (name: string) => {
     const card = cards.find((card) => card.name == name);
     if (card) {
@@ -28,7 +32,7 @@
 </script>
 
 <div id="backdrop">
-  <ul class="grid-container">
+  <ul class="grid-container grid-cols-{colCount}" bind:clientWidth={width}>
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
@@ -46,9 +50,9 @@
   }
 
   .grid-container {
-    @apply max-h-full grid p-1 gap-2;
+    @apply min-h-full max-h-full grid p-1 gap-2;
     /* responsive sizing */
-    @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
+    /* @apply xl:grid-cols-3 lg:grid-cols-2 grid-cols-1; */
   }
 
   /* Create stacking context for each sticky element */
