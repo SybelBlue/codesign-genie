@@ -65,7 +65,7 @@
 
   // svelte-ignore state_referenced_locally
   const fakeCommits = $derived.by(() => {
-    if (!cards) return [];
+    if (!cards || cards.length == 0) return [];
     let lastDeck = cards;
     return [
       {
@@ -136,7 +136,7 @@
 </svelte:head>
 
 <Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
-<main class="overflow-scroll snap-y">
+<main class="overflow-scroll snap-y w-screen">
   {#if cards.length == 0}
   <DeckDialog
     loadDeck={(keyedDeck) => {cards = displayDeck = keyedDeck;}}
