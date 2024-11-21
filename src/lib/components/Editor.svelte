@@ -24,7 +24,7 @@
   use:clickOutside={() => {
     if (card && Date.now() - lastChange > 200) close?.();
   }}
-  class="relative min-h-full z-50 bg-base-100 grid grid-cols-1 shadow-xl"
+  class="relative min-h-full w-full z-50 bg-base-100 grid grid-cols-1 shadow-xl"
 >
   <!-- "X" button in top right -->
   <button
