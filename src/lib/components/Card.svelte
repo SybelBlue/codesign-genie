@@ -11,6 +11,7 @@
 
   type DisplayProps = {
     locked?: boolean;
+    enableTitleLabel?: boolean;
     selectName?: (name: string) => void;
   };
 
@@ -22,7 +23,7 @@
   import ClassLabel from '$lib/components/ClassLabel.svelte';
   import { undiffWords } from '$lib/diff';
 
-  let { name = $bindable(), responsibilities = $bindable(), locked, selectName }: Props = $props();
+  let { name = $bindable(), responsibilities = $bindable(), locked, enableTitleLabel, selectName }: Props = $props();
 
   let highlight = $derived($highlightedClass === undiffWords(name));
 </script>
@@ -56,7 +57,7 @@
 >
   <section class="card-body">
     <h3 class="card-title m-1 mb-0 italic">
-      {@render diffLabel(name, true)}
+      {@render diffLabel(name, !enableTitleLabel)}
     </h3>
     <hr class="border-primary" />
     <table class="table table-auto table-sm">
