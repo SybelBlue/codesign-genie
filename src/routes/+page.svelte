@@ -3,13 +3,12 @@
   import { goto } from '$app/navigation';
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
-  import { debug, currentDeckInit, availableClasses, highlightedClass } from '$lib/stores';
+  import { debug, availableClasses } from '$lib/stores';
   import { deckWithIds, exampleDecks, withId } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
-  import { slide } from 'svelte/transition';
 
   let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
@@ -77,6 +76,7 @@
     if (!cards) return [];
     let lastDeck = cards;
     return [
+      { id: 10, state: lastDeck, text: 'initial commit', date: '11/1/2024' },
       {
         id: 7,
         state: (lastDeck = randomizedEdits(lastDeck)),
@@ -95,10 +95,7 @@
         text: 'add A (rand)',
         date: '11/5/2024'
       },
-      { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-      { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-      { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-      { id: 1, state: [], text: 'initial commit', date: '11/1/2024' }
+      { id: 1, state: [], text: 'empty commit', date: '11/1/2024' }
     ].toReversed();
   })();
   /// fake data ///
