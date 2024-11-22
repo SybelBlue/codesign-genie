@@ -30,8 +30,8 @@
   };
 </script>
 
-<div id="relative bg-base-100 min-h-full min-w-full max-h-full overflow-scroll snap-y">
-  <ul class="grid grid-cols-{columns} p-1 gap-2" bind:clientWidth={width}>
+<div id="backdrop">
+  <ul class="min-h-full grid p-1 gap-2 grid-cols-{columns}" bind:clientWidth={width}>
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
@@ -44,6 +44,10 @@
 </div>
 
 <style lang="postcss">
+  #backdrop {
+    @apply relative top-0 left-0 bg-base-100 max-h-full overflow-scroll snap-y;
+  }
+
   li {
     @apply relative snap-start;
     z-index: 1;
