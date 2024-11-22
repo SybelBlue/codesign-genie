@@ -1,6 +1,5 @@
 <script module lang="ts">
-  import type { Change } from 'diff';
-  import type { Keyed } from '$lib/types';
+  import type { Keyed, DiffText } from '$lib/types';
 
   export interface Data<S> {
     name: string;
@@ -15,7 +14,7 @@
     selectName?: (name: string) => void;
   };
 
-  export type Props<S = string | Change[]> = Data<S> & DisplayProps;
+  export type Props<S = DiffText> = Data<S> & DisplayProps;
 </script>
 
 <script lang="ts">
@@ -27,7 +26,7 @@
   let highlight = $derived($highlightedClass === name);
 </script>
 
-{#snippet diff(v: string | Change[])}
+{#snippet diff(v: DiffText)}
   {#if Array.isArray(v)}
     {#each v as chg}
       {#if chg.added}
@@ -45,7 +44,7 @@
   {/if}
 {/snippet}
 
-{#snippet diffLabel(v: string | Change[])}
+{#snippet diffLabel(v: DiffText)}
   {#if Array.isArray(v)}
     <ClassLabel {selectName} name={v.map((c) => (c.removed ? '' : c.value)).join('')}>
       {@render diff(v)}
