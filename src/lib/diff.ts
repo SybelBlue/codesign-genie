@@ -108,6 +108,14 @@ export const diffDecks = (prev: SimpleDeck, curr: SimpleDeck, expandUnchanged: b
   }));
 };
 
+export const undiffWords = (d: DiffText) =>
+  isDiff(d)
+    ? d
+        .filter((c) => !c.removed)
+        .map((c) => c.value)
+        .join('')
+    : d;
+
 export const isDiff = (d: DiffText) => Array.isArray(d);
 
 export const hasDiff = (c: Card) =>

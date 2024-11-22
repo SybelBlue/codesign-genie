@@ -4,7 +4,7 @@
   import ThemeChanger from './ThemeChange.svelte';
   import TimelinePanel from './TimelinePanel.svelte';
   import type { Props as TimelinePanelProps } from './TimelinePanel.svelte';
-  import { hasDiff } from '$lib/diff';
+  import { hasDiff, undiffWords } from '$lib/diff';
 
   type Props = Omit<TimelinePanelProps, 'show'> & {
     showTimeline?: boolean;
@@ -20,17 +20,16 @@
     for (const c of currentDeck)
       for (const r of c.responsibilities)
         for (const l of r.collaborators)
-          out[l.name] = (out[l.name] ?? 0) + 1;
+          out[undiffWords(l.name)] = (out[undiffWords(l.name)] ?? 0) + 1;
     return out;
   });
   const sortFns: Record<Sorter, (a: Card, b: Card) => number> = {
     none: () => 1,
-    alpha: (x, y) => x.name.localeCompare(y.name),
-    usage: (x, y) => usageDict[x.name] - usageDict[y.name],
+    alpha: (x, y) => undiffWords(x.name).localeCompare(undiffWords(y.name)),
+    usage: (x, y) => usageDict[undiffWords(y.name)] - usageDict[undiffWords(x.name)],
   };
 
   let displayDeck: Deck = $state(currentDeck);
-  $inspect(displayDeck, sorter).with(() => { console.log()})
 
   const setDisplayDeck: Props['setDisplayDeck'] = (d) => (displayDeck = d);
 
@@ -67,19 +66,16 @@
     </h1>
     <nav class="flex-1 flex flex-row-reverse gap-4">
       <ThemeChanger />
-      <div class="join rounded-3xl">
-        {#snippet radioButton(label: Sorter, checked = false)}
+      <div class="join rounded-3xl my-auto">
+        {#each Object.keys(sortFns) as Sorter[] as s}
           <input
-            class="join-item btn input-bordered"
+            class="join-item btn btn-sm"
             type="radio"
             name="sortOptions"
-            aria-label={label}
-            onclick={() => (sorter = label)}
-            {checked}
+            aria-label={s}
+            onclick={() => (sorter = s)}
+            checked={sorter === s}
           />
-        {/snippet}
-        {#each Object.keys(sortFns) as Sorter[] as s}
-          {@render radioButton(s, s === sorter)}
         {/each}
       </div>
     </nav>
