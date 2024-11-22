@@ -147,10 +147,12 @@ export type DeckJson = {
   }>;
 };
 
-import type { Props as CardProps } from '$lib/components/Card.svelte';
+import type { Props as Card } from '$lib/components/Card.svelte';
+
+export type DiffText = string | Change[];
 
 /** Valid `CardProps` without Diffs */
-export type SimpleCard = CardProps<string>;
+export type SimpleCard = Card<string>;
 /** Valid `Deck` without Diffs */
 export type SimpleDeck = Keyed<SimpleCard>[];
 
@@ -162,6 +164,6 @@ export type Commit = {
 };
 
 /** The type `CardBoard` expects for `.cards` */
-export type Deck = Keyed<CardProps>[];
+export type Deck = Keyed<Card>[];
 
-export { CardProps };
+export { Card };
