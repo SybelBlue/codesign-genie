@@ -48,7 +48,7 @@
       >
         <svg
           class:open={showTimeline}
-          class="h-5 w-5 fill-neutral-content"
+          class="h-5 w-5 fill-base-content"
           xmlns="http://www.w3.org/2000/svg"
           shape-rendering="geometricPrecision"
           text-rendering="geometricPrecision"
