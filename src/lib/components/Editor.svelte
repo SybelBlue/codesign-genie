@@ -1,10 +1,9 @@
 <script lang="ts">
   import { clickOutside } from '$lib/actions';
-  import type { SimpleCard } from '$lib/types';
-  import Card from './Card.svelte';
-  import { undiffWords, type Change } from '$lib/diff';
-  import { tick } from 'svelte';
+  import type { DiffText, SimpleCard } from '$lib/types';
+  import { isDiff, undiffWords } from '$lib/diff';
   import { availableClasses } from '$lib/stores';
+  import Card from './Card.svelte';
 
   interface Props {
     card: SimpleCard;
@@ -27,15 +26,15 @@
 
   let renameMode = $state(false);
 
-  const startRename = (clickedName: string | Change[]) => {
-    if (!card || !rename) return;
-    if (Array.isArray(card.name)) return;
+  const startRename = async (clickedName: DiffText) => {
+    if (!rename) return;
+    if (isDiff(card.name)) return;
     if (card.name !== undiffWords(clickedName)) return;
     messageBox.focus();
     renameMode = true;
   }
-  const finishRename = (oldName: string | Change[]) => {
-    if (Array.isArray(oldName)) return;
+  const finishRename = (oldName: DiffText) => {
+    if (isDiff(oldName)) return;
     const newName = message;
     message = '';
     renameMode = false;

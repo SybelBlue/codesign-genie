@@ -162,6 +162,7 @@
       <Editor
         card={selectedCard}
         propose={onProposeEdit}
+        rename={onRename}
         close={() => (selectedCard = undefined)}
         {readyForCommit}
       />

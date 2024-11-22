@@ -1,7 +1,5 @@
 <script module lang="ts">
-  import type { Change, DiffText } from 'diff';
-  import { undiffWords } from 'diff';
-  import type { Keyed } from '$lib/types';
+  import type { DiffText, Keyed } from '$lib/types';
 
   export interface Data<S> {
     name: S;
@@ -22,6 +20,7 @@
 <script lang="ts">
   import { highlightedClass } from '$lib/stores';
   import ClassLabel from '$lib/components/ClassLabel.svelte';
+  import { undiffWords } from '$lib/diff';
 
   let { name = $bindable(), responsibilities = $bindable(), locked, selectName }: Props = $props();
 
