@@ -1,23 +1,42 @@
 <script lang="ts">
   import { clickOutside } from '$lib/actions';
   import type { SimpleCard } from '$lib/types';
+  import { availableClasses } from '$lib/stores';
   import Card from './Card.svelte';
 
   interface Props {
     card: SimpleCard;
     readyForCommit: boolean;
     propose?: (card: SimpleCard, message: string) => void;
+    rename?: (oldName: string, newName: string) => void;
     close?: () => void;
   }
 
-  let { readyForCommit = $bindable(false), card, propose, close }: Props = $props();
+  let { readyForCommit = $bindable(false), card, propose, rename, close }: Props = $props();
 
   let lastChange = $derived.by(() => {
-    card;
+    card && renameMode;
     return Date.now();
   });
 
+  let messageBox: HTMLInputElement;
   let message: string = $state('');
+  let validSymbolName = $derived(Boolean(message) && !$availableClasses.includes(message));
+
+  let renameMode = $state(false);
+
+  const startRename = (clickedName: string) => {
+    if (!rename) return;
+    if (clickedName !== card.name) return;
+    messageBox.focus();
+    renameMode = true;
+  };
+  const finishRename = () => {
+    const newName = message;
+    message = '';
+    renameMode = false;
+    rename?.(card.name, newName);
+  };
 </script>
 
 <div
@@ -51,36 +70,64 @@
 
   <!-- The Card area -->
   <div class="mx-auto w-4/5">
-    <Card {...card} />
+    <Card selectName={startRename} enableTitleLabel={Boolean(rename)} {...card} />
   </div>
   <!-- -->
 
   <!-- The "propose" area -->
-  <div class="flex justify-center w-5/6 mx-auto">
+  <form
+    class="propose-form flex justify-center w-5/6 mx-auto join"
+    use:clickOutside={() => {
+      if (renameMode && Date.now() - lastChange > 200) {
+        renameMode = false;
+        message = '';
+      }
+    }}
+    >
     <input
-      class="input input-bordered mr-2 w-3/4"
+      class:rename={renameMode}
+      class="message-box input input-bordered w-3/4 border-r-0 join-item"
       type="text"
       name="commitMessage"
       id="commitMessageInput"
+      bind:this={messageBox}
       bind:value={message}
     />
     {#if readyForCommit}
       <input
-        class="btn btn-outline min-w-fit w-1/4"
+        class:rename={renameMode}
+        class="submit-button btn btn-outline w-1/4 join-item"
         type="submit"
-        value="propose"
+        value={renameMode ? 'rename' : 'propose'}
+        disabled={renameMode && !validSymbolName}
         id="submitBtn"
-        onclick={() => {
-          if (card) {
-            propose?.(card, message);
-          } else {
+        onclick={(e) => {
+          if (!card) {
             console.error('Tried to commit undefined card!');
+            return;
+          }
+          if (renameMode) {
+            finishRename();
+          } else {
+            propose?.(card, message);
           }
         }}
       />
     {:else}
-      <div class="loading loading-ring loading-lg mb-auto"></div>
+      <div class="btn btn-disabled btn-outline loading loading-ring loading-lg mb-auto"></div>
     {/if}
-  </div>
+  </form>
   <!-- -->
 </div>
+
+<style lang="postcss">
+  input.rename {
+    @apply border-primary transition-all;
+    &.submit-button:enabled {
+      @apply bg-primary text-primary-content;
+    }
+    &.message-box {
+      @apply outline-none;
+    }
+  }
+</style>

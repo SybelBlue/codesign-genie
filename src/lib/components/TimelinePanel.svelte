@@ -21,6 +21,12 @@
   let compareDeck: SimpleDeck | undefined = $state(undefined);
   let highlightedCommitId: number = $state(commits[commits.length - 1].id);
 
+  const setHighlightedCommitId = (id: number) => (highlightedCommitId = id);
+
+  $effect(() => {
+    setHighlightedCommitId(commits[commits.length - 1].id);
+  });
+
   const setCompareCommit = (c: Commit) => {
     compareDeck = c.state;
     highlightedCommitId = c.id;
