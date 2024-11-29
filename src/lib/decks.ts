@@ -25,7 +25,7 @@ export const deckWithIds = (deck: DeckJson): SimpleDeck => {
       id: card.id,
       name: card.name,
       responsibilities: card.responsibilities.map((r) =>
-        withId({ description: r.description, collaborators: r.collaborators.map(withId) })
+        withId({ id: r.id, description: r.description, collaborators: r.collaborators.map(withId) })
       )
     })
   );
