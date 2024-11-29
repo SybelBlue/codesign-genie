@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
   import { debug, availableClasses } from '$lib/stores';
