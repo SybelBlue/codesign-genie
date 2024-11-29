@@ -6,18 +6,15 @@ import hospitalJson from '$lib/crc-decks/hospital.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
-  let skipIds = new Set();
   return (o) => {
     if ("id" in o) {
-      let id = Number(o.id);
-      if (id != 0 && !id) {
-        throw TypeError(`Encountered non-numeric id!: ${o.id} in ${o}`);
+      if (typeof o.id === "number") {
+        nextId = Math.max(nextId, o.id);
+      } else {
+        delete o.id;
       }
-      skipIds.add(id);
     }
-    while (skipIds.has(nextId)) {
-      skipIds.delete(nextId++);
-    }
+
     return { id: nextId++, ...o };
   };
 })();
@@ -25,6 +22,7 @@ export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
 export const deckWithIds = (deck: DeckJson): SimpleDeck => {
   return deck.cards.map((card) =>
     withId({
+      id: card.id,
       name: card.name,
       responsibilities: card.responsibilities.map((r) =>
         withId({ description: r.description, collaborators: r.collaborators.map(withId) })
