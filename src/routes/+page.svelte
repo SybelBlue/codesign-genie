@@ -10,6 +10,7 @@
   import Toolbar from '$lib/components/Toolbar.svelte';
   import DeckDialog from '$lib/components/DeckDialog.svelte';
   
+  import { slide } from 'svelte/transition';
 
   let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
@@ -135,16 +136,31 @@
 </svelte:head>
 
 <Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
-<main class="overflow-scroll snap-y w-screen">
+
+<main class="flex w-screen max-h-full overflow-hidden">
   {#if cards.length == 0}
   <DeckDialog
     loadDeck={(keyedDeck) => {cards = displayDeck = keyedDeck;}}
     />
   {:else}
-  <!-- sets the sizing for Editor -->
-  <div class="absolute w-full h-full">
-    <Editor bind:card={selectedCard} {readyForCommit} propose={onProposeEdit} />
+  <div class:split={selectedCard} class="transition-all min-h-full max-h-full">
+    {#if selectedCard}
+      <Editor
+        card={selectedCard}
+        propose={onProposeEdit}
+        close={() => (selectedCard = undefined)}
+        {readyForCommit}
+      />
+    {/if}
   </div>
-  <CardBoard cards={displayDeck} selectCard={onSelectCard} />
+  <div class="static split">
+    <CardBoard cards={displayDeck} selectCard={onSelectCard}/>
+  </div>
   {/if}
 </main>
+
+<style lang="postcss">
+  .split {
+    @apply flex-1;
+  }
+</style>

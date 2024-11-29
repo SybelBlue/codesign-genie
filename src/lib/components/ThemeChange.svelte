@@ -40,7 +40,7 @@
 </script>
 
 <div title="Change Theme" class="dropdown dropdown-end z-30 [@supports(color:oklch(0%_0_0))]:block">
-  <div tabindex="0" role="button" class="btn btn-neutral btn-circle">
+  <div tabindex="0" role="button" class="btn btn-ghost input-bordered btn-circle">
     <svg
       width="15"
       height="15"

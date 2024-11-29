@@ -1,6 +1,7 @@
-import type { CardProps as Card, SimpleDeck, Deck, SimpleCard, Key } from '$lib/types';
+import type { Card as Card, SimpleDeck, Deck, SimpleCard, Key, DiffText } from '$lib/types';
 import { withId } from '$lib/decks';
 import { diffWords, type Change } from 'diff';
+import { any } from './common';
 
 type Zipped<T, K> =
   | { id: K; type: 'left'; left: T; right: null }
@@ -81,9 +82,7 @@ const diffResponsibilities = (
               return withId({ name });
           }
         });
-        const changed = !(
-          Array.isArray(description) || collaborators.find((c) => Array.isArray(c.name))
-        );
+        const changed = isDiff(description) || any(collaborators, (c) => isDiff(c.name));
         const diffed = { id: z.id, description, collaborators, sortKey: changed ? -1 : 0 };
         const omit = !expandUnchanged && merged.length > 2 && changed;
         omitted ||= omit;
@@ -98,28 +97,32 @@ const diffResponsibilities = (
 };
 
 export const diffDecks = (prev: SimpleDeck, curr: SimpleDeck, expandUnchanged: boolean): Deck => {
-  const [out, unchanged]: Deck[] = [[], []];
-  for (const z of mergeKeyed(prev, curr, (o) => o.id)) {
-    const diff = {
-      id: z.id,
-      name: z.type == 'left' ? z.left.name : z.right.name,
-      responsibilities: diffResponsibilities(
-        z.left?.responsibilities ?? [],
-        z.right?.responsibilities ?? [],
-        expandUnchanged
-      )
-    };
-    const target =
-      z.type != 'both' ||
-      diff.responsibilities.find(
-        (r) => Array.isArray(r.description) || r.collaborators.find((c) => Array.isArray(c.name))
-      )
-        ? out
-        : unchanged;
-    target.push(diff);
-  }
-  out.push(...unchanged);
-  return out;
+  return mergeKeyed(prev, curr, (o) => o.id).map((z) => ({
+    id: z.id,
+    name: z.type == 'left' ? z.left.name : z.right.name,
+    responsibilities: diffResponsibilities(
+      z.left?.responsibilities ?? [],
+      z.right?.responsibilities ?? [],
+      expandUnchanged
+    )
+  }));
 };
+
+export const undiffWords = (d: DiffText) =>
+  isDiff(d)
+    ? d
+        .filter((c) => !c.removed)
+        .map((c) => c.value)
+        .join('')
+    : d;
+
+export const isDiff = (d: DiffText) => Array.isArray(d);
+
+export const hasDiff = (c: Card) =>
+  isDiff(c.name) ||
+  any(
+    c.responsibilities,
+    (r) => isDiff(r.description) || any(r.collaborators, (c) => isDiff(c.name))
+  );
 
 export { type Change, diffWords };
