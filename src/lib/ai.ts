@@ -2,6 +2,7 @@
 import {type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
+import { buildContentString } from '$lib/chat';
 
 import { type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
@@ -31,15 +32,7 @@ export class OpenAIBackend {
         },
         {
           role: 'user',
-          content: `Given the following description and type definition, please generate an object.
-    \`\`\`description
-    ${description}
-    \`\`\`
-    
-    \`\`\`typedef
-    ${typedef}
-    \`\`\`
-    `
+          content: buildContentString(description, SCHEMA, typedef)
         },
         {
           role: 'user',
