@@ -92,14 +92,7 @@ const DECK_SCHEMA: JSONObjectSchema = {
   additionalProperties: false,
   required: ['cards']
 };
-const TEST_SCHEMA: JSONObjectSchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    age: { type: 'number' }
-  },
-  required: ['name', 'age']
-};
+
 const TEST_SCHEMA: JSONObjectSchema = {
   type: 'object',
   properties: {
@@ -109,7 +102,6 @@ const TEST_SCHEMA: JSONObjectSchema = {
   required: ['name', 'age']
 };
 
-export type ValidSchema = 'Card' | 'Deck' | 'TestSchema';
 export const SCHEMAS = {
   Card: CARD_SCHEMA,
   Deck: DECK_SCHEMA,
@@ -143,8 +135,6 @@ export const TYPEDEFS = {
 `.trim()
 };
 
-export type ValidSchema = keyof typeof SCHEMAS;
-
 export type DeckJson = {
   cards: Array<{
     name: string;
@@ -154,8 +144,6 @@ export type DeckJson = {
     }>;
   }>;
 };
-
-export type ValidSchema = keyof typeof SCHEMAS;
 
 export type ValidSchema = keyof typeof SCHEMAS;
 
