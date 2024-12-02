@@ -1,12 +1,7 @@
-
 import {type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
 import { buildContentString } from '$lib/chat';
-
-import { type ValidSchema, SCHEMAS } from '$lib/types.d';
-import { CohereClientV2 } from 'cohere-ai';
-import { OpenAI } from 'openai';
 
 // Add near the top of the file
 const DEBUG = true;
@@ -90,42 +85,6 @@ Respond ONLY with the JSON object, no additonal text.`
       model,
       messages: messages
     });
-    async generateObject<Type>(
-        description: string, 
-        schema_to_select: ValidSchema,
-        typedef: string,
-        apiKey: string
-    ): Promise<Type> {
-        const cohere = new CohereClientV2({
-            token: apiKey
-        });
-        const SCHEMA = SCHEMAS[schema_to_select];
-        const model = 'command-r-plus'
-        const messages = [
-            {
-                role: 'user',
-                content: `You are helping create JSON objects for users. You will be given both a description and schema of the desired object.
-
-Given the following description and type definition, please generate an object.
-\`\`\`description
-${description}
-\`\`\`
-
-\`\`\`typedef
-${typedef}
-\`\`\`
-
-Please respond with JSON in the following schema: ${JSON.stringify(SCHEMA, null, 2)}
-
-Respond ONLY with the JSON object, no additonal text.`,
-            }
-        ]
-        
-        const response = await cohere.chat({
-            model,
-            messages: messages,
-        });
-
 
     if (DEBUG) {
       console.log('Cohere Response:', response);
