@@ -41,6 +41,7 @@
 >
   <div class="w-full px-4 py-3 flex items-center justify-between">
     <nav class="flex-1 flex gap-4">
+      {#if currentDeck.length > 0 && commits.length > 0}
       <button
         class="btn btn-ghost btn-circle input-bordered"
         onclickcapture={() => (showTimeline = !showTimeline)}
@@ -62,6 +63,7 @@
           /></svg
         >
       </button>
+      {/if}
     </nav>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">
       {'{ cara }'}
@@ -71,7 +73,9 @@
       <SortWidget {currentDeck} setSortFn={(fn) => (sorter = fn)} />
     </nav>
   </div>
+  {#if currentDeck.length > 0 && commits.length > 0}
   <TimelinePanel show={showTimeline} {currentDeck} {setDisplayDeck} {commits} expand />
+  {/if}
 </header>
 
 <style lang="postcss">
