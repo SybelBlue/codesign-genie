@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { SimpleDeck } from '$lib/types';
+  import type { SimpleDeck, DeckJson } from '$lib/types';
   import { deckWithIds } from '$lib/decks';
   import { exampleDecks } from '$lib/decks';
+  import { generateObject } from '$lib/ai_tmp';
 
   type Props = {
     loadDeck: (deck: SimpleDeck) => any;
@@ -66,11 +67,7 @@
           class="btn w-full"
           onclick={async () => {
             loading = true;
-            const response = await fetch('/api/object', {
-              method: 'POST',
-              body: JSON.stringify({ description, schema })
-            });
-            const {response: deck} = await response.json();
+            const deck = await generateObject<DeckJson>(description, schema);
             console.log(deck);
             loadDeck(deckWithIds(deck));
           }}

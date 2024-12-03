@@ -18,6 +18,8 @@ export async function generateObject<Type>(
   const SCHEMA = SCHEMAS[schema_to_select];
   const TYPEDEF = TYPEDEFS[schema_to_select];
 
+  console.log("Calling!");
+
   const messages: Array<Message> = [
     {
       role: 'system',
