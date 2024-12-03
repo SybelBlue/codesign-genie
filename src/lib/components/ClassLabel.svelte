@@ -1,27 +1,35 @@
 <script lang="ts">
   import { highlightedClass, availableClasses } from '$lib/stores';
+  import type { Snippet } from 'svelte';
 
   interface Props {
     name: string;
     disabled?: boolean;
     selectName?: (name: string) => void;
+    children?: Snippet;
   }
 
-  let { name, disabled = false, selectName }: Props = $props();
+  let { name, disabled = false, children, selectName }: Props = $props();
 
   let hasACard = $derived($availableClasses.includes(name));
 </script>
 
 <span
-  onmouseenter={() => $highlightedClass = disabled ? undefined : name}
-  onmouseleave={() => $highlightedClass = undefined}
+  onmouseenter={() => ($highlightedClass = disabled ? undefined : name)}
+  onmouseleave={() => ($highlightedClass = undefined)}
   onfocus={() => selectName?.(name)}
   class:enabled={!disabled && hasACard}
   class:no-card={!hasACard}
   class="text-accent"
   role="link"
-  tabindex=0
-  >{name}</span>
+  tabindex="0"
+>
+  {#if children}
+    {@render children()}
+  {:else}
+    {name}
+  {/if}
+</span>
 
 <style lang="postcss">
   span {
@@ -33,10 +41,10 @@
     }
 
     &.no-card {
-      color: var(--fallback-nc,oklch(var(--nc)/0.8));
+      color: var(--fallback-nc, oklch(var(--nc) / 0.8));
 
       &:hover {
-        color: var(--fallback-nc,oklch(var(--nc)/0.3));
+        color: var(--fallback-nc, oklch(var(--nc) / 0.3));
       }
     }
   }

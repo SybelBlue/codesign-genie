@@ -1,6 +1,8 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal",
-  "features": {},
+  "image": "mcr.microsoft.com/devcontainers/base",
+  "features": {
+    "ghcr.io/devcontainers/features/node": {}
+  },
 
   "customizations": {
     "vscode": {

@@ -1,34 +1,32 @@
 <script module lang="ts">
-  import type { Props as CardProps } from './Card.svelte';
-  import type { Keyed } from '$lib/types';
+  import type { Deck } from '$lib/types';
 
   export interface Props {
-    cards: Keyed<CardProps>[];
+    cards: Deck;
     animateIn?: boolean;
-    selectCard?: (c: CardProps) => void;
+    selectCard?: (c: Deck[number]) => void;
   }
 </script>
 
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { withId } from '$lib/common';
+  import { withId } from '$lib/decks';
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
 
-  let {
-    cards = $bindable(),
-    animateIn = !$debug,
-    selectCard,
-  }: Props = $props();
+  let { cards = $bindable(), animateIn = !$debug, selectCard }: Props = $props();
 
-  if (animateIn) setTimeout(() => animateIn = false, 200);
+  if (animateIn) setTimeout(() => (animateIn = false), 200);
+
+  let width: number = $state(0);
+  let columns = $derived(Math.max(1, Math.round(width / 400 - 0.6)));
 
   const propagate = (name: string) => {
     const card = cards.find((card) => card.name == name);
     if (card) {
       selectCard?.(card);
     } else {
-      console.error("Did not find card of name", name);
+      console.error('Did not find card of name', name);
     }
   };
 
@@ -44,7 +42,7 @@
 </script>
 
 <div id="backdrop">
-  <ul class="grid-container">
+  <ul class="min-h-full grid p-1 gap-2 grid-cols-{columns}" bind:clientWidth={width}>
     {#each cards as { id, ...cardProps } (id)}
       {@const surface = cardProps.name === $highlightedClass}
       <li class:surface animate:flip={{ duration: 400 }}>
@@ -70,22 +68,15 @@
 
 <style lang="postcss">
   #backdrop {
-    @apply absolute top-0 left-0 w-full h-full bg-base-100 overflow-auto overscroll-auto;
+    @apply relative top-0 left-0 bg-base-100 max-h-full overflow-scroll snap-y;
   }
 
-  .grid-container {
-    @apply grid p-1 gap-2;
-    /* responsive sizing */
-    @apply xl:grid-cols-3 md:grid-cols-2 grid-cols-1;
-  }
-
-  /* Create stacking context for each sticky element */
   li {
-    @apply relative;
+    @apply relative snap-start;
     z-index: 1;
 
     &.surface {
-      @apply sticky top-0 bottom-0 isolate pointer-events-none;
+      @apply sticky snap-none top-0 bottom-0 isolate pointer-events-none;
       z-index: 2;
     }
   }
