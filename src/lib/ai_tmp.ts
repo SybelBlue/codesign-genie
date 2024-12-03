@@ -1,18 +1,18 @@
+
 // Defined in a `$REPO/.env` file as described in https://kit.svelte.dev/docs/modules#$env-static-private
 import { CHAT_API_KEY } from '$env/static/private';
 import {
   type Message,
-  type GenerationRequest,
   type ValidSchema,
   SCHEMAS,
   TYPEDEFS
 } from '$lib/types.d';
-// import { type Message, type GenerationRequest, type ValidSchema, SCHEMAS } from '$lib/types';
 
-async function generateObject<Type>(
-  description: string,
-  schema_to_select: ValidSchema
-): Promise<Type> {
+
+export async function generateObject<Type>(
+    description: string,
+    schema_to_select: ValidSchema
+  ): Promise<Type> {
   const ENDPOINT_URL: URL = new URL('https://api.openai.com/v1/chat/completions');
   const MODEL: string = 'gpt-4o';
   const SCHEMA = SCHEMAS[schema_to_select];
@@ -73,24 +73,6 @@ ${TYPEDEF}
       return response_object;
     })
   );
-
+  
   return response;
 }
-
-export const POST = async ({ request }) => {
-  if (request.body == null) {
-    return new Response('Please provide a request body!', { status: 400 });
-  }
-
-  return request.json().then(
-    (req: GenerationRequest) => {
-      return generateObject(req.description, req.schema).then((obj) => {
-        const data = { response: obj };
-        return new Response(JSON.stringify(data), { status: 200 });
-      });
-    },
-    (failure_reason) => {
-      return new Response('Invalid JSON!', { status: 400 });
-    }
-  );
-};

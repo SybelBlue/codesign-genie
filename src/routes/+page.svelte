@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
 
-  import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
+  import type { Deck, Commit, SimpleDeck, SimpleCard, DeckJson } from '$lib/types';
   import { debug, availableClasses } from '$lib/stores';
   import { deckWithIds, exampleDecks, withId } from '$lib/decks';
 
@@ -9,6 +9,8 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import DeckDialog from '$lib/components/DeckDialog.svelte';
+
+  import { generateObject } from '$lib/ai_tmp';
   
   import { slide } from 'svelte/transition';
 
@@ -98,16 +100,10 @@
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     console.log('Propose card', message, card);
     readyForCommit = false;
-    const response = await fetch('/api/object', {
-      method: 'POST',
-      body: JSON.stringify({
-        // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
-        schema: 'Deck'
-      })
-    });
-    const { response: deck } = await response.json();
-    console.log(deck);
+    const deck = await generateObject<DeckJson>(
+      `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
+      'Deck'
+    );
     cards = displayDeck = deckWithIds(deck);
     selectedCard = undefined;
   };
