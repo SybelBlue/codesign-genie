@@ -38,7 +38,7 @@ type JSONArraySchema = {
 export type JSONSchema = JSONObjectSchema | JSONArraySchema | JSONPrimitiveSchema;
 
 const ID_SCHEMA = {
-  type: 'int',
+  type: 'integer',
   description: 'A unique ID to track differences between versions'
 };
 
