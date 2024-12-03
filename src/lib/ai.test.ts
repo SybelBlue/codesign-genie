@@ -1,7 +1,9 @@
 import { OpenAIBackend, CohereBackend } from './ai';
 import { type ValidSchema, type TestSchema, TYPEDEFS } from '$lib/types.d';
 import { expect, describe, it } from 'vitest';
-import { CHAT_API_KEY, COHERE_API_KEY } from '$env/static/private';
+
+const CHAT_API_KEY = process.env.CHAT_API_KEY;
+const COHERE_API_KEY = process.env.COHERE_API_KEY;
 
 describe('AI Backends', async () => {
   describe('OpenAIBackend', async () => {
@@ -40,7 +42,7 @@ describe('AI Backends', async () => {
   describe('CohereBackend', () => {
     it('should generate an object based on description', async () => {
       const description = 'Create a person named Alice who is 25 years old';
-      const cohere = new CohereBackend({ apiKey: COHERE_API_KEY });
+      const cohere = new CohereBackend();
       const result = await cohere.generateObject<TestSchema>(
         description,
         'TestSchema' as ValidSchema,

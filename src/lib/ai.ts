@@ -1,7 +1,7 @@
 import {type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
-import { buildContentString } from '$lib/chat';
+import { buildContentSchemaString } from '$lib/chat';
 
 // Add near the top of the file
 const DEBUG = true;
@@ -27,7 +27,7 @@ export class OpenAIBackend {
         },
         {
           role: 'user',
-          content: buildContentString(description, SCHEMA, typedef)
+          content: buildContentSchemaString(description, SCHEMA, typedef)
         },
         {
           role: 'user',
@@ -64,20 +64,11 @@ export class CohereBackend {
     const messages = [
       {
         role: 'user',
-        content: `You are helping create JSON objects for users. You will be given both a description and schema of the desired object.
-
-Given the following description and type definition, please generate an object.
-\`\`\`description
-${description}
-\`\`\`
-
-\`\`\`typedef
-${typedef}
-\`\`\`
-
-Please respond with JSON in the following schema: ${JSON.stringify(SCHEMA, null, 2)}
-
-Respond ONLY with the JSON object, no additonal text.`
+        content: buildContentSchemaString(description, SCHEMA, typedef)
+      },
+      {
+        role: 'user',
+        content: `Please respond with JSON in the following schema: ${SCHEMA}`
       }
     ];
 
