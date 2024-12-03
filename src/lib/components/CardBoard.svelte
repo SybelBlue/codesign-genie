@@ -1,10 +1,11 @@
 <script module lang="ts">
-  import type { Deck } from '$lib/types';
+  import type { Deck, SimpleDeck } from '$lib/types';
 
   export interface Props {
     cards: Deck;
     animateIn?: boolean;
     selectCard?: (c: Deck[number]) => void;
+    addCard?: (c: SimpleDeck[number]) => void;
   }
 </script>
 
@@ -14,7 +15,7 @@
   import { debug, highlightedClass } from '$lib/stores';
   import Card from './Card.svelte';
 
-  let { cards = $bindable(), animateIn = !$debug, selectCard }: Props = $props();
+  let { cards = $bindable(), animateIn = !$debug, selectCard, addCard }: Props = $props();
 
   if (animateIn) setTimeout(() => (animateIn = false), 200);
 
@@ -36,7 +37,7 @@
       name: 'NewClass' + newClassCounter++,
       responsibilities: [],
     });
-    cards.push(card);
+    addCard?.(card);
     selectCard?.(card);
   };
 </script>
