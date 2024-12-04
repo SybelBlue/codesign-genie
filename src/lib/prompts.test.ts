@@ -1,4 +1,4 @@
-import { buildContentString, buildContentSchemaString } from './chat';
+import { buildContentString, buildContentSchemaString } from './prompts';
 import type { ValidSchema } from '$lib/types';
 import { expect, describe, it } from 'vitest';
 
