@@ -139,6 +139,8 @@ export const TYPEDEFS = {
 `.trim()
 };
 
+export type ValidSchema = keyof typeof SCHEMAS;
+
 export type DeckJson = {
   cards: Array<{
     name: string;
@@ -148,8 +150,6 @@ export type DeckJson = {
     }>;
   }>;
 };
-
-export type ValidSchema = keyof typeof SCHEMAS;
 
 import type { Props as Card } from '$lib/components/Card.svelte';
 

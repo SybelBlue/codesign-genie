@@ -48,7 +48,6 @@ export class OpenAIBackend {
   }
 }
 
-
 export class CohereBackend {
   async generateObject<Type>(
     description: string,
