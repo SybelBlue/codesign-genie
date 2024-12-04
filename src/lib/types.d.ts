@@ -96,7 +96,6 @@ const DECK_SCHEMA: JSONObjectSchema = {
   additionalProperties: false,
   required: ['cards']
 };
-
 const TEST_SCHEMA: JSONObjectSchema = {
   type: 'object',
   properties: {
@@ -106,6 +105,7 @@ const TEST_SCHEMA: JSONObjectSchema = {
   required: ['name', 'age']
 };
 
+export type ValidSchema = 'Card' | 'Deck' | 'TestSchema';
 export const SCHEMAS = {
   Card: CARD_SCHEMA,
   Deck: DECK_SCHEMA,
