@@ -1,3 +1,4 @@
+import { CHAT_API_KEY, COHERE_API_KEY } from '$env/static/private';
 import {type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
@@ -80,3 +81,15 @@ export class CohereBackend {
     }
   }
 }
+
+// Create instances of the backends
+export const BACKENDS = {
+  "cohere" : {
+    "apiKey" : COHERE_API_KEY,
+    "backend" : new CohereBackend()
+  },
+  "openai" : {
+    "apiKey" : CHAT_API_KEY,
+    "backend" : new OpenAIBackend()
+  }
+};

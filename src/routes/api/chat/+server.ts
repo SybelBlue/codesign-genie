@@ -1,11 +1,6 @@
-import { CHAT_API_KEY, COHERE_API_KEY } from '$env/static/private';
 import { type GenerationRequest } from '$lib/types.d';
-import { OpenAIBackend, CohereBackend } from '$lib/ai';
+import { BACKENDS } from '$lib/ai';
 import { buildContentString } from '$lib/chat';
-
-// Create instances of the backends
-const openaiBackend = new OpenAIBackend();
-const cohereBackend = new CohereBackend();
 
 export const POST = async ({ request }) => {
   if (request.body == null) {
@@ -14,19 +9,15 @@ export const POST = async ({ request }) => {
 
   return request.json().then(
     async (req: GenerationRequest) => {
-      try {
-        // Use the specified backend or default to OpenAI
-        const backend = req.backend === 'cohere' ? cohereBackend : openaiBackend;
-        const apiKey = req.backend === 'cohere' ? COHERE_API_KEY : CHAT_API_KEY;
+      const ai = BACKENDS[req.backend];
 
-        // Use buildContentString for free-form chat
-        const content = buildContentString(req.description);
-        
-        const obj = await backend.generateObject(
+      // Use buildContentString for free-form chat
+      const content = buildContentString(req.description);
+      try {
+        const obj = await ai.backend.generateObject(
           content,
           req.schema,
-          req.typedef,
-          apiKey
+          ai.apiKey
         );
 
         const data = { response: obj };

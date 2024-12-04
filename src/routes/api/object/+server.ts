@@ -1,19 +1,7 @@
-import { CHAT_API_KEY, COHERE_API_KEY } from '$env/static/private';
 import { type GenerationRequest } from '$lib/types.d';
-import { OpenAIBackend, CohereBackend } from '$lib/ai';
+import { BACKENDS } from '$lib/ai';
 import { buildContentSchemaString } from '$lib/chat';
 
-// Create instances of the backends
-const BACKENDS = {
-  "cohere" : {
-    "apiKey" : COHERE_API_KEY,
-    "backend" : new CohereBackend()
-  },
-  "openai" : {
-    "apiKey" : CHAT_API_KEY,
-    "backend" : new OpenAIBackend()
-  }
-}
 
 export const POST = async ({ request }) => {
   if (request.body == null) {
