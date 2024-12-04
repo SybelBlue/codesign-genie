@@ -14,14 +14,14 @@ export const POST = async ({ request }) => {
 
   return request.json().then(
     async (req: GenerationRequest) => {
-      try {
-        // Use the specified backend or default to OpenAI
-        const backend = req.backend === 'cohere' ? cohereBackend : openaiBackend;
-        const apiKey = req.backend === 'cohere' ? COHERE_API_KEY : CHAT_API_KEY;
+      // Use the specified backend or default to OpenAI
+      const backend = req.backend === 'cohere' ? cohereBackend : openaiBackend;
+      const apiKey = req.backend === 'cohere' ? COHERE_API_KEY : CHAT_API_KEY;
 
-        // Use buildContentSchemaString for schema-based generation
-        const content = buildContentSchemaString(req.description, req.schema, req.typedef);
-        
+      // Use buildContentSchemaString for schema-based generation
+      const content = buildContentSchemaString(req.description, req.schema, req.typedef);
+
+      try {
         const obj = await backend.generateObject(
           content,
           req.schema,
@@ -30,7 +30,7 @@ export const POST = async ({ request }) => {
         );
 
         const data = { response: obj };
-        return new Response(JSON.stringify(data), { status: 200 });
+      return new Response(JSON.stringify(data), { status: 200 });
       } catch (error) {
         console.error('Generation failed:', error);
         return new Response(`Generation failed: ${error.message}`, { status: 500 });
