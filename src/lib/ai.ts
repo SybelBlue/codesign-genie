@@ -61,8 +61,12 @@ export class CohereBackend {
 
     const response = await cohere.chat({
       model,
-      messages: messages
-    });
+      messages: messages,
+      response_format: {
+        type: 'json_object',
+        schema: SCHEMAS[schema_to_select]
+    }
+  });
 
     if (DEBUG) {
       console.log('Cohere Response:', response);
