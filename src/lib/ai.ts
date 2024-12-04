@@ -11,7 +11,6 @@ export class OpenAIBackend {
   async generateObject<Type>(
     description: string,
     schema_to_select: ValidSchema,
-    typedef: string,
     apiKey: string
   ): Promise<Type> {
     const SCHEMA = SCHEMAS[schema_to_select];
@@ -27,11 +26,7 @@ export class OpenAIBackend {
         },
         {
           role: 'user',
-          content: buildContentSchemaString(description, SCHEMA, typedef)
-        },
-        {
-          role: 'user',
-          content: `Please respond with JSON in the following schema: ${SCHEMA}`
+          content: buildContentSchemaString(description, schema_to_select)
         }
       ],
 
@@ -52,22 +47,14 @@ export class CohereBackend {
   async generateObject<Type>(
     description: string,
     schema_to_select: ValidSchema,
-    typedef: string,
     apiKey: string
   ): Promise<Type> {
-    const cohere = new CohereClientV2({
-      token: apiKey
-    });
-    const SCHEMA = SCHEMAS[schema_to_select];
+    const cohere = new CohereClientV2({ token: apiKey });
     const model = 'command-r-plus';
     const messages = [
       {
         role: 'user',
-        content: buildContentSchemaString(description, SCHEMA, typedef)
-      },
-      {
-        role: 'user',
-        content: `Please respond with JSON in the following schema: ${SCHEMA}`
+        content: buildContentSchemaString(description, schema_to_select)
       }
     ];
 
@@ -82,7 +69,10 @@ export class CohereBackend {
 
     try {
       // Parse the generated text as JSON
-      const jsonStr = response.message.content[0].text.trim();
+      const jsonStr = response.message?.content?.[0].text.trim();
+      if (!jsonStr) {
+        throw new Error("Either message or content in response object is null");
+      }
       const parsed = JSON.parse(jsonStr) as Type;
       return parsed;
     } catch (error) {
