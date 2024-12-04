@@ -1,6 +1,6 @@
 import { type GenerationRequest } from '$lib/types.d';
 import { BACKENDS } from '$lib/ai';
-import { buildContentSchemaString } from '$lib/chat';
+import { buildContentSchemaString } from '$lib/prompts';
 
 
 export const POST = async ({ request }) => {

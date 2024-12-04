@@ -1,8 +1,8 @@
 import { CHAT_API_KEY, COHERE_API_KEY } from '$env/static/private';
-import {type ValidSchema, SCHEMAS } from '$lib/types.d';
+import { type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
-import { buildContentSchemaString } from '$lib/chat';
+import { buildContentSchemaString } from '$lib/prompts';
 
 // Add near the top of the file
 const DEBUG = true;

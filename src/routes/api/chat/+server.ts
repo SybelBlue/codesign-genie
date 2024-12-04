@@ -1,6 +1,6 @@
 import { type GenerationRequest } from '$lib/types.d';
 import { BACKENDS } from '$lib/ai';
-import { buildContentString } from '$lib/chat';
+import { buildContentString } from '$lib/prompts';
 
 export const POST = async ({ request }) => {
   if (request.body == null) {
