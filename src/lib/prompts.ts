@@ -1,4 +1,4 @@
-import { SCHEMAS, TYPEDEFS, type ValidSchema } from '$lib/types';
+import { SCHEMAS, TYPEDEFS, type ValidSchema } from '$lib/types.d';
 
 function buildContentSchemaString(description: string, schema: ValidSchema): string {
     const SCHEMA = SCHEMAS[schema];
