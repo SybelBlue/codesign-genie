@@ -41,11 +41,17 @@ type JSONArraySchema = {
 
 export type JSONSchema = JSONObjectSchema | JSONArraySchema | JSONPrimitiveSchema;
 
+const ID_SCHEMA = {
+  type: 'integer',
+  description: 'A unique ID to track differences between versions'
+};
+
 const CARD_SCHEMA: JSONObjectSchema = {
   type: 'object',
   description:
     'A single Class-Responsibility-Collaborator (CRC) card to be used in Agile software development',
   properties: {
+    id: ID_SCHEMA,
     name: {
       type: 'string',
       description: 'The name of the resource, e.g. Library'
@@ -57,6 +63,7 @@ const CARD_SCHEMA: JSONObjectSchema = {
       items: {
         type: 'object',
         properties: {
+          id: ID_SCHEMA,
           description: {
             type: 'string',
             description:
@@ -67,6 +74,7 @@ const CARD_SCHEMA: JSONObjectSchema = {
             items: {
               type: 'object',
               properties: {
+                id: ID_SCHEMA,
                 name: {
                   type: 'string',
                   description: 'The collaborating resources for this resource, e.g. LibraryCard'
@@ -123,20 +131,30 @@ export const TYPEDEFS = {
   }`,
   Card: `
 {
+  id?: int;
   name: string;
   responsibilities: Array<{
+    id?: int;
     description: string;
-    collaborators: Array<{ name: string }>;
+    collaborators: Array<{ 
+      id?: int;
+      name: string;
+    }>;
   }>;
 }
 `.trim(),
   Deck: `
 {
   cards: Array<{
+    id?: int;
     name: string;
     responsibilities: Array<{
+      id?: int;
       description: string;
-      collaborators: Array<{ name: string }>;
+      collaborators: Array<{ 
+        id?: int;
+        name: string;
+      }>;
     }>;
   }>;
 }
@@ -147,10 +165,15 @@ export type ValidSchema = keyof typeof SCHEMAS;
 
 export type DeckJson = {
   cards: Array<{
+    id?: int;
     name: string;
     responsibilities: Array<{
+      id?: int;
       description: string;
-      collaborators: Array<{ name: string }>;
+      collaborators: Array<{ 
+        id?: int;
+        name: string;
+      }>;
     }>;
   }>;
 };

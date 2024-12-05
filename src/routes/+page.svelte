@@ -1,41 +1,33 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
-  import { debug, currentDeckInit, availableClasses } from '$lib/stores';
+  import { debug, availableClasses } from '$lib/stores';
   import { deckWithIds, exampleDecks, withId } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
+  import DeckDialog from '$lib/components/DeckDialog.svelte';
+  
   import { slide } from 'svelte/transition';
 
   let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
 
-  const rawDeckInfo = $page.url.searchParams.get('deckInfo');
-  let cards = currentDeckInit(rawDeckInfo ? atob(rawDeckInfo) : JSON.stringify(exampleDecks.rpg));
+  const deckInfo = $page.url.searchParams.get("deckInfo") ?? btoa("[]");
+  const deckName = $page.url.searchParams.get('deckName');
+  const deckInit: SimpleDeck = deckName && deckName in exampleDecks 
+                               ? exampleDecks[deckName]
+                               : JSON.parse(atob(deckInfo));
 
-  let deckName = $page.url.searchParams.get('deckName');
-  if (deckName && deckName in exampleDecks) {
-    console.log('loading by name:', deckName, $cards.length, exampleDecks[deckName].length);
-    // todo - this doesn't actually set cards?
-    $cards = exampleDecks[deckName];
-  }
-
-  let displayDeck: Deck | undefined = $state();
-
-  const setDisplayDeck = (d: Deck) => {
-    displayDeck = d;
-  };
-
-  // changes to $cards overwrites the display deck
-  $effect(() => setDisplayDeck($cards));
+  console.log("Initializing deck", deckInit);
+  let cards: SimpleDeck = $state(deckInit);
+  let displayDeck: Deck = $state(deckInit);
 
   $effect(() => {
     // note: prevents all other changes to $availableClasses!
-    $availableClasses = $cards.map((c) => c.name);
+    $availableClasses = displayDeck.map((c) => c.name);
   });
 
   $debug = true;
@@ -73,8 +65,8 @@
 
   // svelte-ignore state_referenced_locally
   const fakeCommits = $derived.by(() => {
-    if (!$cards) return [];
-    let lastDeck = $cards;
+    if (!cards || cards.length == 0) return [];
+    let lastDeck = cards;
     return [
       {
         id: 7,
@@ -110,21 +102,22 @@
       method: 'POST',
       body: JSON.stringify({
         // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify($cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
+        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
         schema: 'Deck'
       })
     });
-    selectedCard = undefined;
     const { response: deck } = await response.json();
     console.log(deck);
-    let deckInfo = btoa(JSON.stringify(deckWithIds(deck)));
-    goto(`/?deckInfo=${deckInfo}`);
+    cards = displayDeck = deckWithIds(deck);
+    selectedCard = undefined;
   };
   const onSelectCard = (card: Deck[number]) => {
     console.log('Card selected:', card.name);
     readyForCommit = true;
-    selectedCard = $cards.find((c) => c.id === card.id);
+    selectedCard = cards.find((c) => c.id === card.id);
   };
+
+  const setDisplayDeck = (deck: Deck) => { displayDeck = deck; };
 </script>
 
 <svelte:head>
@@ -142,9 +135,14 @@
   {/if}
 </svelte:head>
 
-<Toolbar currentDeck={$cards} {setDisplayDeck} {commits} />
+<Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
 
 <main class="flex w-screen max-h-full overflow-hidden">
+  {#if cards.length == 0}
+  <DeckDialog
+    loadDeck={(keyedDeck) => {cards = displayDeck = keyedDeck;}}
+    />
+  {:else}
   <div class:split={selectedCard} class="transition-all min-h-full max-h-full">
     {#if selectedCard}
       <Editor
@@ -156,8 +154,9 @@
     {/if}
   </div>
   <div class="static split">
-    <CardBoard cards={displayDeck ?? $cards} selectCard={onSelectCard}/>
+    <CardBoard cards={displayDeck} selectCard={onSelectCard}/>
   </div>
+  {/if}
 </main>
 
 <style lang="postcss">
