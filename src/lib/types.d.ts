@@ -71,15 +71,19 @@ const CARD_SCHEMA: JSONObjectSchema = {
                   type: 'string',
                   description: 'The collaborating resources for this resource, e.g. LibraryCard'
                 }
-              }
+              },
+              additionalProperties: false,
+              required: ['name']
             }
           }
-        }
+        },
+        additionalProperties: false,
+        required: ['description', 'collaborators']
       }
     }
   },
   additionalProperties: false,
-  required: ['name', 'responsibilities', 'collaborators']
+  required: ['name', 'responsibilities']
 };
 
 const DECK_SCHEMA: JSONObjectSchema = {
