@@ -1,3 +1,6 @@
+
+// The type of backend to use for generating objects
+export type Backend = 'openai' | 'cohere';
 export type Key = number;
 export type Keyed<T> = T & { id: Key };
 
@@ -14,6 +17,7 @@ export type ChatRequest = {
 export type GenerationRequest = {
   description: string;
   schema: ValidSchema;
+  backend: Backend;
 };
 
 export type JSONObjectSchema = {
@@ -76,10 +80,12 @@ const CARD_SCHEMA: JSONObjectSchema = {
                   description: 'The collaborating resources for this resource, e.g. LibraryCard'
                 }
               },
+              additionalProperties: false,
               required: ['name']
             }
           }
         },
+        additionalProperties: false,
         required: ['description', 'collaborators']
       }
     }
