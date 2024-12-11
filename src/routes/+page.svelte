@@ -3,7 +3,7 @@
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
   import { debug, availableClasses } from '$lib/stores';
-  import { deckWithIds, exampleDecks, withId } from '$lib/decks';
+  import { deckWithIds, premadeDecks, withId } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
@@ -16,7 +16,7 @@
   const deckInfo = $page.url.searchParams.get('deckInfo') ?? btoa('[]');
   const deckName = $page.url.searchParams.get('deckName');
   const deckInit: SimpleDeck =
-    deckName && deckName in exampleDecks ? exampleDecks[deckName] : JSON.parse(atob(deckInfo));
+    deckName && deckName in premadeDecks ? premadeDecks[deckName] : JSON.parse(atob(deckInfo));
 
   console.log('Initializing deck', deckInit);
   let cards: SimpleDeck = $state(deckInit);

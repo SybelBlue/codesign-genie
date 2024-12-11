@@ -4,11 +4,13 @@ import libraryJson from '$lib/crc-decks/library.json';
 import rpgJson from '$lib/crc-decks/rpg.json';
 import hospitalJson from '$lib/crc-decks/hospital.json';
 
+import teamSyncJson from '$lib/crc-decks/data-col/team-sync.json';
+
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
   return (o) => {
-    if ("id" in o) {
-      if (typeof o.id === "number") {
+    if ('id' in o) {
+      if (typeof o.id === 'number') {
         nextId = Math.max(nextId, o.id);
       } else {
         delete o.id;
@@ -35,4 +37,13 @@ export const exampleDecks: Record<string, SimpleDeck> = {
   rpg: deckWithIds(rpgJson),
   library: deckWithIds(libraryJson),
   hospital: deckWithIds(hospitalJson)
+};
+
+export const dataCollectionDecks: Record<string, SimpleDeck> = {
+  teamSync: deckWithIds(teamSyncJson)
+};
+
+export const premadeDecks: Record<string, SimpleDeck> = {
+  ...exampleDecks,
+  ...dataCollectionDecks
 };
