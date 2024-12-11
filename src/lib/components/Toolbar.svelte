@@ -1,11 +1,11 @@
 <script lang="ts">
   import { clickOutside } from '$lib/actions';
-  import type { Card, Deck } from '$lib/types';
+  import type { Deck } from '$lib/types';
   import ThemeChanger from './ThemeChange.svelte';
   import TimelinePanel from './TimelinePanel.svelte';
   import type { Props as TimelinePanelProps } from './TimelinePanel.svelte';
+  import SortWidget, { type SortFn } from './SortWidget.svelte';
   import { hasDiff } from '$lib/diff';
-  import SortWidget from './SortWidget.svelte';
 
   type Props = Omit<TimelinePanelProps, 'show'> & {
     showTimeline?: boolean;
@@ -22,7 +22,7 @@
 
   const setDisplayDeck: Props['setDisplayDeck'] = (d) => (displayDeck = d);
 
-  let sorter: undefined | ((a: Card, b: Card) => number) = $state();
+  let sorter: undefined | SortFn = $state();
 
   $effect(() => {
     if (!setCardBoardDeck) return;

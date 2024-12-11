@@ -1,12 +1,14 @@
-<script lang="ts">
+<script module lang="ts">
   import type { Deck } from '$lib/types';
-  import { undiffWords } from '$lib/diff';
 
-  type SortFn = (a: Deck[number], b: Deck[number]) => number;
-  type Props = {
+  export type SortFn = (a: Deck[number], b: Deck[number]) => number;
+  export type Props = {
     currentDeck: Deck;
     setSortFn?: (f?: SortFn) => void;
   }
+</script>
+<script lang="ts">
+  import { undiffWords } from '$lib/diff';
 
   let {
     currentDeck, setSortFn
