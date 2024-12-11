@@ -134,7 +134,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar currentDeck={cards} {setDisplayDeck} {commits} />
+<Toolbar currentDeck={cards} {setDisplayDeck} {commits} prompt={cards.prompt} />
 
 <main class="flex w-screen max-h-full overflow-hidden">
   {#if displayDeck.length == 0}

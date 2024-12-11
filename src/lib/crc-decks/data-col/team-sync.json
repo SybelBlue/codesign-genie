@@ -155,5 +155,6 @@
         }
       ]
     }
-  ]
+  ],
+  "prompt": "Enhanced AI-Powered Task Recommendation System<br><br>Implement machine learning algorithms to suggest task priorities<br>Analyze historical project data to predict potential bottlenecks<br>Integrate predictive task assignment capabilities<br><br><br>Advanced Role-Based Access Control (RBAC) Redesign<br><br>Granular permission management beyond current binary access levels<br>Support for complex organizational hierarchies<br>Dynamic role creation and nested permission structures<br><br><br>Comprehensive Integrations Platform<br><br>Build robust plugin architecture for third-party tool integrations<br>Support for popular project management, communication, and productivity tools<br>Standardized integration framework with webhook and API capabilities<br><br><br>Real-Time Analytics and Predictive Performance Dashboards<br><br>Develop advanced visualization of team and individual performance metrics<br>Implement predictive modeling for project completion estimates<br>Create interactive, customizable dashboard experiences"
 }

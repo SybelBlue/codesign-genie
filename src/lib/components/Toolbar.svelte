@@ -9,16 +9,19 @@
 
   type Props = Omit<TimelinePanelProps, 'show'> & {
     showTimeline?: boolean;
+    prompt?: string;
   };
 
   let {
     showTimeline = false,
     currentDeck,
     setDisplayDeck: setCardBoardDeck,
-    commits
+    commits,
+    prompt
   }: Props = $props();
 
   let displayDeck: Deck = $state(currentDeck);
+  let showPrompt = $state(false);
 
   const setDisplayDeck: Props['setDisplayDeck'] = (d) => (displayDeck = d);
 
@@ -63,6 +66,20 @@
             /></svg
           >
         </button>
+      {/if}
+      {#if prompt || true}
+      <button class="btn" onclick={()=>(showPrompt = !showPrompt)}>open prompt</button>
+      <dialog id="my_modal_1" class="modal" open={showPrompt}>
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">Upcoming Changes</h3>
+          <p class="py-4">{@html prompt}</p>
+          <div class="modal-action">
+            <form method="dialog">
+              <button class="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
       {/if}
     </nav>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">

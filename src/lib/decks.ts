@@ -22,7 +22,7 @@ export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
 })();
 
 export const deckWithIds = (deck: DeckJson): SimpleDeck => {
-  return deck.cards.map((card) =>
+  const d: SimpleDeck = deck.cards.map((card) =>
     withId({
       id: card.id,
       name: card.name,
@@ -31,6 +31,8 @@ export const deckWithIds = (deck: DeckJson): SimpleDeck => {
       )
     })
   );
+  d.prompt = deck.prompt;
+  return d;
 };
 
 export const exampleDecks: Record<string, SimpleDeck> = {

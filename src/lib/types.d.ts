@@ -1,4 +1,3 @@
-
 // The type of backend to use for generating objects
 export type Backend = 'openai' | 'cohere';
 export type Key = number;
@@ -136,7 +135,7 @@ export const TYPEDEFS = {
   responsibilities: Array<{
     id?: int;
     description: string;
-    collaborators: Array<{ 
+    collaborators: Array<{
       id?: int;
       name: string;
     }>;
@@ -151,7 +150,7 @@ export const TYPEDEFS = {
     responsibilities: Array<{
       id?: int;
       description: string;
-      collaborators: Array<{ 
+      collaborators: Array<{
         id?: int;
         name: string;
       }>;
@@ -170,12 +169,13 @@ export type DeckJson = {
     responsibilities: Array<{
       id?: int;
       description: string;
-      collaborators: Array<{ 
+      collaborators: Array<{
         id?: int;
         name: string;
       }>;
     }>;
   }>;
+  prompt?: string;
 };
 
 import type { Props as Card } from '$lib/components/Card.svelte';
@@ -185,7 +185,7 @@ export type DiffText = string | Change[];
 /** Valid `CardProps` without Diffs */
 export type SimpleCard = Card<string>;
 /** Valid `Deck` without Diffs */
-export type SimpleDeck = Keyed<SimpleCard>[];
+export type SimpleDeck = Keyed<SimpleCard>[] & { prompt?: string };
 
 export type Commit = {
   id: number;
