@@ -8,6 +8,7 @@
   import { hasDiff } from '$lib/diff';
 
   type Props = Omit<TimelinePanelProps, 'show'> & {
+    getStateJson: () => string;
     showTimeline?: boolean;
     prompt?: string;
   };
@@ -17,7 +18,8 @@
     currentDeck,
     setDisplayDeck: setCardBoardDeck,
     commits,
-    prompt
+    prompt,
+    getStateJson
   }: Props = $props();
 
   let displayDeck: Deck = $state(currentDeck);
@@ -67,7 +69,7 @@
           >
         </button>
       {/if}
-      {#if prompt || true}
+      {#if prompt}
       <button class="btn" onclick={()=>(showPrompt = !showPrompt)}>open prompt</button>
       <dialog id="my_modal_1" class="modal" open={showPrompt}>
         <div class="modal-box">
@@ -81,6 +83,7 @@
         </div>
       </dialog>
       {/if}
+      <button class="btn" onclick={() => console.info(getStateJson())}>dump</button>
     </nav>
     <h1 class="text-lg font-mono italic text-accent decoration-primary hover:underline">
       {'{ cara }'}

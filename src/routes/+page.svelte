@@ -3,7 +3,7 @@
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
   import { debug, availableClasses } from '$lib/stores';
-  import { deckWithIds, premadeDecks, withId } from '$lib/decks';
+  import { deckWithIds, deepCopy, premadeDecks, withId } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
@@ -22,6 +22,8 @@
   let cards: SimpleDeck = $state(deckInit);
   let displayDeck: Deck = $state(deckInit);
 
+  const freeEditing = Boolean($page.url.searchParams.get('free'));
+
   $effect(() => {
     // note: prevents all other changes to $availableClasses!
     $availableClasses = displayDeck.map((c) => c.name);
@@ -31,7 +33,7 @@
 
   /// fake data ///
   const randomizedEdits = (deck: SimpleDeck) => {
-    const out = JSON.parse(JSON.stringify(deck)) as SimpleDeck;
+    const out = deepCopy(deck);
     const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
     const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
     const changed = [];
@@ -42,11 +44,11 @@
         () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
         () => {
           let r = randomElem(card.responsibilities);
-          r.description = r.description.replace(/\b\w+$/, '- todo!');
+          r && (r.description = r.description.replace(/\b\w+$/, '- todo!'));
         },
         () => {
           let r = randomElem(card.responsibilities);
-          r.collaborators.splice(randomIdx(r.collaborators), 1);
+          r && r.collaborators.splice(randomIdx(r.collaborators), 1);
         },
         () => {
           randomElem(card.responsibilities).collaborators.push(
@@ -61,7 +63,7 @@
   };
 
   // svelte-ignore state_referenced_locally
-  const fakeCommits = $derived.by(() => {
+  const fakeCommits = (() => {
     if (!cards || cards.length == 0) return [];
     let lastDeck = cards;
     return [
@@ -88,11 +90,18 @@
       { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
       { id: 1, state: [], text: 'initial commit', date: '11/1/2024' }
     ].toReversed();
-  });
+  })();
   /// fake data ///
-  const commits: Commit[] = $derived(fakeCommits);
+  let commits: Commit[] = $state(fakeCommits);
 
   const onProposeEdit = async (card: SimpleCard, message: string) => {
+    if (freeEditing) {
+      const state = deepCopy(cards).map(c => c.name === card.name ? { id: c.id, ...card } : c);
+      commits.push({ id: commits.length && commits[commits.length - 1].id + 1, text: message, date: new Date().toLocaleDateString(), state });
+      cards = displayDeck = state;
+      selectedCard = undefined;
+      return;
+    }
     console.log('Propose card', message, card);
     readyForCommit = false;
     const response = await fetch('/api/object', {
@@ -117,6 +126,8 @@
   const setDisplayDeck = (deck: Deck) => {
     displayDeck = deck;
   };
+
+  const getStateJson = () => JSON.stringify({ cards: [...cards], prompt: cards.prompt || null, commits });
 </script>
 
 <svelte:head>
@@ -134,7 +145,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar currentDeck={cards} {setDisplayDeck} {commits} prompt={cards.prompt} />
+<Toolbar currentDeck={cards} {setDisplayDeck} {getStateJson} {commits} prompt={cards.prompt} />
 
 <main class="flex w-screen max-h-full overflow-hidden">
   {#if displayDeck.length == 0}
@@ -147,6 +158,7 @@
           propose={onProposeEdit}
           close={() => (selectedCard = undefined)}
           {readyForCommit}
+          {freeEditing}
         />
       {/if}
     </div>

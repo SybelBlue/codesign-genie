@@ -49,3 +49,7 @@ export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,
   ...dataCollectionDecks
 };
+
+export function deepCopy<T extends SimpleDeck>(deck: T): T {
+  return JSON.parse(JSON.stringify(deck)) as T;
+}
