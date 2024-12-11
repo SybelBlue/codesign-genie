@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { Card, Deck } from '$lib/types';
+  import type { Deck } from '$lib/types';
   import { undiffWords } from '$lib/diff';
 
+  type SortFn = (a: Deck[number], b: Deck[number]) => number;
   type Props = {
     currentDeck: Deck;
-    setSortFn?: (f?: (a: Card, b: Card) => number) => void;
+    setSortFn?: (f?: SortFn) => void;
   }
 
   let {
@@ -23,13 +24,17 @@
           out[undiffWords(l.name)] = (out[undiffWords(l.name)] ?? 0) + 1;
     return out;
   });
-  const sortFns: Record<Sorter, (a: Card, b: Card) => number> = {
+  const sortFns: Record<Sorter, SortFn> = {
     alpha: (x, y) => (reversed ? -1 : +1) * undiffWords(x.name).localeCompare(undiffWords(y.name)),
     usage: (x, y) =>
       (reversed ? -1 : +1) * usageDict[undiffWords(y.name)] - usageDict[undiffWords(x.name)]
   };
+  const ordering = $derived(currentDeck.map(c => c.id));
+  const defaultSorter: SortFn | undefined = $derived(
+    reversed ? (a, b) => -(ordering.indexOf(a.id) - ordering.indexOf(b.id)) : undefined
+  );
 
-  $effect(() => { setSortFn?.(sorter && sortFns[sorter]) });
+  $effect(() => { setSortFn?.(sorter ? sortFns[sorter] : defaultSorter) });
 </script>
 
 <div class="join rounded-3xl my-auto">
