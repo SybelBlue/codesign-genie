@@ -5,6 +5,9 @@ import rpgJson from '$lib/crc-decks/rpg.json';
 import hospitalJson from '$lib/crc-decks/hospital.json';
 
 import teamSyncJson from '$lib/crc-decks/data-col/team-sync.json';
+import mediTrackJson from '$lib/crc-decks/data-col/medi-track.json';
+import lib0Json from '$lib/crc-decks/data-col/library0.json';
+import lib1Json from '$lib/crc-decks/data-col/library1.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -42,8 +45,27 @@ export const exampleDecks: Record<string, SimpleDeck> = {
 };
 
 export const dataCollectionDecks: Record<string, SimpleDeck> = {
-  teamSync: deckWithIds(teamSyncJson)
+  teamSync: deckWithIds(teamSyncJson),
+  mediTrack: deckWithIds(mediTrackJson),
+  library0: deckWithIds(lib0Json)
 };
+
+dataCollectionDecks['library1'] = lib1Json.cards.map((c) => {
+  const o = dataCollectionDecks.library0.find((x) => x.name == c.name);
+  if (!o) return deckWithIds({ cards: [c] })[0];
+  return {
+    id: o.id,
+    name: c.name,
+    responsibilities: c.responsibilities.map((r, idx) => ({
+      id: o.responsibilities[idx]?.id ?? withId({}).id,
+      description: r.description,
+      collaborators: r.collaborators.map((c, jdx) => ({
+        id: o.responsibilities[idx]?.collaborators[jdx]?.id ?? withId({}).id,
+        name: c.name
+      }))
+    }))
+  };
+});
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,

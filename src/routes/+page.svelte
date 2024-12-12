@@ -3,7 +3,7 @@
 
   import type { Deck, Commit, SimpleDeck, SimpleCard } from '$lib/types';
   import { debug, availableClasses } from '$lib/stores';
-  import { deckWithIds, deepCopy, premadeDecks, withId } from '$lib/decks';
+  import { deckWithIds, deepCopy, premadeDecks } from '$lib/decks';
 
   import Editor from '$lib/components/Editor.svelte';
   import CardBoard from '$lib/components/CardBoard.svelte';
@@ -31,68 +31,7 @@
 
   $debug = true;
 
-  /// fake data ///
-  const randomizedEdits = (deck: SimpleDeck) => {
-    const out = deepCopy(deck);
-    const randomIdx = (list: any[]) => Math.floor(Math.random() * list.length);
-    const randomElem = <T,>(list: T[]): T => list[randomIdx(list)];
-    const changed = [];
-    for (let i = 0, n = Math.random() * 4; i < n; i++) {
-      const idx = randomIdx(out);
-      const card = out[idx];
-      const actions = [
-        () => card.responsibilities.splice(randomIdx(card.responsibilities), 1),
-        () => {
-          let r = randomElem(card.responsibilities);
-          r && (r.description = r.description.replace(/\b\w+$/, '- todo!'));
-        },
-        () => {
-          let r = randomElem(card.responsibilities);
-          r && r.collaborators.splice(randomIdx(r.collaborators), 1);
-        },
-        () => {
-          randomElem(card.responsibilities).collaborators.push(
-            withId({ name: randomElem(out).name })
-          );
-        }
-      ];
-      actions[randomIdx(actions)]();
-      changed.push(card);
-    }
-    return out;
-  };
-
-  // svelte-ignore state_referenced_locally
-  const fakeCommits = (() => {
-    if (!cards || cards.length == 0) return [];
-    let lastDeck = cards;
-    return [
-      {
-        id: 7,
-        state: (lastDeck = randomizedEdits(lastDeck)),
-        text: 'add C (rand)',
-        date: '11/7/2024'
-      },
-      {
-        id: 6,
-        state: (lastDeck = randomizedEdits(lastDeck)),
-        text: 'add B (rand)',
-        date: '11/6/2024'
-      },
-      {
-        id: 5,
-        state: (lastDeck = randomizedEdits(lastDeck)),
-        text: 'add A (rand)',
-        date: '11/5/2024'
-      },
-      { id: 4, state: [], text: 'removed Dialogue System', date: '11/4/2024' },
-      { id: 3, state: [], text: 'updated character', date: '11/3/2024' },
-      { id: 2, state: [], text: 'updated manna', date: '11/2/2024' },
-      { id: 1, state: [], text: 'initial commit', date: '11/1/2024' }
-    ].toReversed();
-  })();
-  /// fake data ///
-  let commits: Commit[] = $state(fakeCommits);
+  let commits: Commit[] = $state([ { id: 1, state: premadeDecks.library0, date: 'yesterday', text: 'lib0' }]);
 
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     if (freeEditing) {
