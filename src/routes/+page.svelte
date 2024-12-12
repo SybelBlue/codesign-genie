@@ -31,7 +31,8 @@
 
   $debug = true;
 
-  let commits: Commit[] = $state([ { id: 1, state: premadeDecks.library0, date: 'yesterday', text: 'lib0' }]);
+  let commits: Commit[] = $state(
+    deckName?.endsWith('1') ? [ { id: 1, state: premadeDecks[deckName.slice(0, deckName.length - 1) + '0'], date: 'yesterday', text: 'lib0' }] : []);
 
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     if (freeEditing) {

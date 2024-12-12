@@ -50,22 +50,25 @@ export const dataCollectionDecks: Record<string, SimpleDeck> = {
   library0: deckWithIds(lib0Json)
 };
 
-dataCollectionDecks['library1'] = lib1Json.cards.map((c) => {
-  const o = dataCollectionDecks.library0.find((x) => x.name == c.name);
-  if (!o) return deckWithIds({ cards: [c] })[0];
-  return {
-    id: o.id,
-    name: c.name,
-    responsibilities: c.responsibilities.map((r, idx) => ({
-      id: o.responsibilities[idx]?.id ?? withId({}).id,
-      description: r.description,
-      collaborators: r.collaborators.map((c, jdx) => ({
-        id: o.responsibilities[idx]?.collaborators[jdx]?.id ?? withId({}).id,
-        name: c.name
+const asCommit = (json: DeckJson, base: SimpleDeck) =>
+  json.cards.map((c) => {
+    const o = base.find((x) => x.name == c.name);
+    if (!o) return deckWithIds({ cards: [c] })[0];
+    return {
+      id: o.id,
+      name: c.name,
+      responsibilities: c.responsibilities.map((r, idx) => ({
+        id: o.responsibilities[idx]?.id ?? withId({}).id,
+        description: r.description,
+        collaborators: r.collaborators.map((c, jdx) => ({
+          id: o.responsibilities[idx]?.collaborators[jdx]?.id ?? withId({}).id,
+          name: c.name
+        }))
       }))
-    }))
-  };
-});
+    };
+  });
+
+dataCollectionDecks.library1 = asCommit(lib1Json, dataCollectionDecks.library0);
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,
@@ -73,5 +76,7 @@ export const premadeDecks: Record<string, SimpleDeck> = {
 };
 
 export function deepCopy<T extends SimpleDeck>(deck: T): T {
-  return JSON.parse(JSON.stringify(deck)) as T;
+  const out = JSON.parse(JSON.stringify(deck)) as T;
+  out.prompt = deck.prompt;
+  return out;
 }
