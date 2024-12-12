@@ -115,5 +115,6 @@
         }
       ]
     }
-  ]
+  ],
+  "prompt": "Machine Learning-Powered Recommendation Engine<br>Implement intelligent book recommendation algorithms<br>Classes Impacted: 4/8 total (50%)<br>- Catalog (Integrated with recommender)<br>- Book (Enhanced metadata tagging and classification)<br>- Member (Preference tracking and personalization)<br>- Report (Generate recommendation performance analytics)<br>Classes Created<br>+ Recommender (Core of recommendation logic)"
 }

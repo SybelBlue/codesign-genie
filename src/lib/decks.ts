@@ -6,8 +6,8 @@ import hospitalJson from '$lib/crc-decks/hospital.json';
 
 import teamSyncJson from '$lib/crc-decks/data-col/team-sync.json';
 import mediTrackJson from '$lib/crc-decks/data-col/medi-track.json';
-import lib0Json from '$lib/crc-decks/data-col/library0.json';
-import lib1Json from '$lib/crc-decks/data-col/library1.json';
+import libAI0Json from '$lib/crc-decks/data-col/libraryAI0.json';
+import libAI1Json from '$lib/crc-decks/data-col/libraryAI1.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -47,11 +47,11 @@ export const exampleDecks: Record<string, SimpleDeck> = {
 export const dataCollectionDecks: Record<string, SimpleDeck> = {
   teamSync: deckWithIds(teamSyncJson),
   mediTrack: deckWithIds(mediTrackJson),
-  library0: deckWithIds(lib0Json)
+  libraryAI0: deckWithIds(libAI0Json)
 };
 
-const asCommit = (json: DeckJson, base: SimpleDeck) =>
-  json.cards.map((c) => {
+const asCommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
+  const out: SimpleDeck = json.cards.map((c) => {
     const o = base.find((x) => x.name == c.name);
     if (!o) return deckWithIds({ cards: [c] })[0];
     return {
@@ -67,8 +67,11 @@ const asCommit = (json: DeckJson, base: SimpleDeck) =>
       }))
     };
   });
+  out.prompt = json.prompt ?? base.prompt;
+  return out;
+};
 
-dataCollectionDecks.library1 = asCommit(lib1Json, dataCollectionDecks.library0);
+dataCollectionDecks.libraryAI1 = asCommit(libAI1Json, dataCollectionDecks.libraryAI0);
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,

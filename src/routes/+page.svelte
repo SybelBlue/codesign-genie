@@ -85,7 +85,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar currentDeck={cards} {setDisplayDeck} {getStateJson} {commits} prompt={cards.prompt} />
+<Toolbar showTimeline currentDeck={cards} {setDisplayDeck} {getStateJson} {commits} prompt={cards.prompt} />
 
 <main class="flex w-screen max-h-full overflow-hidden">
   {#if displayDeck.length == 0}
