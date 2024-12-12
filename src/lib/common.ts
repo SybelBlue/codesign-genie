@@ -5,3 +5,8 @@ export const any = <T>(arr: T[], pred?: (elem: T, idx?: number, arr?: T[]) => bo
 
 export const all = <T>(xs: T[], pred?: (t: T, idx?: number, arr?: T[]) => boolean) =>
   !(pred ? any(xs, (t, i, a) => !pred(t, i, a)) : any(xs, (t) => !t));
+
+export const dbg = <T>(o: T): T => {
+  console.debug(o);
+  return o;
+};

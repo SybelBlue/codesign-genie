@@ -9,6 +9,7 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import DeckDialog from '$lib/components/DeckDialog.svelte';
+  import { dbg } from '$lib/common';
 
   let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
@@ -32,7 +33,7 @@
   $debug = true;
 
   let commits: Commit[] = $state(
-    deckName?.endsWith('1') ? [ { id: 1, state: premadeDecks[deckName.slice(0, deckName.length - 1) + '0'], date: 'yesterday', text: 'lib0' }] : []);
+    deckName?.endsWith('1') ? [ { id: 1, state: premadeDecks[dbg(deckName.slice(0, deckName.length - 1) + '0')], date: 'yesterday', text: 'prompt' }] : []);
 
   const onProposeEdit = async (card: SimpleCard, message: string) => {
     if (freeEditing) {

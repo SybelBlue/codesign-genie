@@ -4,8 +4,8 @@
       "name": "Book",
       "responsibilities": [
         {
-          "description": "Store book information (title, author, ISBN)",
-          "collaborators": [{ "name": "Library" }]
+          "description": "Store book information (title, author, ISBN, ratings)",
+          "collaborators": [{ "name": "Member" }, { "name": "Library" }]
         },
         {
           "description": "Track availability status",
@@ -14,6 +14,10 @@
         {
           "description": "Maintain loan history",
           "collaborators": [{ "name": "Member" }]
+        },
+        {
+          "description": "Display reviews and message mentions",
+          "collaborators": [{ "name": "Member" }, { "name": "Library" }]
         }
       ]
     },
@@ -31,6 +35,14 @@
         {
           "description": "Manage loan history",
           "collaborators": [{ "name": "Book" }]
+        },
+        {
+          "description": "Store and display reviews",
+          "collaborators": [{ "name": "Book" }]
+        },
+        {
+          "description": "Manage followers and following",
+          "collaborators": [{ "name": "Member" }]
         }
       ]
     },
@@ -48,6 +60,14 @@
         {
           "description": "Process loans and returns",
           "collaborators": [{ "name": "Loan" }, { "name": "Librarian" }]
+        },
+        {
+          "description": "Host public message board",
+          "collaborators": [{ "name": "Member" }]
+        },
+        {
+          "description": "Moderate reviews and messages",
+          "collaborators": [{ "name": "Librarian" }, { "name": "Member" }, { "name": "Book" }]
         }
       ]
     },
@@ -98,7 +118,8 @@
         {
           "description": "Notify members when reserved books are available",
           "collaborators": [{ "name": "Library" }]
-        }
+        },
+        { "description": "Gift a reservation", "collaborators": [{ "name": "Member" }] }
       ]
     },
     {
@@ -112,9 +133,12 @@
         {
           "description": "Produce member activity summaries",
           "collaborators": [{ "name": "Member" }]
+        },
+        {
+          "description": "Track moderation and local ratings",
+          "collaborators": [{ "name": "Librarian" }, { "name": "Library" }]
         }
       ]
     }
-  ],
-  "prompt": "Machine Learning-Powered Recommendation Engine<br>Implement intelligent book recommendation algorithms<br>Classes Impacted: 4/8 total (50%)<br>- Catalog (Integrated with recommender)<br>- Book (Enhanced metadata tagging and classification)<br>- Member (Preference tracking and personalization)<br>- Report (Generate recommendation performance analytics)<br>Classes Created<br>+ Recommender (Core of recommendation logic)"
+  ]
 }
