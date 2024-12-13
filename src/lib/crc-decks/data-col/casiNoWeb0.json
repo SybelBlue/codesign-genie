@@ -271,5 +271,5 @@
       ]
     }
   ],
-  "prompt": "To prevent cheating, new regulations require that monetary gambling systems must have an air gap to the internet.<br><br>Make the following removals leaving no trace, but while causing minimal changes to function and structure<br>- NetworkConnectionHandler be deleted<br>- ChipTransaction should handle in-house transactions and still track a player's balance<br>- PlayerProfiles are now secured with physical passkeys, so authentication is no longer necessary"
+  "prompt": "To prevent cheating, new regulations require that monetary gambling systems must have an air gap to the internet. PlayerProfiles are authenticated with physical passkeys, and do not require web connections. Make the following removals leaving no trace, but while causing minimal changes to function and structure of the app.<br>- NetworkConnectionHandler should not exist<br>- ChipTransaction should only handle in-house transactions, but still track a player's balance<br>- PlayerProfiles should not perform authentication or authorization"
 }

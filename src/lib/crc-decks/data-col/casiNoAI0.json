@@ -271,5 +271,5 @@
       ]
     }
   ],
-  "prompt": "New regulations require that online monetary gambling cannot pit non-human decision-makers against humans. To prevent cheating, even recommender systems on which decisions to make are now banned. Make the following removals leaving no trace, but while causing minimal changes to function and structure<br>- AIPlayer and AIPlayerStrategy must be deleted<br>- The AnalyticsEngine must not provide recommendations"
+  "prompt": "New regulations require that online monetary gambling cannot pit non-human decision-makers against humans. To prevent cheating, even recommender systems on play-by-play decisions are now banned. Make the following removals leaving no trace, but while causing minimal changes to function and structure of the app.<br>- AIPlayer and AIPlayerStrategy should not exist<br>- AnalyticsEngine should not provide recommendations"
 }
