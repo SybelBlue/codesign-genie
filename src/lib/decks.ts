@@ -44,6 +44,35 @@ export const deckWithIds = (deck: DeckJson): SimpleDeck => {
   return d;
 };
 
+const asCommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
+  const out: SimpleDeck = json.cards.map((c) => {
+    const o = base.find((x) => x.name == c.name);
+    if (!o) return deckWithIds({ cards: [c] })[0];
+    return {
+      id: o.id,
+      name: c.name,
+      responsibilities: c.responsibilities.map((r, idx) => {
+        const oResp =
+          o.responsibilities.find((x) => x.description == r.description) ?? o.responsibilities[idx];
+        return {
+          id: oResp?.id ?? withId({}).id,
+          description: r.description,
+          collaborators: r.collaborators.map((c, jdx) => ({
+            id: (
+              oResp?.collaborators.find((x) => x.name == c.name) ??
+              oResp?.collaborators[jdx] ??
+              withId({})
+            ).id,
+            name: c.name
+          }))
+        };
+      })
+    };
+  });
+  out.prompt = json.prompt ?? base.prompt;
+  return out;
+};
+
 export const exampleDecks: Record<string, SimpleDeck> = {
   rpg: deckWithIds(rpgJson),
   library: deckWithIds(libraryJson),
@@ -57,27 +86,6 @@ export const dataCollectionDecks: Record<string, SimpleDeck> = {
   libraryCE0: deckWithIds(libCE0Json),
   killGod0: deckWithIds(techDebtKillGod0Json),
   makeGod0: deckWithIds(techDebtMakeGod0Json)
-};
-
-const asCommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
-  const out: SimpleDeck = json.cards.map((c) => {
-    const o = base.find((x) => x.name == c.name);
-    if (!o) return deckWithIds({ cards: [c] })[0];
-    return {
-      id: o.id,
-      name: c.name,
-      responsibilities: c.responsibilities.map((r, idx) => ({
-        id: o.responsibilities[idx]?.id ?? withId({}).id,
-        description: r.description,
-        collaborators: r.collaborators.map((c, jdx) => ({
-          id: o.responsibilities[idx]?.collaborators[jdx]?.id ?? withId({}).id,
-          name: c.name
-        }))
-      }))
-    };
-  });
-  out.prompt = json.prompt ?? base.prompt;
-  return out;
 };
 
 dataCollectionDecks.libraryAI1 = asCommit(libAI1Json, dataCollectionDecks.libraryAI0);

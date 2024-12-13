@@ -25,11 +25,17 @@
 
   let { name = $bindable(), responsibilities = $bindable(), locked, selectName }: Props = $props();
 
-  let highlight = $derived($highlightedClass === name);
-  let emptyBody = $derived(
+  const highlight = $derived($highlightedClass === name);
+  const emptyBody = $derived(
     all(responsibilities, (r) =>
       isDiff(r.description) ? all(r.description, (chg) => chg.removed) : !r.description.length
     )
+  );
+  const newBody = $derived(
+    all(responsibilities, (r) => isDiff(r.description) && all(r.description, (chg) => chg.added))
+  );
+  const titleDifftext: DiffText = $derived(
+    emptyBody ? diffWords(name, '') : newBody ? diffWords('', name) : name
   );
 </script>
 
@@ -70,7 +76,7 @@
 >
   <section class="card-body">
     <h3 class="card-title m-1 mb-0 italic">
-      {@render diffLabel(emptyBody ? diffWords(name, '') : name, true)}
+      {@render diffLabel(titleDifftext, true)}
     </h3>
     <hr class="border-primary" />
     <table class="table table-auto table-sm">
