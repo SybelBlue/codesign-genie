@@ -271,5 +271,5 @@
       ]
     }
   ],
-  "prompt": "New regulations require that online gambling apps cannot have financial transactions.<br>- ChipTransaction can no longer handle transactions or secure payments, but should stil track player balances"
+  "prompt": "New regulations require that online gambling apps cannot have financial transactions.<br>- ChipTransaction (and any other class) should no longer handle transactions or secure payments, but should stil track player balances"
 }

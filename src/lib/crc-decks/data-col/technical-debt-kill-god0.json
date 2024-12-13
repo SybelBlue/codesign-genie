@@ -126,5 +126,5 @@
       ]
     }
   ],
-  "prompt": "Redistribute the responsibilities of the god class to other classes.<br>- IntegrationBroker should be a proxy for all external services and manage API keys<br>- Database should only handle its own encryption, transactions, persistence and cross-platform functionality<br>- UserModule should handle authentication<br>- ReportingEngine should generate all analytics and recommendations"
+  "prompt": "Redistribute the responsibilities of the SystemController class to other classes.<br>- IntegrationBroker should be a proxy for all external services and manage API keys<br>- Database should only handle its own encryption, transactions, persistence and cross-platform functionality<br>- UserModule should handle authentication<br>- ReportingEngine should generate all analytics and recommendations"
 }

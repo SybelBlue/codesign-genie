@@ -116,5 +116,5 @@
       ]
     }
   ],
-  "prompt": "Comprehensive Community Engagement Platform<br>Create social features for book discussions, reviews, and community interactions<br>Classes Impacted: 5/8 total (62.5%)<br>- Member (Profile expansion, social interaction tracking)<br>- Library (Manage community features and moderation)<br>- Book (Add community metadata like reviews and ratings)<br>- Reservation (Community-driven waiting list management)<br>- Report (Social engagement and interaction analytics)"
+  "prompt": "Create social features for public book reservations, discussions, and reviews, as well as a follower/following system for members.<br>- Member should manage its own followers and following<br>- Library should have a public message board, as well as the ability to moderate public reviews and messages<br>- Books should know their ratings and be able to display ratings and messages that mention them<br>- Reservation should be able to be gifted between friends<br>- Report should be able to track ratings and moderation statistics for a Library"
 }
