@@ -10,6 +10,10 @@ import libAI0Json from '$lib/crc-decks/data-col/libraryAI0.json';
 import libAI1Json from '$lib/crc-decks/data-col/libraryAI1.json';
 import libCE0Json from '$lib/crc-decks/data-col/libraryCE0.json';
 import libCE1Json from '$lib/crc-decks/data-col/libraryCE1.json';
+import techDebtKillGod0Json from '$lib/crc-decks/data-col/technical-debt-kill-god0.json';
+import techDebtKillGod1Json from '$lib/crc-decks/data-col/technical-debt-kill-god1.json';
+import techDebtMakeGod0Json from '$lib/crc-decks/data-col/technical-debt-make-god0.json';
+import techDebtMakeGod1Json from '$lib/crc-decks/data-col/technical-debt-make-god1.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -50,7 +54,9 @@ export const dataCollectionDecks: Record<string, SimpleDeck> = {
   teamSync: deckWithIds(teamSyncJson),
   mediTrack: deckWithIds(mediTrackJson),
   libraryAI0: deckWithIds(libAI0Json),
-  libraryCE0: deckWithIds(libCE0Json)
+  libraryCE0: deckWithIds(libCE0Json),
+  killGod0: deckWithIds(techDebtKillGod0Json),
+  makeGod0: deckWithIds(techDebtMakeGod0Json)
 };
 
 const asCommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
@@ -76,6 +82,8 @@ const asCommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
 
 dataCollectionDecks.libraryAI1 = asCommit(libAI1Json, dataCollectionDecks.libraryAI0);
 dataCollectionDecks.libraryCE1 = asCommit(libCE1Json, dataCollectionDecks.libraryCE0);
+dataCollectionDecks.killGod1 = asCommit(techDebtKillGod1Json, dataCollectionDecks.killGod0);
+dataCollectionDecks.makeGod1 = asCommit(techDebtMakeGod1Json, dataCollectionDecks.makeGod0);
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,
