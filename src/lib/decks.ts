@@ -126,7 +126,7 @@ dataCollectionDecks['C3-1'] = dataCollectionDecks.casiNoWeb1;
 dataCollectionDecks['D1-0'] = dataCollectionDecks.teamSyncAuth0;
 dataCollectionDecks['D1-1'] = dataCollectionDecks.teamSyncAuth1;
 
-export type DeckCode = 'A1-0' | 'A1-1' | 'A2-0' | 'A2-1' | 'B1-0' | 'B1-1' | 'B2-0' | 'B2-1' | 'C1-0' | 'C1-1' | 'C2-0' | 'C2-1' | 'C3-0' | 'C3-1' | 'D1-0' | 'D1-1';
+export type DeckCode = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'C3' | 'D1';
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,

@@ -17,7 +17,7 @@ export const POST = async ({ request }) => {
       // Use the specified backend or default to OpenAI
       const ai = BACKENDS[req.backend];
 
-      const deck = dataCollectionDecks[req.deckCode];
+      const deck = dataCollectionDecks[`${req.deckCode}-0`];
 
       const content = buildSolveTaskPrompt(req.task, {cards: deck});
 
