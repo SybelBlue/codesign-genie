@@ -93,7 +93,7 @@ const CARD_SCHEMA: JSONObjectSchema = {
   required: ['name', 'responsibilities']
 };
 
-const DECK_SCHEMA: JSONObjectSchema = {
+export const DECK_SCHEMA: JSONObjectSchema = {
   type: 'object',
   description:
     'A deck of Class-Responsibility-Collaborator (CRC) cards to be used in Agile software development',

@@ -23,6 +23,28 @@ import casiNoCash1Json from '$lib/crc-decks/data-col/casiNoCash1.json';
 import teamSyncAuth0Json from '$lib/crc-decks/data-col/teamSyncAuth0.json';
 import teamSyncAuth1Json from '$lib/crc-decks/data-col/teamSyncAuth1.json';
 
+import a1cohereJson from '$lib/crc-decks/data-col/ai/A1-cohere.json';
+import a2cohereJson from '$lib/crc-decks/data-col/ai/A2-cohere.json';
+import b1cohereJson from '$lib/crc-decks/data-col/ai/B1-cohere.json';
+import b2cohereJson from '$lib/crc-decks/data-col/ai/B2-cohere.json';
+import c1cohereJson from '$lib/crc-decks/data-col/ai/C1-cohere.json';
+import c2cohereJson from '$lib/crc-decks/data-col/ai/C2-cohere.json';
+import c3cohereJson from '$lib/crc-decks/data-col/ai/C3-cohere.json';
+import a1openaiJson from '$lib/crc-decks/data-col/ai/A1-openai.json';
+import a2openaiJson from '$lib/crc-decks/data-col/ai/A2-openai.json';
+import b1openaiJson from '$lib/crc-decks/data-col/ai/B1-openai.json';
+import b2openaiJson from '$lib/crc-decks/data-col/ai/B2-openai.json';
+import c1openaiJson from '$lib/crc-decks/data-col/ai/C1-openai.json';
+import c2openaiJson from '$lib/crc-decks/data-col/ai/C2-openai.json';
+import c3openaiJson from '$lib/crc-decks/data-col/ai/C3-openai.json';
+import a1claudeJson from '$lib/crc-decks/data-col/ai/A1-claude.json';
+import a2claudeJson from '$lib/crc-decks/data-col/ai/A2-claude.json';
+import b1claudeJson from '$lib/crc-decks/data-col/ai/B1-claude.json';
+import b2claudeJson from '$lib/crc-decks/data-col/ai/B2-claude.json';
+import c1claudeJson from '$lib/crc-decks/data-col/ai/C1-claude.json';
+import c2claudeJson from '$lib/crc-decks/data-col/ai/C2-claude.json';
+import c3claudeJson from '$lib/crc-decks/data-col/ai/C3-claude.json';
+
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
   return (o) => {
@@ -109,22 +131,70 @@ dataCollectionDecks.casiNoWeb1 = asCommit(casiNoWeb1Json, dataCollectionDecks.ca
 dataCollectionDecks.casiNoCash1 = asCommit(casiNoCash1Json, dataCollectionDecks.casiNoCash0);
 dataCollectionDecks.teamSyncAuth1 = asCommit(teamSyncAuth1Json, dataCollectionDecks.teamSyncAuth0);
 
-dataCollectionDecks['A1-0'] = dataCollectionDecks.libraryAI0;
-dataCollectionDecks['A1-1'] = dataCollectionDecks.libraryAI1;
-dataCollectionDecks['A2-0'] = dataCollectionDecks.libraryCE0;
-dataCollectionDecks['A2-1'] = dataCollectionDecks.libraryCE1;
-dataCollectionDecks['B1-0'] = dataCollectionDecks.killGod0;
-dataCollectionDecks['B1-1'] = dataCollectionDecks.killGod1;
-dataCollectionDecks['B2-0'] = dataCollectionDecks.makeGod0;
-dataCollectionDecks['B2-1'] = dataCollectionDecks.makeGod1;
-dataCollectionDecks['C1-0'] = dataCollectionDecks.casiNoCash0;
-dataCollectionDecks['C1-1'] = dataCollectionDecks.casiNoCash1;
-dataCollectionDecks['C2-0'] = dataCollectionDecks.casiNoAI0;
-dataCollectionDecks['C2-1'] = dataCollectionDecks.casiNoAI1;
-dataCollectionDecks['C3-0'] = dataCollectionDecks.casiNoWeb0;
-dataCollectionDecks['C3-1'] = dataCollectionDecks.casiNoWeb1;
-dataCollectionDecks['D1-0'] = dataCollectionDecks.teamSyncAuth0;
-dataCollectionDecks['D1-1'] = dataCollectionDecks.teamSyncAuth1;
+dataCollectionDecks['a1-0'] = dataCollectionDecks.libraryAI0;
+dataCollectionDecks['a1-1'] = dataCollectionDecks.libraryAI1;
+dataCollectionDecks['a2-0'] = dataCollectionDecks.libraryCE0;
+dataCollectionDecks['a2-1'] = dataCollectionDecks.libraryCE1;
+dataCollectionDecks['b1-0'] = dataCollectionDecks.killGod0;
+dataCollectionDecks['b1-1'] = dataCollectionDecks.killGod1;
+dataCollectionDecks['b2-0'] = dataCollectionDecks.makeGod0;
+dataCollectionDecks['b2-1'] = dataCollectionDecks.makeGod1;
+dataCollectionDecks['c1-0'] = dataCollectionDecks.casiNoCash0;
+dataCollectionDecks['c1-1'] = dataCollectionDecks.casiNoCash1;
+dataCollectionDecks['c2-0'] = dataCollectionDecks.casiNoAI0;
+dataCollectionDecks['c2-1'] = dataCollectionDecks.casiNoAI1;
+dataCollectionDecks['c3-0'] = dataCollectionDecks.casiNoWeb0;
+dataCollectionDecks['c3-1'] = dataCollectionDecks.casiNoWeb1;
+dataCollectionDecks['d1-0'] = dataCollectionDecks.teamSyncAuth0;
+dataCollectionDecks['d1-1'] = dataCollectionDecks.teamSyncAuth1;
+
+dataCollectionDecks['a1-a0'] = dataCollectionDecks['a1-0'];
+dataCollectionDecks['a1-a1'] = a1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['a2-a0'] = dataCollectionDecks['a2-0'];
+dataCollectionDecks['a2-a1'] = a2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['b1-a0'] = dataCollectionDecks['b1-0'];
+dataCollectionDecks['b1-a1'] = b1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['b2-a0'] = dataCollectionDecks['b2-0'];
+dataCollectionDecks['b2-a1'] = b2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c1-a0'] = dataCollectionDecks['c1-0'];
+dataCollectionDecks['c1-a1'] = c1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c2-a0'] = dataCollectionDecks['c2-0'];
+dataCollectionDecks['c2-a1'] = c2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c3-a0'] = dataCollectionDecks['c3-0'];
+dataCollectionDecks['c3-a1'] = c3cohereJson.cards as SimpleDeck;
+dataCollectionDecks['a1-b0'] = dataCollectionDecks['a1-0'];
+dataCollectionDecks['a1-b1'] = a1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['a2-b0'] = dataCollectionDecks['a2-0'];
+dataCollectionDecks['a2-b1'] = a2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['b1-b0'] = dataCollectionDecks['b1-0'];
+dataCollectionDecks['b1-b1'] = b1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['b2-b0'] = dataCollectionDecks['b2-0'];
+dataCollectionDecks['b2-b1'] = b2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c1-b0'] = dataCollectionDecks['c1-0'];
+dataCollectionDecks['c1-b1'] = c1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c2-b0'] = dataCollectionDecks['c2-0'];
+dataCollectionDecks['c2-b1'] = c2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c3-b0'] = dataCollectionDecks['c3-0'];
+dataCollectionDecks['c3-b1'] = c3openaiJson.cards as SimpleDeck;
+dataCollectionDecks['a1-c0'] = dataCollectionDecks['a1-0'];
+dataCollectionDecks['a1-c1'] = a1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['a2-c0'] = dataCollectionDecks['a2-0'];
+dataCollectionDecks['a2-c1'] = a2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['b1-c0'] = dataCollectionDecks['b1-0'];
+dataCollectionDecks['b1-c1'] = b1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['b2-c0'] = dataCollectionDecks['b2-0'];
+dataCollectionDecks['b2-c1'] = b2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c1-c0'] = dataCollectionDecks['c1-0'];
+dataCollectionDecks['c1-c1'] = c1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c2-c0'] = dataCollectionDecks['c2-0'];
+dataCollectionDecks['c2-c1'] = c2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c3-c0'] = dataCollectionDecks['c3-0'];
+dataCollectionDecks['c3-c1'] = c3claudeJson.cards as SimpleDeck;
+
+for (const [a, b] of [['a1-a', 'lemur']]) {
+  dataCollectionDecks[b + '0'] = dataCollectionDecks[a + '0'];
+  dataCollectionDecks[b + '1'] = dataCollectionDecks[a + '1'];
+}
 
 export type DeckCode = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'C3' | 'D1';
 
