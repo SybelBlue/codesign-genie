@@ -191,9 +191,33 @@ dataCollectionDecks['c2-c1'] = c2claudeJson.cards as SimpleDeck;
 dataCollectionDecks['c3-c0'] = dataCollectionDecks['c3-0'];
 dataCollectionDecks['c3-c1'] = c3claudeJson.cards as SimpleDeck;
 
-for (const [a, b] of [['a1-a', 'lemur']]) {
-  dataCollectionDecks[b + '0'] = dataCollectionDecks[a + '0'];
-  dataCollectionDecks[b + '1'] = dataCollectionDecks[a + '1'];
+const animalMap = [
+  ['camel', 'b1-c'],
+  ['deer', 'b1-a'],
+  ['eagle', 'b1-b'],
+  ['ferret', 'c1-b'],
+  ['gecko', 'a2-c'],
+  ['hawk', 'a1-b'],
+  ['iguana', 'c3-b'],
+  ['jaguar', 'b2-a'],
+  ['koala', 'a1-c'],
+  ['lemur', 'c3-c'],
+  ['mole', 'b2-c'],
+  ['newt', 'b2-b'],
+  ['otter', 'a2-a'],
+  ['panda', 'c2-a'],
+  ['quail', 'c1-a'],
+  ['snake', 'c2-c'],
+  ['tiger', 'c3-a'],
+  ['vole', 'a1-a'],
+  ['weasel', 'a2-b'],
+  ['xerus', 'c2-b'],
+  ['yak', 'c1-c']
+];
+
+for (const [animal, base] of animalMap) {
+  dataCollectionDecks[animal + '-0'] = dataCollectionDecks[base + '0'];
+  dataCollectionDecks[animal + '-1'] = dataCollectionDecks[base + '1'];
 }
 
 export type DeckCode = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'C3' | 'D1';

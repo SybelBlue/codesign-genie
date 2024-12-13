@@ -19,7 +19,7 @@
   const deckInit: SimpleDeck =
     deckName && deckName in premadeDecks ? premadeDecks[deckName] : JSON.parse(atob(deckInfo));
 
-  console.log('Initializing deck', deckInit);
+  console.info(`Initializing deck ${deckName ?? '<unamed>'}: `, deckInit);
   let cards: SimpleDeck = $state(deckInit);
   let displayDeck: Deck = $state(deckInit);
 
@@ -86,7 +86,7 @@
   {/if}
 </svelte:head>
 
-<Toolbar showTimeline currentDeck={cards} {setDisplayDeck} {getStateJson} {commits} prompt={cards.prompt} />
+<Toolbar showTimeline currentDeck={cards} {setDisplayDeck} {getStateJson} {commits} prompt={cards?.prompt} />
 
 <main class="flex w-screen max-h-full overflow-hidden">
   {#if displayDeck.length == 0}
