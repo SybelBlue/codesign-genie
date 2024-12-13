@@ -93,6 +93,19 @@ dataCollectionDecks.libraryCE1 = asCommit(libCE1Json, dataCollectionDecks.librar
 dataCollectionDecks.killGod1 = asCommit(techDebtKillGod1Json, dataCollectionDecks.killGod0);
 dataCollectionDecks.makeGod1 = asCommit(techDebtMakeGod1Json, dataCollectionDecks.makeGod0);
 
+dataCollectionDecks['A1-0'] = dataCollectionDecks.libraryAI0;
+dataCollectionDecks['A1-1'] = dataCollectionDecks.libraryAI1;
+dataCollectionDecks['A2-0'] = dataCollectionDecks.libraryCE0;
+dataCollectionDecks['A2-1'] = dataCollectionDecks.libraryCE1;
+dataCollectionDecks['B1-0'] = dataCollectionDecks.killGod0;
+dataCollectionDecks['B1-1'] = dataCollectionDecks.killGod1;
+dataCollectionDecks['B2-0'] = dataCollectionDecks.makeGod0;
+dataCollectionDecks['B2-1'] = dataCollectionDecks.makeGod1;
+dataCollectionDecks['C1-0'] = [];
+dataCollectionDecks['C1-1'] = [];
+dataCollectionDecks['C2-0'] = [];
+dataCollectionDecks['C2-1'] = [];
+
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,
   ...dataCollectionDecks
