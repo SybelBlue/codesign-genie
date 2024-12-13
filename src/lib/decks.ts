@@ -4,7 +4,6 @@ import libraryJson from '$lib/crc-decks/library.json';
 import rpgJson from '$lib/crc-decks/rpg.json';
 import hospitalJson from '$lib/crc-decks/hospital.json';
 
-import teamSyncJson from '$lib/crc-decks/data-col/team-sync.json';
 import mediTrackJson from '$lib/crc-decks/data-col/medi-track.json';
 import ecoTrackJson from '$lib/crc-decks/data-col/ecotrack.json';
 import libAI0Json from '$lib/crc-decks/data-col/libraryAI0.json';
@@ -21,6 +20,8 @@ import casiNoWeb0Json from '$lib/crc-decks/data-col/casiNoWeb0.json';
 import casiNoWeb1Json from '$lib/crc-decks/data-col/casiNoWeb1.json';
 import casiNoCash0Json from '$lib/crc-decks/data-col/casiNoCash0.json';
 import casiNoCash1Json from '$lib/crc-decks/data-col/casiNoCash1.json';
+import teamSyncAuth0Json from '$lib/crc-decks/data-col/teamSyncAuth0.json';
+import teamSyncAuth1Json from '$lib/crc-decks/data-col/teamSyncAuth1.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -87,7 +88,6 @@ export const exampleDecks: Record<string, SimpleDeck> = {
 };
 
 export const dataCollectionDecks: Record<string, SimpleDeck> = {
-  teamSync: deckWithIds(teamSyncJson),
   mediTrack: deckWithIds(mediTrackJson),
   ecoTrack: deckWithIds(ecoTrackJson),
   libraryAI0: deckWithIds(libAI0Json),
@@ -96,7 +96,8 @@ export const dataCollectionDecks: Record<string, SimpleDeck> = {
   makeGod0: deckWithIds(techDebtMakeGod0Json),
   casiNoAI0: deckWithIds(casiNoAI0Json),
   casiNoWeb0: deckWithIds(casiNoWeb0Json),
-  casiNoCash0: deckWithIds(casiNoCash0Json)
+  casiNoCash0: deckWithIds(casiNoCash0Json),
+  teamSyncAuth0: deckWithIds(teamSyncAuth0Json)
 };
 
 dataCollectionDecks.libraryAI1 = asCommit(libAI1Json, dataCollectionDecks.libraryAI0);
@@ -106,6 +107,7 @@ dataCollectionDecks.makeGod1 = asCommit(techDebtMakeGod1Json, dataCollectionDeck
 dataCollectionDecks.casiNoAI1 = asCommit(casiNoAI1Json, dataCollectionDecks.casiNoAI0);
 dataCollectionDecks.casiNoWeb1 = asCommit(casiNoWeb1Json, dataCollectionDecks.casiNoWeb0);
 dataCollectionDecks.casiNoCash1 = asCommit(casiNoCash1Json, dataCollectionDecks.casiNoCash0);
+dataCollectionDecks.teamSyncAuth1 = asCommit(teamSyncAuth1Json, dataCollectionDecks.teamSyncAuth0);
 
 dataCollectionDecks['A1-0'] = dataCollectionDecks.libraryAI0;
 dataCollectionDecks['A1-1'] = dataCollectionDecks.libraryAI1;
@@ -121,6 +123,8 @@ dataCollectionDecks['C2-0'] = dataCollectionDecks.casiNoAI0;
 dataCollectionDecks['C2-1'] = dataCollectionDecks.casiNoAI1;
 dataCollectionDecks['C3-0'] = dataCollectionDecks.casiNoWeb0;
 dataCollectionDecks['C3-1'] = dataCollectionDecks.casiNoWeb1;
+dataCollectionDecks['D1-0'] = dataCollectionDecks.teamSyncAuth0;
+dataCollectionDecks['D1-1'] = dataCollectionDecks.teamSyncAuth1;
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,
