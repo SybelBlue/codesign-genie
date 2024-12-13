@@ -1,4 +1,4 @@
-import type { Card as Card, SimpleDeck, Deck, SimpleCard, Key, DiffText } from '$lib/types';
+import type { Card, SimpleDeck, Deck, SimpleCard, Key, DiffText } from '$lib/types';
 import { withId } from '$lib/decks';
 import { diffWords, type Change } from 'diff';
 import { any } from './common';
