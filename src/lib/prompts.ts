@@ -32,14 +32,20 @@ ${JSON.stringify(card)}
 }
 
 const buildSolveTaskPrompt = (task: string, deck: DeckJson): string => {
-    const prompt = `Consider this deck represented in JSON:
+    const prompt = `You are a highly competent software engineer.
+
+Consider this deck represented in JSON:
 \`\`\`json
 ${JSON.stringify({cards: deck.cards})}
 \`\`\`
 
-You must follow the below instructions, along with their context.
+Given the following instructions and type definition, produce the JSON of the resulting deck.
 \`\`\`instructions
 ${task}
+\`\`\`
+
+\`\`\`typedef
+${TYPEDEFS['Deck']}
 \`\`\`
 `
     return prompt;
