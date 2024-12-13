@@ -45,7 +45,7 @@
         {
           "description": "Generates predictive analytics and makes recomendations",
           "collaborators": [
-            { "name": "SystemController" },
+            { "name": "ReportingEngine" },
             { "name": "Database" },
             { "name": "IntegrationBroker" },
             { "name": "OpenAPI" },
@@ -125,5 +125,6 @@
         }
       ]
     }
-  ]
+  ],
+  "prompt": "Redelegate responsibilities so that SystemController is a true god class. Do not meaningfully edit any responsibilities besides moving them.<br>- IntegrationBroker should be folded into SystemController<br>- SystemController should proxy and manage all external services<br>- Database should only collaborate with SystemController<br>- UserModule and ReportGenerator should only collaborate with Database for reads and SystemController for all other business logic"
 }

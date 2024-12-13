@@ -9,7 +9,7 @@
             { "name": "Database" },
             { "name": "UserModule" },
             { "name": "ReportingEngine" },
-            { "name": "IntegrationBroker" }
+            { "name": "SystemController" }
           ]
         },
         {
@@ -22,7 +22,8 @@
         {
           "description": "Implements database transactions",
           "collaborators": [
-            { "name": "Database" }
+            { "name": "Database" },
+            { "name": "RSAModule" }
           ]
         },
         {
@@ -30,7 +31,7 @@
           "collaborators": [
             { "name": "Database" },
             { "name": "UserModule" },
-            { "name": "IntegrationBroker" }
+            { "name": "IAMUserAuth" }
           ]
         },
         {
@@ -39,17 +40,27 @@
             { "name": "Database" },
             { "name": "UserModule" },
             { "name": "ReportingEngine" },
-            { "name": "IntegrationBroker" }
+            { "name": "AWSCloudWatch" },
+            { "name": "AWSMessagingService" }
           ]
         },
         {
           "description": "Generates predictive analytics and makes recomendations",
           "collaborators": [
-            { "name": "SystemController" },
+            { "name": "ReportingEngine" },
             { "name": "Database" },
-            { "name": "IntegrationBroker" },
             { "name": "OpenAPI" },
             { "name": "AWSCloudWatch" }
+          ]
+        },
+        {
+          "description": "Proxies all external services",
+          "collaborators": [
+            { "name": "IAMUserAuth" },
+            { "name": "RSAModule" },
+            { "name": "OpenAPI" },
+            { "name": "AWSMessagingService" },
+            { "name": "AWSFirebaseGateway" }
           ]
         }
       ]
@@ -60,19 +71,13 @@
         {
           "description": "Performs all data persistence and transformation, including complex business logic, caching, and cross-domain operations",
           "collaborators": [
-            { "name": "SystemController" },
-            { "name": "IntegrationBroker" },
-            { "name": "AWSFirebaseGateway" }
+            { "name": "SystemController" }
           ]
         },
         {
           "description": "Manages admin authentication, data encryption, and external service integrations",
           "collaborators": [
-            { "name": "IntegrationBroker" },
-            { "name": "IAMUserAuth" },
-            { "name": "RSAModule" },
-            { "name": "AWSCloudWatch" },
-            { "name": "AWSFirebaseGateway" }
+            { "name": "SystemController" }
           ]
         }
       ]
@@ -90,9 +95,7 @@
         {
           "description": "Manages email notifications, SMS alerts, push notifications, and user engagement tracking",
           "collaborators": [
-            { "name": "SystemController" },
-            { "name": "IntegrationBroker" },
-            { "name": "AWSMessagingService" }
+            { "name": "SystemController" }
           ]
         }
       ]
@@ -105,22 +108,6 @@
           "collaborators": [
             { "name": "SystemController" },
             { "name": "Database" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "IntegrationBroker",
-      "responsibilities": [
-        {
-          "description": "Generates live instances of external services from SystemController keys",
-          "collaborators": [
-            { "name": "SystemController" },
-            { "name": "IAMUserAuth" },
-            { "name": "RSAModule" },
-            { "name": "OpenAPI" },
-            { "name": "AWSMessagingService" },
-            { "name": "AWSFirebaseGateway" }
           ]
         }
       ]
