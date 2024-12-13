@@ -77,7 +77,7 @@
           <p class="py-4">{@html prompt}</p>
           <div class="modal-action">
             <form method="dialog">
-              <button class="btn">Close</button>
+              <button class="btn" onclick={() => (showPrompt = false)}>Close</button>
             </form>
           </div>
         </div>
