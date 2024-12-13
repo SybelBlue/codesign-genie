@@ -9,6 +9,7 @@
   import CardBoard from '$lib/components/CardBoard.svelte';
   import Toolbar from '$lib/components/Toolbar.svelte';
   import DeckDialog from '$lib/components/DeckDialog.svelte';
+  import { buildUpsertCardPrompt } from '$lib/prompts';
 
   let selectedCard: SimpleCard | undefined = $state();
   let readyForCommit: boolean = $state(false);
@@ -48,7 +49,7 @@
       method: 'POST',
       body: JSON.stringify({
         // TODO: currently we're passing in the deck/card with ids. That may reduce quality
-        description: `Consider this deck:\n\`\`\`json\n{ "cards" : ${JSON.stringify(cards)} }\n\`\`\`\n\nGiven that we are now upserting the following card, describing the change as "${message}", update both the collaborators on this card and the whole deck to remain consistent. This may involve removing or adding responsibilities, their respective lists of collaborators, or even adding or removing whole cards. Make sure to reproduce all unchanged cards.\n\`\`\`json\n${JSON.stringify(card)}\n\`\`\``,
+        description: buildUpsertCardPrompt(card, { cards }, message),
         schema: 'Deck'
       })
     });
