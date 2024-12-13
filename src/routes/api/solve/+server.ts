@@ -11,15 +11,15 @@ export const POST = async ({ request }) => {
   return request.json().then(
     async (req: {
       backend: Backend,
-      task: string,
       deckCode: DeckCode
     }) => {
       // Use the specified backend or default to OpenAI
       const ai = BACKENDS[req.backend];
 
       const deck = dataCollectionDecks[`${req.deckCode}-0`];
+      const task = deck.prompt ?? "";
 
-      const content = buildSolveTaskPrompt(req.task, {cards: deck});
+      const content = buildSolveTaskPrompt(task, {cards: deck});
 
       try {
         const obj = await ai.backend.generateObject(
