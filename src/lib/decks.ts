@@ -148,48 +148,55 @@ dataCollectionDecks['c3-1'] = dataCollectionDecks.casiNoWeb1;
 dataCollectionDecks['d1-0'] = dataCollectionDecks.teamSyncAuth0;
 dataCollectionDecks['d1-1'] = dataCollectionDecks.teamSyncAuth1;
 
+const asAICommit = (json: DeckJson, base: SimpleDeck): SimpleDeck => {
+  const out = json.cards as SimpleDeck;
+  // todo: new cards sometimes don't have ids!?
+  out.prompt = json.prompt ?? base.prompt;
+  return out;
+};
+
 dataCollectionDecks['a1-a0'] = dataCollectionDecks['a1-0'];
-dataCollectionDecks['a1-a1'] = a1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['a1-a1'] = asAICommit(a1cohereJson, dataCollectionDecks['a1-0']);
 dataCollectionDecks['a2-a0'] = dataCollectionDecks['a2-0'];
-dataCollectionDecks['a2-a1'] = a2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['a2-a1'] = asAICommit(a2cohereJson, dataCollectionDecks['a2-0']);
 dataCollectionDecks['b1-a0'] = dataCollectionDecks['b1-0'];
-dataCollectionDecks['b1-a1'] = b1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['b1-a1'] = asAICommit(b1cohereJson, dataCollectionDecks['b1-0']);
 dataCollectionDecks['b2-a0'] = dataCollectionDecks['b2-0'];
-dataCollectionDecks['b2-a1'] = b2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['b2-a1'] = asAICommit(b2cohereJson, dataCollectionDecks['b2-0']);
 dataCollectionDecks['c1-a0'] = dataCollectionDecks['c1-0'];
-dataCollectionDecks['c1-a1'] = c1cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c1-a1'] = asAICommit(c1cohereJson, dataCollectionDecks['c1-0']);
 dataCollectionDecks['c2-a0'] = dataCollectionDecks['c2-0'];
-dataCollectionDecks['c2-a1'] = c2cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c2-a1'] = asAICommit(c2cohereJson, dataCollectionDecks['c2-0']);
 dataCollectionDecks['c3-a0'] = dataCollectionDecks['c3-0'];
-dataCollectionDecks['c3-a1'] = c3cohereJson.cards as SimpleDeck;
+dataCollectionDecks['c3-a1'] = asAICommit(c3cohereJson, dataCollectionDecks['c3-0']);
 dataCollectionDecks['a1-b0'] = dataCollectionDecks['a1-0'];
-dataCollectionDecks['a1-b1'] = a1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['a1-b1'] = asAICommit(a1openaiJson, dataCollectionDecks['a1-0']);
 dataCollectionDecks['a2-b0'] = dataCollectionDecks['a2-0'];
-dataCollectionDecks['a2-b1'] = a2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['a2-b1'] = asAICommit(a2openaiJson, dataCollectionDecks['a2-0']);
 dataCollectionDecks['b1-b0'] = dataCollectionDecks['b1-0'];
-dataCollectionDecks['b1-b1'] = b1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['b1-b1'] = asAICommit(b1openaiJson, dataCollectionDecks['b1-0']);
 dataCollectionDecks['b2-b0'] = dataCollectionDecks['b2-0'];
-dataCollectionDecks['b2-b1'] = b2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['b2-b1'] = asAICommit(b2openaiJson, dataCollectionDecks['b2-0']);
 dataCollectionDecks['c1-b0'] = dataCollectionDecks['c1-0'];
-dataCollectionDecks['c1-b1'] = c1openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c1-b1'] = asAICommit(c1openaiJson, dataCollectionDecks['c1-0']);
 dataCollectionDecks['c2-b0'] = dataCollectionDecks['c2-0'];
-dataCollectionDecks['c2-b1'] = c2openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c2-b1'] = asAICommit(c2openaiJson, dataCollectionDecks['c2-0']);
 dataCollectionDecks['c3-b0'] = dataCollectionDecks['c3-0'];
-dataCollectionDecks['c3-b1'] = c3openaiJson.cards as SimpleDeck;
+dataCollectionDecks['c3-b1'] = asAICommit(c3openaiJson, dataCollectionDecks['c3-0']);
 dataCollectionDecks['a1-c0'] = dataCollectionDecks['a1-0'];
-dataCollectionDecks['a1-c1'] = a1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['a1-c1'] = asAICommit(a1claudeJson, dataCollectionDecks['a1-0']);
 dataCollectionDecks['a2-c0'] = dataCollectionDecks['a2-0'];
-dataCollectionDecks['a2-c1'] = a2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['a2-c1'] = asAICommit(a2claudeJson, dataCollectionDecks['a2-0']);
 dataCollectionDecks['b1-c0'] = dataCollectionDecks['b1-0'];
-dataCollectionDecks['b1-c1'] = b1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['b1-c1'] = asAICommit(b1claudeJson, dataCollectionDecks['b1-0']);
 dataCollectionDecks['b2-c0'] = dataCollectionDecks['b2-0'];
-dataCollectionDecks['b2-c1'] = b2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['b2-c1'] = asAICommit(b2claudeJson, dataCollectionDecks['b2-0']);
 dataCollectionDecks['c1-c0'] = dataCollectionDecks['c1-0'];
-dataCollectionDecks['c1-c1'] = c1claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c1-c1'] = asAICommit(c1claudeJson, dataCollectionDecks['c1-0']);
 dataCollectionDecks['c2-c0'] = dataCollectionDecks['c2-0'];
-dataCollectionDecks['c2-c1'] = c2claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c2-c1'] = asAICommit(c2claudeJson, dataCollectionDecks['c2-0']);
 dataCollectionDecks['c3-c0'] = dataCollectionDecks['c3-0'];
-dataCollectionDecks['c3-c1'] = c3claudeJson.cards as SimpleDeck;
+dataCollectionDecks['c3-c1'] = asAICommit(c3claudeJson, dataCollectionDecks['c3-0']);
 
 const animalMap = [
   ['camel', 'b1-c'],
