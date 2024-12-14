@@ -37,13 +37,20 @@ import b2openaiJson from '$lib/crc-decks/data-col/ai/B2-openai.json';
 import c1openaiJson from '$lib/crc-decks/data-col/ai/C1-openai.json';
 import c2openaiJson from '$lib/crc-decks/data-col/ai/C2-openai.json';
 import c3openaiJson from '$lib/crc-decks/data-col/ai/C3-openai.json';
-import a1claudeJson from '$lib/crc-decks/data-col/ai/A1-claude.json';
-import a2claudeJson from '$lib/crc-decks/data-col/ai/A2-claude.json';
-import b1claudeJson from '$lib/crc-decks/data-col/ai/B1-claude.json';
-import b2claudeJson from '$lib/crc-decks/data-col/ai/B2-claude.json';
-import c1claudeJson from '$lib/crc-decks/data-col/ai/C1-claude.json';
-import c2claudeJson from '$lib/crc-decks/data-col/ai/C2-claude.json';
-import c3claudeJson from '$lib/crc-decks/data-col/ai/C3-claude.json';
+import a1sonnetJson from '$lib/crc-decks/data-col/ai/A1-sonnet.json';
+import a2sonnetJson from '$lib/crc-decks/data-col/ai/A2-sonnet.json';
+import b1sonnetJson from '$lib/crc-decks/data-col/ai/B1-sonnet.json';
+import b2sonnetJson from '$lib/crc-decks/data-col/ai/B2-sonnet.json';
+import c1sonnetJson from '$lib/crc-decks/data-col/ai/C1-sonnet.json';
+import c2sonnetJson from '$lib/crc-decks/data-col/ai/C2-sonnet.json';
+import c3sonnetJson from '$lib/crc-decks/data-col/ai/C3-sonnet.json';
+import a1haikuJson from '$lib/crc-decks/data-col/ai/A1-haiku.json';
+import a2haikuJson from '$lib/crc-decks/data-col/ai/A2-haiku.json';
+import b1haikuJson from '$lib/crc-decks/data-col/ai/B1-haiku.json';
+import b2haikuJson from '$lib/crc-decks/data-col/ai/B2-haiku.json';
+import c1haikuJson from '$lib/crc-decks/data-col/ai/C1-haiku.json';
+import c2haikuJson from '$lib/crc-decks/data-col/ai/C2-haiku.json';
+import c3haikuJson from '$lib/crc-decks/data-col/ai/C3-haiku.json';
 
 export const withId: <T extends object>(o: T) => Keyed<T> = (function () {
   let nextId = 0;
@@ -184,50 +191,71 @@ dataCollectionDecks['c2-b1'] = asAICommit(c2openaiJson, dataCollectionDecks['c2-
 dataCollectionDecks['c3-b0'] = dataCollectionDecks['c3-0'];
 dataCollectionDecks['c3-b1'] = asAICommit(c3openaiJson, dataCollectionDecks['c3-0']);
 dataCollectionDecks['a1-c0'] = dataCollectionDecks['a1-0'];
-dataCollectionDecks['a1-c1'] = asAICommit(a1claudeJson, dataCollectionDecks['a1-0']);
+dataCollectionDecks['a1-c1'] = asAICommit(a1sonnetJson, dataCollectionDecks['a1-0']);
 dataCollectionDecks['a2-c0'] = dataCollectionDecks['a2-0'];
-dataCollectionDecks['a2-c1'] = asAICommit(a2claudeJson, dataCollectionDecks['a2-0']);
+dataCollectionDecks['a2-c1'] = asAICommit(a2sonnetJson, dataCollectionDecks['a2-0']);
 dataCollectionDecks['b1-c0'] = dataCollectionDecks['b1-0'];
-dataCollectionDecks['b1-c1'] = asAICommit(b1claudeJson, dataCollectionDecks['b1-0']);
+dataCollectionDecks['b1-c1'] = asAICommit(b1sonnetJson, dataCollectionDecks['b1-0']);
 dataCollectionDecks['b2-c0'] = dataCollectionDecks['b2-0'];
-dataCollectionDecks['b2-c1'] = asAICommit(b2claudeJson, dataCollectionDecks['b2-0']);
+dataCollectionDecks['b2-c1'] = asAICommit(b2sonnetJson, dataCollectionDecks['b2-0']);
 dataCollectionDecks['c1-c0'] = dataCollectionDecks['c1-0'];
-dataCollectionDecks['c1-c1'] = asAICommit(c1claudeJson, dataCollectionDecks['c1-0']);
+dataCollectionDecks['c1-c1'] = asAICommit(c1sonnetJson, dataCollectionDecks['c1-0']);
 dataCollectionDecks['c2-c0'] = dataCollectionDecks['c2-0'];
-dataCollectionDecks['c2-c1'] = asAICommit(c2claudeJson, dataCollectionDecks['c2-0']);
+dataCollectionDecks['c2-c1'] = asAICommit(c2sonnetJson, dataCollectionDecks['c2-0']);
 dataCollectionDecks['c3-c0'] = dataCollectionDecks['c3-0'];
-dataCollectionDecks['c3-c1'] = asAICommit(c3claudeJson, dataCollectionDecks['c3-0']);
+dataCollectionDecks['c3-c1'] = asAICommit(c3sonnetJson, dataCollectionDecks['c3-0']);
+dataCollectionDecks['a1-d0'] = dataCollectionDecks['a1-0'];
+dataCollectionDecks['a1-d1'] = asAICommit(a1haikuJson, dataCollectionDecks['a1-0']);
+dataCollectionDecks['a2-d0'] = dataCollectionDecks['a2-0'];
+dataCollectionDecks['a2-d1'] = asAICommit(a2haikuJson, dataCollectionDecks['a2-0']);
+dataCollectionDecks['b1-d0'] = dataCollectionDecks['b1-0'];
+dataCollectionDecks['b1-d1'] = asAICommit(b1haikuJson, dataCollectionDecks['b1-0']);
+dataCollectionDecks['b2-d0'] = dataCollectionDecks['b2-0'];
+dataCollectionDecks['b2-d1'] = asAICommit(b2haikuJson, dataCollectionDecks['b2-0']);
+dataCollectionDecks['c1-d0'] = dataCollectionDecks['c1-0'];
+dataCollectionDecks['c1-d1'] = asAICommit(c1haikuJson, dataCollectionDecks['c1-0']);
+dataCollectionDecks['c2-d0'] = dataCollectionDecks['c2-0'];
+dataCollectionDecks['c2-d1'] = asAICommit(c2haikuJson, dataCollectionDecks['c2-0']);
+dataCollectionDecks['c3-d0'] = dataCollectionDecks['c3-0'];
+dataCollectionDecks['c3-d1'] = asAICommit(c3haikuJson, dataCollectionDecks['c3-0']);
 
-const animalMap = [
-  ['camel', 'b1-c'],
-  ['deer', 'b1-a'],
-  ['eagle', 'b1-b'],
-  ['ferret', 'c1-b'],
-  ['gecko', 'a2-c'],
-  ['hawk', 'a1-b'],
-  ['iguana', 'c3-b'],
-  ['jaguar', 'b2-a'],
-  ['koala', 'a1-c'],
-  ['lemur', 'c3-c'],
-  ['mole', 'b2-c'],
-  ['newt', 'b2-b'],
-  ['otter', 'a2-a'],
-  ['panda', 'c2-a'],
-  ['quail', 'c1-a'],
-  ['snake', 'c2-c'],
-  ['tiger', 'c3-a'],
-  ['vole', 'a1-a'],
-  ['weasel', 'a2-b'],
-  ['xerus', 'c2-b'],
-  ['yak', 'c1-c']
-];
+const animalMap: Record<string, `${DeckCode}-${'a' | 'b' | 'c' | 'd'}`> = {
+  camel: 'b1-c',
+  bear: 'b1-d',
+  deer: 'b1-a',
+  eagle: 'b1-b',
+  ferret: 'c1-b',
+  fox: 'c1-d',
+  gecko: 'a2-c',
+  goat: 'c3-d',
+  hare: 'a2-d',
+  hawk: 'a1-b',
+  iguana: 'c3-b',
+  jaguar: 'b2-a',
+  koala: 'a1-c',
+  lemur: 'c3-c',
+  mole: 'b2-c',
+  newt: 'b2-b',
+  otter: 'a2-a',
+  panda: 'c2-a',
+  quail: 'c1-a',
+  rabbit: 'a1-d',
+  seal: 'b2-d',
+  snake: 'c2-c',
+  tiger: 'c3-a',
+  vole: 'a1-a',
+  weasel: 'a2-b',
+  xerus: 'c2-b',
+  yak: 'c1-c',
+  zebra: 'c2-d'
+};
 
-for (const [animal, base] of animalMap) {
-  dataCollectionDecks[animal + '-0'] = dataCollectionDecks[base + '0'];
-  dataCollectionDecks[animal + '-1'] = dataCollectionDecks[base + '1'];
+for (const [animal, stub] of Object.entries(animalMap)) {
+  dataCollectionDecks[animal + '-0'] = dataCollectionDecks[stub + '0'];
+  dataCollectionDecks[animal + '-1'] = dataCollectionDecks[stub + '1'];
 }
 
-export type DeckCode = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'C3' | 'D1';
+export type DeckCode = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2' | 'c3' | 'd1';
 
 export const premadeDecks: Record<string, SimpleDeck> = {
   ...exampleDecks,

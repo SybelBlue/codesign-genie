@@ -3,7 +3,7 @@ import { type ValidSchema, SCHEMAS } from '$lib/types.d';
 import { CohereClientV2 } from 'cohere-ai';
 import { OpenAI } from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
-import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
+import type { MessageParam, Model } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { buildContentSchemaString } from '$lib/prompts';
 
 // Add near the top of the file
@@ -95,7 +95,7 @@ export class ClaudeBackend {
     apiKey: string
   ): Promise<Type> {
     const claude = new Anthropic({ apiKey });
-    const model = 'claude-3-5-sonnet-20241022';
+    const model: Model = 'claude-3-5-haiku-latest';
     const messages: MessageParam[] = [
       {
         role: 'user',

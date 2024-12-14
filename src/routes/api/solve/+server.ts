@@ -13,7 +13,13 @@ export const POST = async ({ request }) => {
       // Use the specified backend or default to OpenAI
       const ai = BACKENDS[req.backend];
 
-      const deck = dataCollectionDecks[`${req.deckCode}-0`];
+      const baseDeckName = `${req.deckCode}-0`;
+      if (!(baseDeckName in dataCollectionDecks)) {
+        throw new Error(
+          `deck "${baseDeckName}" does not exist in ${Object.keys(dataCollectionDecks)}`
+        );
+      }
+      const deck = dataCollectionDecks[baseDeckName];
       const task = deck.prompt ?? '';
 
       const content = buildSolveTaskPrompt(task, { cards: deck });
